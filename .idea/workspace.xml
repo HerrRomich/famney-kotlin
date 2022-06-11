@@ -4,44 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2f6ca191-61dc-4381-8cb0-6262d42bab95" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/.name" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.jar" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gradlew.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/kotlin/com/hrrm/famoney/launcher/ServerLauncher.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/kotlin/com/hrrm/famoney/launcher/WebUiConfiguration.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/application.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/favicon-16x16.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/favicon-32x32.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/index.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/oauth2-redirect.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/swagger-initializer.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/swagger-ui-bundle.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/swagger-ui-bundle.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/swagger-ui-es-bundle-core.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/swagger-ui-es-bundle-core.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/swagger-ui-es-bundle.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/swagger-ui-es-bundle.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/swagger-ui-standalone-preset.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/swagger-ui-standalone-preset.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/swagger-ui.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/swagger-ui.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/swagger-ui.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/resources/static/swagger-ui/swagger-ui.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-ui/build.gradle.kts" afterDir="false" />
-    </list>
+    <list default="true" id="2f6ca191-61dc-4381-8cb0-6262d42bab95" name="Changes" comment="First commit" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -291,6 +254,21 @@
       <option name="presentableId" value="Default" />
       <updated>1654944019067</updated>
     </task>
+    <task id="LOCAL-00001" summary="First commit">
+      <created>1654956641862</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1654956641862</updated>
+    </task>
+    <task id="LOCAL-00002" summary="First commit">
+      <created>1654956842093</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1654956842093</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -303,5 +281,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="First commit" />
+    <option name="LAST_COMMIT_MESSAGE" value="First commit" />
   </component>
 </project>
