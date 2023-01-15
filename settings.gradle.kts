@@ -15,3 +15,21 @@ pluginManagement {
 
 include("web-ui")
 include("launcher")
+include("accounts")
+include("accounts:accounts-domain")
+findProject(":accounts:accounts-domain")?.name = "accounts-domain"
+include("commons")
+include("commons:commons-persistence")
+findProject(":commons:commons-persistence")?.name = "commons-persistence"
+include("commons:commons-core")
+findProject(":commons:commons-core")?.name = "commons-core"
+include("accounts:accounts-api")
+findProject(":accounts:accounts-api")?.name = "accounts-api"
+include("commons:commons-jaxrs")
+findProject(":commons:commons-jaxrs")?.name = "commons-jaxrs"
+include("commons:commons-immutables")
+findProject(":commons:commons-immutables")?.name = "commons-immutables"
+include("accounts:accounts-api-impl")
+findProject(":accounts:accounts-api-impl")?.name = "accounts-api-impl"
+include("commons:commons-events")
+findProject(":commons:commons-events")?.name = "commons-events"

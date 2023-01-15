@@ -1,5 +1,6 @@
 package com.hrrm.famoney.launcher
 
+import com.hrrm.famoney.accounts.AccountRepository
 import org.springframework.context.annotation.Configuration
 import org.springframework.core.io.ClassPathResource
 import org.springframework.core.io.Resource
@@ -10,8 +11,9 @@ import org.springframework.web.servlet.resource.PathResourceResolver
 import java.io.IOException
 
 @Configuration
-class WebUiConfiguration : WebMvcConfigurer {
+class WebUiConfiguration(val accountRepository: AccountRepository) : WebMvcConfigurer {
     override fun addResourceHandlers(registry: ResourceHandlerRegistry) {
+        accountRepository.findByOrderByName()
         registry.addResourceHandler(
             "/ui/",
             "/ui/**"

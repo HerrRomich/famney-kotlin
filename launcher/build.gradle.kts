@@ -1,13 +1,15 @@
-plugins {
-    id("org.springframework.boot") version "2.7.0"
-}
-
 dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("stdlib-jdk8"))
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation(kotlin("reflect"))
+    implementation("org.springframework.boot:spring-boot-starter-web") {
+        exclude("org.springframework.boot:spring-boot-starter-tomcat")
+    }
+    implementation("org.springframework.boot:spring-boot-starter-jetty")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-aop")
+
+    implementation(project(":accounts:accounts-domain"))
 }
 
 springBoot {

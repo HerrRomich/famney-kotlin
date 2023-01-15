@@ -1,0 +1,1 @@
+package com.hrrm.famoney.accounts.migration.v02;

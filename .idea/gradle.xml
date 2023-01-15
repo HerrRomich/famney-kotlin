@@ -9,6 +9,16 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/accounts" />
+            <option value="$PROJECT_DIR$/accounts/accounts-api" />
+            <option value="$PROJECT_DIR$/accounts/accounts-api-impl" />
+            <option value="$PROJECT_DIR$/accounts/accounts-domain" />
+            <option value="$PROJECT_DIR$/commons" />
+            <option value="$PROJECT_DIR$/commons/commons-core" />
+            <option value="$PROJECT_DIR$/commons/commons-events" />
+            <option value="$PROJECT_DIR$/commons/commons-immutables" />
+            <option value="$PROJECT_DIR$/commons/commons-jaxrs" />
+            <option value="$PROJECT_DIR$/commons/commons-persistence" />
             <option value="$PROJECT_DIR$/launcher" />
             <option value="$PROJECT_DIR$/web-ui" />
           </set>

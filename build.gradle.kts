@@ -1,20 +1,23 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 plugins {
-    id("org.springframework.boot") version "2.7.0" apply false
-    id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.7.0"
-    kotlin("plugin.spring") version "1.6.10" apply false
-    id("io.swagger.core.v3.swagger-gradle-plugin") version "2.1.12" apply false
+    id("org.springframework.boot") version "2.7.2" apply false
+    id("io.spring.dependency-management") version "1.0.13.RELEASE"
+    kotlin("jvm") version "1.7.10"
+    kotlin("plugin.spring") version "1.7.10" apply false
+    kotlin("plugin.jpa") version "1.7.10" apply false
+    id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.7" apply false
+    id("io.freefair.lombok") version "6.5.0.3"
 }
 
 java.sourceCompatibility = JavaVersion.VERSION_17
 
-configure(subprojects.filter { !listOf("web-ui").contains(it.name) }){
+configure(subprojects.filter { !listOf("web-ui").contains(it.name) }) {
     apply {
-            plugin("io.spring.dependency-management")
-            plugin("org.jetbrains.kotlin.jvm")
-            plugin("org.jetbrains.kotlin.plugin.spring")
+        plugin("org.springframework.boot")
+        plugin("io.spring.dependency-management")
+        plugin("org.jetbrains.kotlin.jvm")
+        plugin("org.jetbrains.kotlin.plugin.spring")
+        plugin("org.jetbrains.kotlin.plugin.jpa")
+        plugin("io.freefair.lombok")
     }
 
     group = "com.hrrm.famoney"

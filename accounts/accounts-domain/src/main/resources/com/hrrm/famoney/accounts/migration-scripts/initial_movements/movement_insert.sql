@@ -1,0 +1,18 @@
+insert into movement(account_id,
+                     type,
+                     date,
+                     booking_date,
+                     budget_period,
+                     category_id,
+                     comments,
+                     opposit_account_id,
+                     amount)
+values(?,
+       ?,
+       ?,
+       ?,
+       ?,
+       ?,
+       ?,
+       ?,
+       ?)
