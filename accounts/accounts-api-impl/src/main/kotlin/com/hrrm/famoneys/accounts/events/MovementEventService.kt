@@ -1,29 +1,22 @@
 package com.hrrm.famoneys.accounts.events
 
-import com.hrrm.famoneys.commons.immutables.ImmutableStyle
-import org.immutables.value.Value
-
 interface MovementEventService {
-    fun registerEventListener(accountId: Int?): Observable<EventData?>
     fun putEvent(eventData: EventData)
+
     interface EventData {
-        val accountId: Int?
-        val position: Int?
+        val accountId: Int
+        val position: Int
     }
 
-    @Value.Immutable
-    @ImmutableStyle
-    interface AddEventData : EventData
+    data class AddEventData(override val accountId: Int, override val position: Int) : EventData
 
-    @Value.Immutable
-    @ImmutableStyle
-    interface ChangeEventData : EventData {
-        val positionAfter: Int?
+    data class ChangeEventData(override val accountId: Int, override val position: Int, val positionAfter: Int) :
+        EventData {
+
     }
 
-    @Value.Immutable
-    @ImmutableStyle
-    interface DeleteEventData : EventData
+    data class DeleteEventData(override val accountId: Int, override val position: Int) : EventData
+
     companion object {
         const val MOVEMENTS_TOPIC = "com/hrrm/famoney/event/accounts/movements"
         const val MOVEMENTS_ADD_TOPIC = (MOVEMENTS_TOPIC

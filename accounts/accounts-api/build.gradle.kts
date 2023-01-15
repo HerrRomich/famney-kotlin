@@ -9,12 +9,8 @@ val resolveConfig by configurations.creating
 
 dependencies {
     api(project(":commons:commons-jaxrs"))
-    implementation(project(":commons:commons-immutables"))
 
     resolveConfig("io.swagger.core.v3:swagger-jaxrs2:2.2.1")
-
-    annotationProcessor("org.immutables:value:2.9.2")
-    kapt("org.immutables:value:2.9.2")
 }
 
 val resolveApi = tasks.register<ResolveTask>("resolveApi") {

@@ -10,7 +10,6 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
-import javax.validation.constraints.NotNull
 import javax.ws.rs.*
 import javax.ws.rs.core.MediaType
 
@@ -121,8 +120,8 @@ interface AccountMovementsApi {
             `in` = ParameterIn.PATH,
             description = "Identifier of movement that will be searched."
         ) @PathParam("movementId") movementId: Int,
-        movementDataDTO: MovementDataDTO?
-    ): MovementDTO?
+        movementDataDTO: MovementDataDTO
+    ): MovementDTO
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)

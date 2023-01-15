@@ -29,6 +29,7 @@ interface AccountsApi {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Operation(description = "Adds a new account.")
+    @ApiResponse(description="Account is created.", responseCode = "204")
     fun addAccount(accountData: AccountDataDTO)
 
     @PUT
@@ -46,20 +47,6 @@ interface AccountsApi {
         )]
     )
     fun changeAccount(@PathParam("accountId") accountId: Int, accountData: AccountDataDTO): AccountDataDTO
-
-    @DELETE
-    @Path("{accountId}")
-    @Operation(description = "Deletes a specified account.")
-    @ApiResponse(description = "A changed account.")
-    @ApiResponse(
-        responseCode = "404",
-        description = "No account was found for specified id.",
-        content = [Content(
-            mediaType = MediaType.APPLICATION_JSON,
-            schema = Schema(implementation = ApiErrorDTO::class)
-        )]
-    )
-    fun deleteAccount(@PathParam("accountId") accountId: Int)
 
     @GET
     @Path("{accountId}")

@@ -1,3 +1,3 @@
 dependencies {
-    implementation("io.reactivex.rxjava2:rxjava")
+    api("io.reactivex.rxjava2:rxjava")
 }

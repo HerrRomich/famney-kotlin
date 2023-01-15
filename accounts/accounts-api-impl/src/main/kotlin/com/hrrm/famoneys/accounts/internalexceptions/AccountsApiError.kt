@@ -8,7 +8,7 @@ enum class AccountsApiError(override val message: String, override val status: R
         "No account was found for request of all account movements.",
         Response.Status.NOT_FOUND
     ),
-    NO_ACCOUNT_BY_CHANGE(
+    NO_ACCOUNT_ON_CHANGE(
         "No account was found for request on account change.",
         Response.Status.NOT_FOUND
     ),

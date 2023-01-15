@@ -1,6 +1,6 @@
 package com.hrrm.famoneys.accounts.internal
 
-import com.hrrm.famoneys.commons.core.FamoneyException
+import com.hrrm.famoneys.core.FamoneyException
 
 class IncompatibleMovementType : FamoneyException {
     constructor() : super() {}

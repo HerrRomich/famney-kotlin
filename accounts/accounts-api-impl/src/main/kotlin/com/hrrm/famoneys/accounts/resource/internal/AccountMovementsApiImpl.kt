@@ -1,148 +1,145 @@
 package com.hrrm.famoneys.accounts.resource.internal
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.hrrm.famoney.accounts.Account
 import com.hrrm.famoney.accounts.api.AccountsApiResource
+import com.hrrm.famoney.accounts.api.MovementDTO
+import com.hrrm.famoney.accounts.api.MovementDataDTO
 import com.hrrm.famoney.accounts.api.resources.AccountMovementsApi
 import com.hrrm.famoney.accounts.movement.MovementRepository
-import com.hrrm.famoneys.accounts.api.AccountsApiResource
+import com.hrrm.famoney.jaxrs.ApiException
 import com.hrrm.famoneys.accounts.events.MovementEventService
 import com.hrrm.famoneys.accounts.internal.MovementApiService
+import com.hrrm.famoneys.accounts.internalexceptions.AccountsApiError
 import io.swagger.v3.oas.annotations.Hidden
-import lombok.extern.log4j.Log4j2
+import mu.KotlinLogging
 import org.springframework.stereotype.Service
+import unwrap
+import java.text.MessageFormat
 import java.util.*
-import java.util.stream.Collectors
 import javax.servlet.http.HttpServletResponse
+import javax.transaction.Transactional
 import javax.ws.rs.core.Context
+import javax.ws.rs.core.HttpHeaders
 import javax.ws.rs.core.UriInfo
+import javax.ws.rs.sse.Sse
 
 @Service
 @Hidden
-class AccountMovementsApiImpl( private val movementRepository: MovementRepository,
-        private val accountsApiService: AccountsApiService,
-        private val movementsApiService: MovementApiService,
-        private val movementEventService: MovementEventService,
-        private val operationTimestamProvider: OperationTimestampProvider) : AccountMovementsApi, AccountsApiResource {
+class AccountMovementsApiImpl(
+    private val movementRepository: MovementRepository,
+    private val accountsApiService: AccountsApiService,
+    private val movementsApiService: MovementApiService,
+    private val movementEventService: MovementEventService,
+    private val objectMapper: ObjectMapper,
+) : AccountMovementsApi, AccountsApiResource {
+    private val logger = KotlinLogging.logger { }
 
     @Context
-    private val httpServletResponse: HttpServletResponse? = null
+    private lateinit var httpServletResponse: HttpServletResponse
 
     @Context
-    private val uriInfo: UriInfo? = null
+    private lateinit var uriInfo: UriInfo
 
     @Context
-    private val sse: Sse? = null
+    private lateinit var sse: Sse
 
     @Context
-    private val httpHeaders: HttpHeaders? = null
+    private lateinit var httpHeaders: HttpHeaders
+
     @Transactional
-    fun getMovements(@NotNull accountId: Int?, offset: Int?, limit: Int?): List<MovementDTO> {
-        val offsetOptional = Optional.ofNullable(offset)
-        val limitOptional = Optional.ofNullable(limit)
-        AccountMovementsApiImpl.log.debug("Getting all movemnts of account with id: {}, offset: {} and count: {}.",
-            accountId,
-            offsetOptional
-                .map { obj: Int -> obj.toString() }
-                .orElse("\"from beginning\""),
-            limitOptional.map { obj: Int -> obj.toString() }
-                .orElse("\"all\""))
-        val account: Account? = accountsApiService!!.getAccountByIdOrThrowNotFound(
+    override fun getMovements(accountId: Int, offset: Int?, limit: Int?): List<MovementDTO> {
+        logger.debug { "Getting all movemnts of account by id: $accountId, offset: ${offset ?: "\"from beginning\""} and count: ${limit ?: "\"all\""}." }
+        accountsApiService.getAccountByIdOrThrowNotFound(
             accountId,
             AccountsApiError.NO_ACCOUNT_ON_GET_ALL_ACCOUNT_MOVEMENTS
         )
-        operationTimestamProvider.setTimestamp()
-        val movements: Unit = movementRepository.getMovementsByAccountIdWithOffsetAndLimitOrderedByPos(
-            account, offset,
+        val movements = movementRepository.getMovementsByAccountIdWithOffsetAndLimitOrderedByPos(
+            accountId, offset,
             limit
         )
-        val movementDTOs: List<MovementDTO> = movements.stream()
-            .map { movement ->
-                MovementDTOImpl.builder()
-                    .id(movement.getId())
-                    .data(convertMovement(movement))
-                    .position(movement.getPosition())
-                    .total(movement.getTotal())
-                    .build()
-            }
-            .collect(Collectors.toList())
-        AccountMovementsApiImpl.log.debug("Got {} movemnts of account with ID: {}", movementDTOs.size, accountId)
-        AccountMovementsApiImpl.log.trace("Got movemnts of account with ID: {}. {}", accountId, movementDTOs)
+        val movementDTOs: List<MovementDTO> = movements.map { movement ->
+            MovementDTO(
+                id = movement.id!!,
+                data = convertMovement(movement),
+                position = movement.position,
+                total = movement.total
+            )
+        }
+        logger.debug { "Got ${movementDTOs.size} movemnts of account by id: $accountId" }
+        logger.trace {
+            """Got movemnts of account by id: $accountId.
+              |${objectMapper.writeValueAsString(movementDTOs)}""".trimMargin()
+        }
         return movementDTOs
     }
 
     @Transactional
-    fun getMovement(@NotNull accountId: Int?, @NotNull movementId: Int?): MovementDTO {
-        AccountMovementsApiImpl.log.debug(
-            "Geting movement info by id {} from account with id: {} with data: {}",
-            movementId,
-            accountId
-        )
-        val account: Account? = accountsApiService!!.getAccountByIdOrThrowNotFound(
+    override fun getMovement(accountId: Int, movementId: Int): MovementDTO {
+        logger.debug { "Geting movement info by id $movementId from account by id: $accountId." }
+        val account = accountsApiService.getAccountByIdOrThrowNotFound(
             accountId,
             AccountsApiError.NO_ACCOUNT_ON_ADD_MOVEMENT
         )
-        operationTimestamProvider.setTimestamp()
-        val movement: Unit = movementRepository.findById(movementId)
-            .filter { m -> account.equals(m.getAccount()) }
-            .orElseThrow {
-                val errorMessage: Unit = MessageFormat.format(
-                    NO_ACCOUNT_MOVEMENT_IS_FOUND_MESSAGE, account.getId(),
-                    movementId
-                )
+        val movement = movementRepository.findById(movementId).unwrap()
+            ?.takeIf { m -> account == m.account }
+            ?: run {
+                val errorMessage = NO_ACCOUNT_MOVEMENT_IS_FOUND_MESSAGE(movementId, accountId)
                 val exception = ApiException(AccountsApiError.NO_MOVEMENT_ON_GET_MOVEMENT, errorMessage)
-                AccountMovementsApiImpl.log.warn(errorMessage)
-                AccountMovementsApiImpl.log.trace(errorMessage, exception)
-                exception
+                logger.warn { errorMessage }
+                logger.trace(exception) { errorMessage }
+                throw exception
             }
-        val movementDTO: Unit = MovementDTOImpl.builder()
-            .id(movement.getId())
-            .data(convertMovement(movement))
-            .build()
-        AccountMovementsApiImpl.log.debug("Got movement info by id {} from account with id: {}.", movementId, accountId)
-        AccountMovementsApiImpl.log.trace(
-            "Got movement info by id {} from account with id: {} with data: {}", movementId, accountId,
-            movementDTO
+        val movementDTO = MovementDTO(
+            id = movement.id!!,
+            data = convertMovement(movement),
+            position = movement.position,
+            total = movement.total
         )
+        logger.debug { "Got movement info by id: $movementId from account by id: accountId." }
+        logger.trace {
+            """Got movement info by id: $movementId from account by id: $accountId.
+              |${objectMapper.writeValueAsString(movementDTO)}""".trimMargin()
+        }
         return movementDTO
     }
 
-    fun changeMovement(
-        @NotNull accountId: Int?, @NotNull movementId: Int?,
-        movementDataDTO: MovementDataDTO?
+    @Transactional
+    override fun changeMovement(
+        accountId: Int, movementId: Int,
+        movementDataDTO: MovementDataDTO
     ): MovementDTO {
-        AccountMovementsApiImpl.log.debug("Changing movement id: {} in account id: {}.", movementId, accountId)
+        logger.debug { "Changing movement by id: $movementId in account id: accountId." }
         return try {
-            val account: Account? = accountsApiService!!.getAccountByIdOrThrowNotFound(
+            val account = accountsApiService.getAccountByIdOrThrowNotFound(
                 accountId,
                 AccountsApiError.NO_ACCOUNT_ON_CHANGE_MOVEMENT
             )
-            operationTimestamProvider.setTimestamp()
-            val movementToChange: Unit = movementRepository.findById(movementId)
-                .filter { movement -> account.equals(movement.getAccount()) }
-                .orElseThrow {
-                    val errorMessage: Unit = MessageFormat.format(
-                        NO_ACCOUNT_MOVEMENT_IS_FOUND_MESSAGE, account.getId(),
-                        movementId
-                    )
+            val movementToChange = movementRepository.findById(movementId).unwrap()
+                ?.takeIf { movement -> account == movement.account }
+                ?: run {
+                    val errorMessage = NO_ACCOUNT_MOVEMENT_IS_FOUND_MESSAGE(movementId, accountId)
                     val exception = ApiException(
                         AccountsApiError.NO_MOVEMENT_ON_CHANGE_MOVEMENT,
                         errorMessage
                     )
-                    AccountMovementsApiImpl.log.warn(errorMessage)
-                    AccountMovementsApiImpl.log.trace(errorMessage, exception)
-                    exception
+                    logger.warn { errorMessage }
+                    logger.trace(exception) { errorMessage }
+                    throw exception
                 }
-            val position: Unit = movementToChange.getPosition()
-            val resultMovement: Unit = movementsApiService.updateMovement(movementToChange, movementDataDTO)
-            val positionAfter: Unit = resultMovement.getPosition()
+            val position = movementToChange.position
+            val resultMovement = movementsApiService.updateMovement(movementToChange, movementDataDTO)
+            val positionAfter = resultMovement.getPosition()
             val data: MovementDataDTO = convertMovement(resultMovement)
-            val eventData: Unit = ChangeEventDataImpl.builder()
-                .accountId(accountId)
-                .position(position)
-                .positionAfter(positionAfter)
-                .build()
+            val eventData = MovementEventService.ChangeEventData(
+                accountId = accountId,
+                position = position,
+                positionAfter = positionAfter,
+            )
             movementEventService.putEvent(eventData)
-            val movementDTO: Unit = MovementDTOImpl.builder()
-                .id(resultMovement.getId())
+            val movementDTO = MovementDTO(
+                id = resultMovement.
+            )
                 .data(data)
                 .position(positionAfter)
                 .total(data.getAmount())
@@ -278,7 +275,7 @@ class AccountMovementsApiImpl( private val movementRepository: MovementRepositor
     }
 
     companion object {
-        private const val NO_ACCOUNT_MOVEMENT_IS_FOUND_MESSAGE =
-            "No movement info for id: {1} is found in account with id: {0}."
+        private fun NO_ACCOUNT_MOVEMENT_IS_FOUND_MESSAGE(movementId: Int, accountId: Int) =
+            "No movement info by id: $movementId is found in account by id: $accountId."
     }
 }

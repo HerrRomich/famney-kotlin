@@ -21,7 +21,7 @@ class EntryApiService {
         val entry = getEntry()
         val entryItems = entry.entryItems
         var i = 0
-        val entryItemDTOs = entryDataDTO.getEntryItems()
+        val entryItemDTOs = entryDataDTO.entryItems
         while (i < entryItemDTOs.size) {
             var entryItem: EntryItem
             if (i < entryItems.size) {
@@ -32,14 +32,14 @@ class EntryApiService {
             }
             val entryItemDTO = entryItemDTOs[i]
             entryItem.setCategoryId(entryItemDTO.categoryId)
-                .setAmount(entryItemDTO.getAmount())
+                .setAmount(entryItemDTO.amount)
                 .setComments(entryItemDTO.comments)
             i++
         }
         while (i < entryItems.size) {
             entryItems.removeAt(entryItems.size - 1)
         }
-        return entry.setAmount(entryDataDTO.getAmount())
+        return entry.setAmount(entryDataDTO.amount)
             .setTotal(BigDecimal.ZERO)
     }
 }

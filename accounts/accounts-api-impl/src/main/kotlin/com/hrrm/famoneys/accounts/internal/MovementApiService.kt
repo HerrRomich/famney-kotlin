@@ -1,140 +1,142 @@
 package com.hrrm.famoneys.accounts.internal
 
-import com.hrrm.famoneys.accounts.Account
-import lombok.extern.log4j.Log4j2
-import org.apache.logging.log4j.util.Supplier
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.hrrm.famoney.accounts.Account
+import com.hrrm.famoney.accounts.AccountRepository
+import com.hrrm.famoney.accounts.api.EntryDataDTO
+import com.hrrm.famoney.accounts.api.MovementDataDTO
+import com.hrrm.famoney.accounts.movement.Entry
+import com.hrrm.famoney.accounts.movement.Movement
+import com.hrrm.famoney.accounts.movement.MovementRepository
+import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.math.BigDecimal
 import javax.persistence.EntityManager
 import javax.persistence.LockModeType
 
-@RequiredArgsConstructor
-@Log4j2
 @Service
-class MovementApiService {
-    private val accountRepository: AccountRepository? = null
-    private val movementRepository: MovementRepository? = null
-    private val entryApiService: EntryApiService? = null
-    private val entityManager: EntityManager? = null
+class MovementApiService(
+    private val accountRepository: AccountRepository,
+    private val movementRepository: MovementRepository,
+    private val entryApiService: EntryApiService,
+    private val entityManager: EntityManager,
+    private val objectMapper: ObjectMapper,
+) {
+    private val logger = KotlinLogging.logger { }
+
     @Transactional
-    @Throws(UnknownMovementType::class)
     fun addMovement(account: Account, movementDataDTO: MovementDataDTO): Movement {
-        MovementApiService.log.debug("Creating movement.")
-        MovementApiService.log.trace("A new movement will be created with DTO data {}.") { movementDataDTO }
+        logger.debug { "Creating movement in account by id: ${account.id}." }
+        logger.trace {
+            """Creating movement in account by id: ${account.id}..
+              |${objectMapper.writeValueAsString(movementDataDTO)}""".trimMargin()
+        }
         val movement: Movement = callAddMovement(account, movementDataDTO)
-        MovementApiService.log.debug("A new movement is created.")
-        MovementApiService.log.trace("A new movement {} is created.") { movement }
+        logger.debug { "Movement with id: ${movement.id} is created in account by id: ${account.id}." }
+        logger.trace {
+            """Movement is created in account by id: ${account.id}.
+              |${objectMapper.writeValueAsString(movement)}""".trimMargin()
+        }
         return movement
     }
 
-    @Throws(UnknownMovementType::class)
     private fun callAddMovement(account: Account, movementDataDTO: MovementDataDTO): Movement {
-        var movement: Movement?
-        movement = if (movementDataDTO is EntryDataDTO) {
-            entryApiService!!.createMovement(movementDataDTO as EntryDataDTO)
+        var movement = if (movementDataDTO is EntryDataDTO) {
+            entryApiService.createMovement(movementDataDTO)
         } else {
-            val message: String =
-                MessageFormat.format(UNKNOWN_DTO_MESSAGE, movementDataDTO.getClass())
-            MovementApiService.log.warn(message)
+            val message: String = provideUnknownDtoMessage(movementDataDTO)
+            logger.warn { message }
             throw UnknownMovementType(message)
         }
-        entityManager!!.lock(account, LockModeType.PESSIMISTIC_WRITE)
-        val newPosition: Unit = movementRepository.getLastPositionByAccountOnDate(account, movementDataDTO.getDate())
-        movement = setMovementAttributes(account, movement, movementDataDTO).setPosition(newPosition)
-        adjustAccountMovements(movement, newPosition)
-        val addedMovement: Unit = movementRepository.save(movement)
-        movementRepository.flush()
+        entityManager.lock(account, LockModeType.PESSIMISTIC_WRITE)
+        val newPosition = movementRepository.getLastPositionByAccountOnDate(movement, movementDataDTO.date)
+        movement = movement.let { setMovementAttributes(it, movementDataDTO) }.apply {
+            this.account = account
+            position = newPosition
+        }
+        val addedMovement = adjustAccountMovements(movement)
         return addedMovement
     }
 
     private fun setMovementAttributes(
-        account: Account,
-        movement: Movement?,
+        movement: Movement,
         movementDataDTO: MovementDataDTO
-    ): Movement {
-        return movement.setAccount(account)
-            .setDate(movementDataDTO.getDate())
-            .setBookingDate(
-                movementDataDTO.getBookingDate()
-                    .orElse(null)
-            )
-            .setBudgetPeriod(
-                movementDataDTO.getBudgetPeriod()
-                    .orElse(null)
-            )
+    ) = movement.apply {
+        date = movementDataDTO.date
+        bookingDate = movementDataDTO.bookingDate
+        budgetPeriod = movementDataDTO.budgetPeriod
     }
 
-    private fun adjustAccountMovements(movement: Movement?, positionAfter: Int) {
-        val account: Unit = movement.getAccount()
-        account.setMovementCount(account.getMovementCount() + 1)
-        account.setMovementTotal(
-            account.getMovementTotal()
-                .add(movement.getAmount())
-        )
-        movementRepository.adjustMovementPositionsAndSumsByAccountAfterPosition(movement, positionAfter)
-        val totalBeforeMovement: Unit = movementRepository.findNextMovementByAccountIdBeforePosition(
-            account,
-            positionAfter
-        )
-            .map(Movement::getTotal)
-            .orElse(BigDecimal.ZERO)
-        movement.setTotal(totalBeforeMovement.add(movement.getAmount()))
-            .setPosition(positionAfter)
-    }
-
-    @Throws(IncompatibleMovementType::class)
-    fun updateMovement(movement: Movement, movementDataDTO: MovementDataDTO): Movement? {
-        MovementApiService.log.debug("Updateing movement.")
-        MovementApiService.log.trace(
-            "Movement {} will be updated with DTO data {}.",
-            Supplier<Any> { movement },
-            Supplier<Any> { movementDataDTO })
-        entityManager!!.lock(movement.getAccount(), LockModeType.PESSIMISTIC_WRITE)
-        val positionBefore: Unit = movement.getPosition()
-        rollbackAccount(movement)
-        var positionAfter = positionBefore
-        if (!movement.getDate()
-                .equals(movementDataDTO.getDate())
-        ) {
-            positionAfter = movementRepository.getLastPositionByAccountOnDate(
-                movement.getAccount(), movementDataDTO
-                    .getDate()
-            )
+    private fun adjustAccountMovements(movement: Movement): Movement {
+        val account = movement.account.apply {
+            movementCount++
+            movementTotal += movement.amount
         }
-        var updatedMovement: Movement?
-        updatedMovement = if (movementDataDTO is EntryDataDTO && movement is Entry) {
-            entryApiService!!.updateMovement(movement as Entry, movementDataDTO as EntryDataDTO)
+        accountRepository.save(account)
+        movementRepository.adjustMovementPositionsAndSumsByAccountAfterPosition(movement)
+        val totalBeforeMovement = movementRepository.findNextMovementByAccountIdBeforePosition(movement)
+            ?.let(Movement::total)
+            ?: BigDecimal.ZERO
+        return movement.apply {
+            this.account = account
+            total = totalBeforeMovement + amount
+        }.let(movementRepository::save)
+            .also { movementRepository.flush() }
+    }
+
+    @Transactional
+    fun updateMovement(movement: Movement, movementDataDTO: MovementDataDTO): Movement {
+        logger.debug { "Updateing movement by id: ${movement.id}." }
+        logger.trace {
+            """Updateing movement by id: ${movement.id}.
+                       |${objectMapper.writeValueAsString(movementDataDTO)}""".trimMargin()
+        }
+        entityManager.lock(movement.account, LockModeType.PESSIMISTIC_WRITE)
+        val positionBefore = movement.position
+        rollbackAccount(movement)
+        val positionAfter =
+            if (movement.date != movementDataDTO.date) {
+                movementRepository.getLastPositionByAccountOnDate(movement, movementDataDTO.date)
+            } else positionBefore
+        var updatedMovement = if (movementDataDTO is EntryDataDTO && movement is Entry) {
+            entryApiService.updateMovement(movement, movementDataDTO)
         } else {
-            val message: String = MessageFormat.format(
-                INCOMPATIBLE_ENTITY_AND_DTO_MESSAGE, movement.getClass(), movement
-                    .getAccount()
-                    .getId(), movement.getId(), movementDataDTO.getClass()
-            )
-            MovementApiService.log.warn(message)
+            val message = provideIncompatibleEntityAndDtoMessage(movement, movementDataDTO)
+            logger.warn(message)
             throw IncompatibleMovementType(message)
         }
-        updatedMovement = setMovementAttributes(movement.getAccount(), updatedMovement, movementDataDTO)
-        adjustAccountMovements(updatedMovement, positionAfter)
-        MovementApiService.log.debug("Movement is updated.")
-        MovementApiService.log.trace("Movement {} is updated.") { movement }
+        updatedMovement = setMovementAttributes(updatedMovement, movementDataDTO).apply { position = positionAfter }
+            .let(::adjustAccountMovements)
+        logger.debug { "Movement is updated by id ${updatedMovement.id}." }
+        logger.trace {
+            """Movement is updated.
+              |${objectMapper.writeValueAsString(movement)}""".trimMargin()
+        }
         return updatedMovement
     }
 
     private fun rollbackAccount(movement: Movement) {
-        val positionBefore: Unit = movement.getPosition()
-        movement.setPosition(-1)
-        val account: Unit = movement.getAccount()
-        account.setMovementCount(account.getMovementCount() - 1)
-        account.setMovementTotal(
-            account.getMovementTotal()
-                .subtract(movement.getAmount())
-        )
-        movementRepository.rollbackMovementPositionsAndSumsByAccountAfterPosition(movement, positionBefore)
+        val positionBefore = movement.position
+        movement.position = -1
+        val account = movement.account
+            .apply {
+                movementCount--
+                movementTotal -= movement.amount
+            }
+        movement.account = accountRepository.save(account)
+        movementRepository.rollbackMovementPositionsAndSumsByAccountAfterPosition(movement)
     }
 
     companion object {
-        private const val INCOMPATIBLE_ENTITY_AND_DTO_MESSAGE =
-            "Movement entity class [{0}] for account id: {1} and movement id: {2] are incompatible with DTO class [{3}]."
-        private const val UNKNOWN_DTO_MESSAGE = "Unknown DTO class [{0}]."
+        private fun <T : Movement, P : MovementDataDTO> provideIncompatibleEntityAndDtoMessage(
+            movement: T,
+            movementDTO: P
+        ) =
+            "Movement entity class [${movement::class.qualifiedName}] for account by id: ${movement.account.id} " +
+                    "and movement id: ${movement.id}] are incompatible with DTO class [${movementDTO::class.qualifiedName}]."
+
+        private fun <T : MovementDataDTO> provideUnknownDtoMessage(movementDTO: T) =
+            "Unknown DTO class [${movementDTO::class.qualifiedName}]."
     }
 }

@@ -10,8 +10,8 @@ import javax.ws.rs.core.MediaType
 @Path("tags")
 @Tag(name = "accounts")
 interface TagsApi {
-    @get:ApiResponse(description = "A list of all account tags")
-    @get:Produces(MediaType.APPLICATION_JSON)
-    @get:GET
-    val allAccountTags: List<String>
+    @ApiResponse(description = "A list of all account tags")
+    @Produces(MediaType.APPLICATION_JSON)
+    @GET
+    fun allAccountTags(): List<String>
 }
