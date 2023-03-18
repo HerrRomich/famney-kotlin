@@ -4,158 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2f6ca191-61dc-4381-8cb0-6262d42bab95" name="Changes" comment="Progress">
-      <change afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/AccountsApiSpecificationImpl.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/events/MovementEventServiceImpl.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/resources/BalanceDataDTO.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/commons/commons-core/src/main/kotlin/com/hrrm/famoney/core/ObjectMapperConfig.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/commons/commons-jaxrs/src/main/kotlin/com/hrrm/famoney/jaxrs/JaxRsConfiguration.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/commons/commons-jaxrs/src/main/kotlin/com/hrrm/famoney/jaxrs/ObjectMapperContextResolver.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/commons/commons-jaxrs/src/main/kotlin/com/hrrm/famoney/jaxrs/OperationTimestampProvider.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/commons/commons-jaxrs/src/main/kotlin/com/hrrm/famoney/jaxrs/internal/OperationTimestampProviderImpl.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/domain-migration/build.gradle.kts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/AccountsJavaMigration.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/DomainMigration.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/FlywayConfig.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/v01/MigrationAccount.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/v02/AccountData.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/v02/AccountMigrationData.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/v02/EntryItemData.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/v02/InitialMovementsJdbcStatements.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/v02/MigrationData.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/v02/MovementData.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/v02/Pupsik_Wallet.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/v02/V2M2InitialMovements.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/accounts/movement/CustomMovementRepository.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/accounts/movement/CustomMovementRepositoryImpl.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/accounts/movement/MovementRepository.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/master/EntryCategory.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/master/ExpenseCategory.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/master/IncomeCategory.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/launcher/src/main/kotlin/com/hrrm/famoney/launcher/config/JerseyRestConfig.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/kotlin/com/hrrm/famoney/web/swagger/SwaggerUiConfig.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/kotlin/com/hrrm/famoney/web/swagger/apis/ApisController.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/favicon-16x16.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/favicon-32x32.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/index.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/oauth2-redirect.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/swagger-initializer.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/swagger-ui-bundle.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/swagger-ui-bundle.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/swagger-ui-es-bundle-core.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/swagger-ui-es-bundle-core.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/swagger-ui-es-bundle.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/swagger-ui-es-bundle.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/swagger-ui-standalone-preset.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/swagger-ui-standalone-preset.js.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/swagger-ui.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/swagger-ui.css.map" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/swagger-ui.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/swagger-ui/src/main/resources/static/api/swagger-ui/swagger-ui.js.map" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/kotlinc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/kotlinc.xml" afterDir="false" />
+    <list default="true" id="2f6ca191-61dc-4381-8cb0-6262d42bab95" name="Changes" comment="Migration&#10;&#10; * Angular">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/events/AccountEventService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/events/AccountEventService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/events/AccountEventServiceImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/events/AccountEventServiceImpl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/events/MovementEventService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/events/MovementEventService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/events/MovementEventServiceImpl.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/events/dto/AccountAddEventDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/events/dto/AccountAddEventDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/events/dto/AccountChangeEventDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/events/dto/AccountChangeEventDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/events/dto/AccountDeleteEventDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/events/dto/AccountDeleteEventDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/events/dto/AccountEventDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/events/dto/AccountEventDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/events/dto/EventDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/events/dto/EventDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/events/dto/MovementAddEventDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/events/dto/MovementAddEventDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/events/dto/MovementChangeEventDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/events/dto/MovementChangeEventDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/events/dto/MovementDeleteEventDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/events/dto/MovementDeleteEventDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/events/dto/MovementEventDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/events/dto/MovementEventDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/events/resource/EventsResource.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/events/resource/EventsResource.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/internal/EntryApiService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/internal/EntryApiService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/internal/IncompatibleMovementType.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/internal/IncompatibleMovementType.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/internal/MovementApiService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/internal/MovementApiService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/internal/OperationTimestampRequestFilter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/internal/OperationTimestampRequestFilter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/internal/OperationTimestampResponseFilter.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/internal/OperationTimestampResponseFilter.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/internal/UnknownMovementType.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/internal/UnknownMovementType.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/internalexceptions/AccountsApiError.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/internalexceptions/AccountsApiError.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/resource/internal/AccountMovementsApiImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/resource/internal/AccountMovementsApiImpl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/resource/internal/AccountsApiImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/resource/internal/AccountsApiImpl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/resource/internal/AccountsApiService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/resource/internal/AccountsApiService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoneys/accounts/resource/internal/TagsApiImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/resource/internal/TagsApiImpl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/AccountDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/AccountDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/AccountDataDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/AccountDataDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/AccountsApiSpecification.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/AccountsApiSpecification.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/EntryDataDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/EntryDataDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/EntryItemDataDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/EntryItemDataDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/MovementDataDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/MovementDataDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/RefundDataDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/RefundDataDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/TransferDataDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/TransferDataDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/resources/AccountMovementsApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/resources/AccountMovementsApi.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/resources/AccountsApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/resources/AccountsApi.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/resources/TagsApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/com/hrrm/famoney/accounts/api/resources/TagsApi.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/build.gradle" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/java/com/hrrm/famoney/accounts/migration/v01/AccountData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/Account.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/accounts/Account.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/AccountRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/accounts/AccountRepository.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/AccountsDomainEntity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/DomainEntity.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/AccountsJpaConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/JpaConfig.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/migration/AccountsJavaMigration.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/migration/v01/AccountsJdbcStatements.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/v01/AccountsJdbcStatements.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/migration/v01/V01M02Accounts.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/v01/V01M02Accounts.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/migration/v01/V01_01__Account_tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/v01/V01_01__Account_tables.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/migration/v01/V1M2Accounts.json" beforeDir="false" afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/v01/V1M2Accounts.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/migration/v02/EntryItemData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/migration/v02/InitialMovementsJdbcStatements.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/migration/v02/MovementData.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/migration/v02/Pupsik_Wallet.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/migration/v02/V2M2InitialMovements.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/migration/v02/V2_1__Movement_tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/com/hrrm/famoney/domain/migration/v02/V2_1__Movement_tables.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/migration/v02/package-info.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/movement/Balance.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/accounts/movement/Balance.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/movement/Entry.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/accounts/movement/Entry.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/movement/EntryItem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/accounts/movement/EntryItem.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/movement/Movement.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/accounts/movement/Movement.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/movement/MovementRepository.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/movement/Refund.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/accounts/movement/Refund.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/kotlin/com/hrrm/famoney/accounts/movement/Transfer.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/com/hrrm/famoney/domain/accounts/movement/Transfer.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/resources/com/hrrm/famoney/accounts/migration-scripts/accounts/account_insert.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/resources/com/hrrm/famoney/accounts/migration-scripts/accounts/account_tag_insert.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/resources/com/hrrm/famoney/accounts/migration-scripts/initial_movements/account_movements_max_booking date_between_dates_select2.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/resources/com/hrrm/famoney/accounts/migration-scripts/initial_movements/account_movements_max_date_between_dates_select.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/resources/com/hrrm/famoney/accounts/migration-scripts/initial_movements/account_movements_min_max_dates_select.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/resources/com/hrrm/famoney/accounts/migration-scripts/initial_movements/account_movements_sum_count_between_booking_dates_select.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/resources/com/hrrm/famoney/accounts/migration-scripts/initial_movements/account_movements_sum_count_between_movement_dates_select.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/resources/com/hrrm/famoney/accounts/migration-scripts/initial_movements/account_movements_sum_count_update.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/resources/com/hrrm/famoney/accounts/migration-scripts/initial_movements/account_name_by_id_select.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/resources/com/hrrm/famoney/accounts/migration-scripts/initial_movements/accounts_movements_sum_count_select.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/resources/com/hrrm/famoney/accounts/migration-scripts/initial_movements/entry_item_insert.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/resources/com/hrrm/famoney/accounts/migration-scripts/initial_movements/movement_insert.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-domain/src/main/resources/com/hrrm/famoney/accounts/migration-scripts/initial_movements/movement_slice_insert.sql" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/swagger-ui/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/build.gradle.kts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/commons-core/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-core/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/commons-core/src/main/kotlin/com/hrrm/famoneys/core/FamoneyException.kt" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-core/src/main/kotlin/com/hrrm/famoney/core/FamoneyException.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/commons-core/src/main/kotlin/com/hrrm/famoneys/core/extensions.kt" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-core/src/main/kotlin/com/hrrm/famoney/core/extensions.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/commons-events/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-events/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/commons-events/src/main/kotlin/com/hrrm/famoneys/commons/events/Event.kt" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-events/src/main/kotlin/com/hrrm/famoney/commons/events/Event.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/commons-events/src/main/kotlin/com/hrrm/famoneys/commons/events/EventBusService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-events/src/main/kotlin/com/hrrm/famoney/commons/events/EventBusService.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/commons-events/src/main/kotlin/com/hrrm/famoneys/commons/events/InternalEvent.kt" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-events/src/main/kotlin/com/hrrm/famoney/commons/events/InternalEvent.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/commons-jaxrs/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-jaxrs/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/commons-jaxrs/src/main/kotlin/com/hrrm/famoney/jaxrs/ApiError.kt" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-jaxrs/src/main/kotlin/com/hrrm/famoney/jaxrs/ApiError.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/commons-jaxrs/src/main/kotlin/com/hrrm/famoney/jaxrs/ApiException.kt" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-jaxrs/src/main/kotlin/com/hrrm/famoney/jaxrs/ApiException.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/commons-persistence/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-persistence/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/commons-persistence/src/main/kotlin/com/hrrm/famoney/commons/persistence/EclipseLinkJpaConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-persistence/src/main/kotlin/com/hrrm/famoney/commons/persistence/EclipseLinkJpaConfig.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/commons-persistence/src/main/kotlin/com/hrrm/famoney/commons/persistence/migration/JdbcMigrationStetemnets.kt" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-persistence/src/main/kotlin/com/hrrm/famoney/commons/persistence/migration/JdbcMigrationStetemnets.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/launcher/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/launcher/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/launcher/src/main/kotlin/com/hrrm/famoney/launcher/WebUiConfiguration.kt" beforeDir="false" afterPath="$PROJECT_DIR$/launcher/src/main/kotlin/com/hrrm/famoney/launcher/config/WebUiConfiguration.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/launcher/src/main/resources/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/launcher/src/main/resources/application.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lombok.config" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/settings.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/.browserslistrc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/test.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/tsconfig.json" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -556,7 +411,21 @@
       <option name="project" value="LOCAL" />
       <updated>1673810194941</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Migration&#10;&#10; * Spring">
+      <created>1679121843970</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1679121843970</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Migration&#10;&#10; * Angular">
+      <created>1679122204584</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1679122204584</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -575,7 +444,9 @@
     <MESSAGE value="First commit" />
     <MESSAGE value="Zwischencommit" />
     <MESSAGE value="Progress" />
-    <option name="LAST_COMMIT_MESSAGE" value="Progress" />
+    <MESSAGE value="Migration&#10;&#10; * Spring" />
+    <MESSAGE value="Migration&#10;&#10; * Angular" />
+    <option name="LAST_COMMIT_MESSAGE" value="Migration&#10;&#10; * Angular" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
