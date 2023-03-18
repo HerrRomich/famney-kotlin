@@ -15,7 +15,7 @@ val resolveApi = tasks.register<ResolveTask>("resolveApi") {
     outputFileName = "accounts-api"
     prettyPrint = true
     encoding = "UTF-8"
-    resourcePackages = setOf("com.hrrm.famoney.accounts.api")
+    resourcePackages = setOf("io.github.herrromich.famoney.accounts.api")
     classpath = sourceSets.main.get().runtimeClasspath
     buildClasspath = resolveConfig
     dependsOn(tasks.compileJava)

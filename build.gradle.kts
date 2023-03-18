@@ -16,7 +16,7 @@ configure(subprojects.filter { !listOf("web-ui").contains(it.name) }) {
         plugin("org.jetbrains.kotlin.plugin.jpa")
     }
 
-    group = "com.hrrm.famoney"
+    group = "io.github.herrromich.famoney"
     version = "1.0-SNAPSHOT"
 
     dependencyManagement {

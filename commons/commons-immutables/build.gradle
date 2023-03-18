@@ -1,5 +1,0 @@
-dependencies {
-    api ("org.springframework.boot:spring-boot-starter-json")
-    api("org.immutables:value:2.9.3")
-    api("org.immutables:annotate:2.9.3")
-}
