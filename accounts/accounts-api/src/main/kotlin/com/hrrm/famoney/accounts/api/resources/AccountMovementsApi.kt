@@ -10,10 +10,10 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
-import javax.ws.rs.*
-import javax.ws.rs.core.MediaType
+import jakarta.ws.rs.*
+import jakarta.ws.rs.core.MediaType
 
-@Path("accounts/{accountId}/movements")
+@Path("{accountId}/movements")
 @Tag(name = "accounts")
 interface AccountMovementsApi {
     @GET

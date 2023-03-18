@@ -10,12 +10,11 @@ server:
 spring:
   flyway:
     enabled: false
-    accounts:
-      enabled: true
-      clean-disabled: true
-      locations: classpath:com/hrrm/famoney/accounts/migration
+
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: welcome1
     driverClassName: org.postgresql.Driver
+    hikari:
+      schema: famoney

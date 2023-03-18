@@ -5,7 +5,6 @@ import com.hrrm.famoney.jaxrs.IdDTO
 import io.swagger.v3.oas.annotations.media.Schema
 import java.math.BigDecimal
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Schema(name = "Account", allOf = [AccountDataDTO::class])
 data class AccountDTO(

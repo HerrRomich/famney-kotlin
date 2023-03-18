@@ -1,7 +1,7 @@
 import com.github.gradle.node.npm.task.NpxTask
 
 plugins {
-    id("com.github.node-gradle.node") version "3.3.0"
+    id("com.github.node-gradle.node") version "3.5.1"
 }
 
 node {

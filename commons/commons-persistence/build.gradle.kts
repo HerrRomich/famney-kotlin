@@ -5,7 +5,7 @@ dependencies {
         exclude("org.hibernate:hibernate-entitymanager")
         exclude("org.hibernate:hibernate-core")
     }
-    api("org.eclipse.persistence:eclipselink:2.7.11")
+    api("org.eclipse.persistence:eclipselink:2.7.12")
     implementation("org.postgresql:postgresql")
     api("org.flywaydb:flyway-core")
 

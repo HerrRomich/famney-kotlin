@@ -9,7 +9,9 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
-    implementation(project(":accounts:accounts-domain"))
+    implementation(project(":domain"))
+    implementation(project(":swagger-ui"))
+    implementation(project(":accounts:accounts-api-impl"))
 }
 
 springBoot {

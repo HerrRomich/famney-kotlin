@@ -9,8 +9,8 @@ import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
-import javax.ws.rs.*
-import javax.ws.rs.core.MediaType
+import jakarta.ws.rs.*
+import jakarta.ws.rs.core.MediaType
 
 @Path("accounts")
 @Tag(name = "accounts")
@@ -33,7 +33,7 @@ interface AccountsApi {
     fun addAccount(accountData: AccountDataDTO)
 
     @PUT
-    @Path("{accountId}")
+    @Path("/{accountId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @Operation(description = "Changes a specified account.")

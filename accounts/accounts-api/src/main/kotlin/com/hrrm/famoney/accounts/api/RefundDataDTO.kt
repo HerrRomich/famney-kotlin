@@ -10,9 +10,14 @@ import java.time.LocalDate
 @Schema(
     name = "RefundData",
     allOf = [MovementDataDTO::class],
-    extensions = [Extension(properties = [ExtensionProperty(name = "x-discriminator-value", value = "refund")])]
+    extensions = [Extension(
+        properties = [ExtensionProperty(
+            name = "x-discriminator-value",
+            value = RefundDataDTO.TYPE_NAME
+        )]
+    )]
 )
-@JsonTypeName("refund")
+@JsonTypeName(RefundDataDTO.TYPE_NAME)
 data class RefundDataDTO(
     override val date: LocalDate,
     override val bookingDate: LocalDate?,
@@ -20,4 +25,8 @@ data class RefundDataDTO(
     override val categoryId: Int,
     override val amount: BigDecimal,
     override val comments: String?,
-) : MovementDataDTO, EntryItemDataDTO
+) : MovementDataDTO, EntryItemDataDTO {
+    companion object {
+        const val TYPE_NAME = "REFUND"
+    }
+}

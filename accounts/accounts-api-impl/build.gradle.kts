@@ -1,13 +1,9 @@
-plugins {
-    kotlin("kapt")
-}
-
 dependencies {
-    implementation(project(":accounts:accounts-api"))
-    implementation(project(":accounts:accounts-domain"))
+    api(project(":accounts:accounts-api"))
+    implementation(project(":domain"))
 
     implementation(project(":commons:commons-events"))
 
-    implementation ("org.springframework.boot:spring-boot-starter-jersey")
+    api ("org.springframework.boot:spring-boot-starter-jersey")
 
 }

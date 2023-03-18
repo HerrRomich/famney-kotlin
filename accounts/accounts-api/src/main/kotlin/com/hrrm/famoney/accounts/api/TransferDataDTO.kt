@@ -10,9 +10,14 @@ import java.time.LocalDate
 @Schema(
     name = "TransferData",
     allOf = [MovementDataDTO::class],
-    extensions = [Extension(properties = [ExtensionProperty(name = "x-discriminator-value", value = "transfer")])]
+    extensions = [Extension(
+        properties = [ExtensionProperty(
+            name = "x-discriminator-value",
+            value = TransferDataDTO.TYPE_NAME
+        )]
+    )]
 )
-@JsonTypeName("transfer")
+@JsonTypeName(TransferDataDTO.TYPE_NAME)
 data class TransferDataDTO(
     override val date: LocalDate,
     override val bookingDate: LocalDate?,
@@ -21,4 +26,8 @@ data class TransferDataDTO(
     @get:Schema(required = true)
     val oppositAccountId: Int,
     val comments: String?,
-) : MovementDataDTO
+) : MovementDataDTO {
+    companion object {
+        const val TYPE_NAME = "TRANSFER"
+    }
+}

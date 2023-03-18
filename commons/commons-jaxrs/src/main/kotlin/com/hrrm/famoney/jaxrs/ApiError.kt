@@ -1,6 +1,6 @@
 package com.hrrm.famoney.jaxrs
 
-import javax.ws.rs.core.Response
+import jakarta.ws.rs.core.Response
 
 interface ApiError {
     val code: String

@@ -19,9 +19,9 @@ import java.time.LocalDate
     ), DiscriminatorMapping(schema = TransferDataDTO::class, value = "transfer")]
 )
 @JsonSubTypes(
-    JsonSubTypes.Type(name = "entry", value = EntryDataDTO::class),
-    JsonSubTypes.Type(name = "refund", value = RefundDataDTO::class),
-    JsonSubTypes.Type(name = "transfer", value = TransferDataDTO::class)
+    JsonSubTypes.Type(name = EntryDataDTO.TYPE_NAME, value = EntryDataDTO::class),
+    JsonSubTypes.Type(name = RefundDataDTO.TYPE_NAME, value = RefundDataDTO::class),
+    JsonSubTypes.Type(name = TransferDataDTO.TYPE_NAME, value = TransferDataDTO::class)
 )
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 interface MovementDataDTO : DTO {

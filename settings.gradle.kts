@@ -13,12 +13,12 @@ pluginManagement {
     }
 }
 
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version ("0.4.0")
+}
+
 include("web-ui")
 include("launcher")
-include("accounts")
-include("accounts:accounts-domain")
-findProject(":accounts:accounts-domain")?.name = "accounts-domain"
-include("commons")
 include("commons:commons-persistence")
 findProject(":commons:commons-persistence")?.name = "commons-persistence"
 include("commons:commons-core")
@@ -33,3 +33,7 @@ include("accounts:accounts-api-impl")
 findProject(":accounts:accounts-api-impl")?.name = "accounts-api-impl"
 include("commons:commons-events")
 findProject(":commons:commons-events")?.name = "commons-events"
+include("domain")
+include("domain:domain-migration")
+findProject(":domain:domain-migration")?.name = "domain-migration"
+include("swagger-ui")

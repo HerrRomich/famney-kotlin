@@ -10,9 +10,9 @@ import java.time.LocalDate
 @Schema(
     name = "EntryData",
     allOf = [MovementDataDTO::class],
-    extensions = [Extension(properties = [ExtensionProperty(name = "x-discriminator-value", value = "entry")])]
+    extensions = [Extension(properties = [ExtensionProperty(name = "x-discriminator-value", value = EntryDataDTO.TYPE_NAME)])]
 )
-@JsonTypeName("entry")
+@JsonTypeName(EntryDataDTO.TYPE_NAME)
 data class EntryDataDTO(
     override val date: LocalDate,
     override val bookingDate: LocalDate?,
@@ -20,4 +20,8 @@ data class EntryDataDTO(
     override val amount: BigDecimal,
     @get:Schema(required = true)
     val entryItems: List<EntryItemDataDTO>,
-) : MovementDataDTO
+) : MovementDataDTO {
+    companion object {
+        const val TYPE_NAME = "ENTRY"
+    }
+}

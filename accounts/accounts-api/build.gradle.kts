@@ -1,16 +1,12 @@
 import io.swagger.v3.plugins.gradle.tasks.ResolveTask
 import io.swagger.v3.plugins.gradle.tasks.ResolveTask.Format.JSON
 
-plugins {
-    kotlin("kapt")
-}
-
 val resolveConfig by configurations.creating
 
 dependencies {
     api(project(":commons:commons-jaxrs"))
 
-    resolveConfig("io.swagger.core.v3:swagger-jaxrs2:2.2.1")
+    resolveConfig("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.8")
 }
 
 val resolveApi = tasks.register<ResolveTask>("resolveApi") {
