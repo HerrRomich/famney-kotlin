@@ -1,6 +1,6 @@
 package io.github.herrromich.famoney.domain.master
 
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @DiscriminatorValue(IncomeCategory.TYPE)

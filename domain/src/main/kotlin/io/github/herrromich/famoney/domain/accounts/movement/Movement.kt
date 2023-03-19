@@ -4,7 +4,7 @@ import io.github.herrromich.famoney.domain.DomainEntity
 import io.github.herrromich.famoney.domain.accounts.Account
 import java.math.BigDecimal
 import java.time.LocalDate
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)

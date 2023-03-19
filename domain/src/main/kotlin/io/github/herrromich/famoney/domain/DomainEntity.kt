@@ -1,6 +1,6 @@
 package io.github.herrromich.famoney.domain
 
-import javax.persistence.*
+import jakarta.persistence.*
 
 @MappedSuperclass
 abstract class DomainEntity {

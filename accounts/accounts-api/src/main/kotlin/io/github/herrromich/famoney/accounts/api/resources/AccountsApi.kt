@@ -1,7 +1,7 @@
 package io.github.herrromich.famoney.accounts.api.resources
 
-import io.github.herrromich.famoney.accounts.api.AccountDTO
-import io.github.herrromich.famoney.accounts.api.AccountDataDTO
+import io.github.herrromich.famoney.accounts.api.dto.AccountDTO
+import io.github.herrromich.famoney.accounts.api.dto.AccountDataDTO
 import io.github.herrromich.famoney.jaxrs.ApiErrorDTO
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter

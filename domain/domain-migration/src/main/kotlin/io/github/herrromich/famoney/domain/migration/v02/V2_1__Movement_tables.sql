@@ -1,14 +1,16 @@
 create table entry_category(
   id serial primary key,
+  budget_id int not null,
   type varchar(50) not null,
   parent_id int,
   name varchar(50) not null,
-  constraint entry_category_parent_uq unique (type, parent_id, name),
+  constraint entry_category_parent_uq unique (budget_id, type, parent_id, name),
   constraint entry_category_parent_fk foreign key (parent_id) references entry_category(id),
   constraint entry_category_type_ck check (type in  ('INCOME', 'EXPENSE'))
 );
 comment on table entry_category is 'Movement entry categories. A hierarchical structure. Could be of 2 types : (INCOME, EXPENSE)';
-comment on column entry_category.id is 'Identifier.';
+comment on column entry_category.budget_id is 'Budget ID. Groups users.';
+comment on column entry_category.type is 'Movement type. could be "INCOME", "EXPENSE"';
 comment on column entry_category.type is 'Movement type. could be "INCOME", "EXPENSE"';
 comment on column entry_category.parent_id is 'Reference to a higher level category. Root level has NULL value.';
 comment on column entry_category.name is 'Name of category level.';

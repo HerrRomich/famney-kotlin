@@ -14,7 +14,7 @@ import javax.sql.DataSource
 
 @Configuration
 @EnableTransactionManagement
-@EnableJpaRepositories("io.github.herrromich.domain", entityManagerFactoryRef = "entityManagerFactory")
+@EnableJpaRepositories("io.github.herrromich.famoney.domain", entityManagerFactoryRef = "entityManagerFactory")
 class JpaConfig(
     dataSource: DataSource,
     properties: JpaProperties,

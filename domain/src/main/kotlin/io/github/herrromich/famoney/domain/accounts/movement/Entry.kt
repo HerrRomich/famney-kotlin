@@ -2,7 +2,7 @@ package io.github.herrromich.famoney.domain.accounts.movement
 
 import org.eclipse.persistence.annotations.JoinFetch
 import org.eclipse.persistence.annotations.JoinFetchType
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @DiscriminatorValue(Entry.TYPE)

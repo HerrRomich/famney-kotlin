@@ -24,7 +24,7 @@ import java.io.IOException
 import java.nio.charset.StandardCharsets
 
 @RestController
-@RequestMapping("/spec")
+@RequestMapping(ApisController.CONTROLLER_SPEC)
 class ApisController(
     val openApiParser: OpenAPIV3Parser,
     val objectMapper: ObjectMapper,
@@ -35,7 +35,7 @@ class ApisController(
     private val specifications: Map<String, Pair<ApiSpecification, OpenAPI>>
 
     init {
-        this.specifications = specifications.map { it.name to (it to parseSwagger(it)) }.toMap()
+        this.specifications = specifications.map { it.apiPath to (it to parseSwagger(it)) }.toMap()
     }
 
     private fun parseSwagger(specification: ApiSpecification): OpenAPI {
@@ -58,7 +58,7 @@ class ApisController(
         val api = specifications.values
             .map { (spec) ->
                 Api(
-                    url = "${request.contextPath}/spec/${spec.name}.json",
+                    url = "${request.contextPath}$CONTROLLER_SPEC/${spec.apiPath}.json",
                     name = spec.description
                 )
             }
@@ -78,10 +78,9 @@ ${objectMapper.writeValueAsString(api)};"""
                 val openApiSpec = specificationTuple.second
                 val url = UriComponentsBuilder.fromHttpRequest(
                     ServletServerHttpRequest(request)
+                ).replacePath(
+                    "apis/${specificationTuple.first.apiPath}"
                 )
-                    .replacePath(
-                        specificationTuple.first.apiPath
-                    )
                     .build()
                 openApiSpec.setServers(java.util.List.of(Server().url(url.toString())))
                 val spec = Json.mapper()
@@ -107,4 +106,8 @@ ${objectMapper.writeValueAsString(api)};"""
         val url: String,
         val name: String
     )
+
+    companion object {
+        const val CONTROLLER_SPEC = "/apis/spec"
+    }
 }

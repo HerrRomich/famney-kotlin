@@ -4,6 +4,17 @@
   "compilerOptions": {
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
+    "paths": {
+      "@famoney-apis/*": [
+        "src/app/shared/apis/*"
+      ],
+      "@famoney-shared/*": [
+        "src/app/shared/*"
+      ],
+      "@famoney-features/*": [
+        "src/app/features/*"
+      ],
+    },
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,

@@ -183,10 +183,12 @@ select id
     val categoryByParentIdAndName by lazy {
         getStatementWithGeneratedKeys(
             """
-insert into entry_category(type 
+insert into entry_category(budget_id 
+                         , type
                          , parent_id 
                          , name)
 values (?
+      , ? 
       , ? 
       , ?)
 on conflict do nothing

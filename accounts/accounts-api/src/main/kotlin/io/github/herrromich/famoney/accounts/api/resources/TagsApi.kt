@@ -13,5 +13,5 @@ interface TagsApi {
     @ApiResponse(description = "A list of all account tags")
     @Produces(MediaType.APPLICATION_JSON)
     @GET
-    fun allAccountTags(): List<String>
+    fun getAllAccountTags(): List<String>
 }

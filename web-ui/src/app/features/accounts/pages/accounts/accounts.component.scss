@@ -1,0 +1,27 @@
+:host {
+  flex-direction: column;
+  display: flex;
+  flex: 1 1 auto;
+}
+
+div.menu {
+  flex-direction: row;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.accounts-tab-group {
+  min-width: 0px;
+}
+
+.transparent-backdrop {
+  color: rgba($color: #000000, $alpha: 0);
+}
+
+div.area {
+  flex-direction: column;
+  display: flex;
+  flex: 1 1 auto;
+}
+

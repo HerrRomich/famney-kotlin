@@ -3,7 +3,7 @@ package io.github.herrromich.famoney.domain.accounts
 import io.github.herrromich.famoney.domain.DomainEntity
 import java.math.BigDecimal
 import java.time.LocalDate
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Entity
 @Table(name = "account")

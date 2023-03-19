@@ -7,7 +7,7 @@ plugins {
     id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.8" apply false
 }
 
-configure(subprojects.filter { !listOf("web-ui").contains(it.name) }) {
+configure(subprojects) {
     apply {
         plugin("org.springframework.boot")
         plugin("io.spring.dependency-management")
@@ -38,6 +38,6 @@ configure(subprojects.filter { !listOf("web-ui").contains(it.name) }) {
     }
 
     tasks.jar {
-        duplicatesStrategy = org.gradle.api.file.DuplicatesStrategy.EXCLUDE
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
     }
 }

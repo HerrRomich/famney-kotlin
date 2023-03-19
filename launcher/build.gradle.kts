@@ -2,20 +2,18 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("stdlib-jdk8"))
     implementation(kotlin("reflect"))
-    implementation("org.springframework.boot:spring-boot-starter-web") {
-        exclude("org.springframework.boot:spring-boot-starter-tomcat")
-    }
-    implementation("org.springframework.boot:spring-boot-starter-jetty")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
+    implementation(project(":commons:commons-web"))
     implementation(project(":domain"))
     implementation(project(":swagger-ui"))
     implementation(project(":accounts:accounts-api-impl"))
+    implementation(project(":master-data:master-data-api-impl"))
 }
 
 springBoot {
-    mainClass.set("com.hrrm.famoney.launcher.ServerLauncherKt")
+    mainClass.set("io.github.herrromich.famoney.launcher.ServerLauncherKt")
 }
 
 tasks {

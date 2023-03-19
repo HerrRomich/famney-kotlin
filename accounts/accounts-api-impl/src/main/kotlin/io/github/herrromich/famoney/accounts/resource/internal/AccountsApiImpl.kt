@@ -1,8 +1,8 @@
 package io.github.herrromich.famoney.accounts.resource.internal
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.github.herrromich.famoney.accounts.api.AccountDTO
-import io.github.herrromich.famoney.accounts.api.AccountDataDTO
+import io.github.herrromich.famoney.accounts.api.dto.AccountDTO
+import io.github.herrromich.famoney.accounts.api.dto.AccountDataDTO
 import io.github.herrromich.famoney.accounts.api.AccountsApiResource
 import io.github.herrromich.famoney.accounts.api.resources.AccountsApi
 import io.github.herrromich.famoney.accounts.internalexceptions.AccountsApiError
@@ -11,8 +11,6 @@ import io.github.herrromich.famoney.domain.accounts.AccountRepository
 import io.github.herrromich.famoney.jaxrs.ApiException
 import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.http.HttpServletResponse
-import jakarta.transaction.Transactional
-import jakarta.transaction.Transactional.TxType
 import jakarta.ws.rs.core.Context
 import jakarta.ws.rs.core.HttpHeaders
 import jakarta.ws.rs.core.Response
@@ -20,6 +18,8 @@ import jakarta.ws.rs.core.UriInfo
 import jakarta.ws.rs.sse.Sse
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Propagation
+import org.springframework.transaction.annotation.Transactional
 import unwrap
 
 @Service
@@ -39,7 +39,7 @@ class AccountsApiImpl(
     @Context
     private lateinit var sse: Sse
 
-    @Transactional(value = TxType.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     override fun getAllAccounts(tags: Set<String>): List<AccountDTO> {
         logger.debug { "Getting all accounts by ${tags.size} tag(s)." }
         logger.trace {

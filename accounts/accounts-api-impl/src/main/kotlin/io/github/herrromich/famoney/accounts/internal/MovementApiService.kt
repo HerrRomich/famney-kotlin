@@ -1,8 +1,8 @@
 package io.github.herrromich.famoney.accounts.internal
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.github.herrromich.famoney.accounts.api.EntryDataDTO
-import io.github.herrromich.famoney.accounts.api.MovementDataDTO
+import io.github.herrromich.famoney.accounts.api.dto.EntryDataDTO
+import io.github.herrromich.famoney.accounts.api.dto.MovementDataDTO
 import io.github.herrromich.famoney.domain.accounts.Account
 import io.github.herrromich.famoney.domain.accounts.AccountRepository
 import io.github.herrromich.famoney.domain.accounts.movement.Entry
@@ -12,8 +12,8 @@ import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
-import javax.persistence.EntityManager
-import javax.persistence.LockModeType
+import jakarta.persistence.EntityManager
+import jakarta.persistence.LockModeType
 
 @Service
 class MovementApiService(

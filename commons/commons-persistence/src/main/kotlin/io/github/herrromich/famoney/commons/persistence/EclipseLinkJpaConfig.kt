@@ -14,18 +14,17 @@ abstract class EclipseLinkJpaConfig(
     dataSource: DataSource,
     properties: JpaProperties,
     jtaTransactionManager: ObjectProvider<JtaTransactionManager>
-) :
-    JpaBaseConfiguration(dataSource, properties, jtaTransactionManager) {
+) : JpaBaseConfiguration(dataSource, properties, jtaTransactionManager) {
 
     override fun createJpaVendorAdapter() = EclipseLinkJpaVendorAdapter()
 
-    override fun getVendorProperties() = mapOf(PersistenceUnitProperties.WEAVING to "false")
+    override fun getVendorProperties() = mapOf(PersistenceUnitProperties.WEAVING to "true")
 
     companion object {
-        public fun initJpaProperties() = mapOf(
+        fun initJpaProperties() = mapOf(
             PersistenceUnitProperties.BATCH_WRITING to BatchWriting.JDBC,
             PersistenceUnitProperties.LOGGING_LEVEL to SessionLog.INFO_LABEL,
-            PersistenceUnitProperties.WEAVING to "false"
+            PersistenceUnitProperties.WEAVING to "true"
         )
     }
 }

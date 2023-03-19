@@ -21,6 +21,6 @@ class JerseyRestConfig {
         accountsApiResourcesConfig.register(objectMapperContextResolver)
         accountsApiResources.forEach(accountsApiResourcesConfig::registerInstances)
         val accountsApis = ServletContainer(accountsApiResourcesConfig)
-        return ServletRegistrationBean<ServletContainer>(accountsApis, "/${accountsSpec.apiPath}/*")
+        return ServletRegistrationBean<ServletContainer>(accountsApis, "/apis/${accountsSpec.apiPath}/*")
     }
 }

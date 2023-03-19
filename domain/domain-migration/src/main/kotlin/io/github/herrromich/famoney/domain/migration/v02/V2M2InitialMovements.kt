@@ -187,16 +187,14 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
         val categories = migrationData.categories.getOrPut(amountSignum) { mutableMapOf(null to mutableMapOf()) }
         val parent = categories.getValue(parentId)
         val categoryId = parent.getOrPut(currentLevel) {
-            val categoryId = getOrCreateCategory(
+            getOrCreateCategory(
                 migrationData,
                 amountSignum,
                 parentId,
                 currentLevel
-            )
-            categories[categoryId] = mutableMapOf()
-            return categoryId
+            ).also { categoryId -> categories[categoryId] = mutableMapOf() }
         }
-        return if (reducedCategoryLevels.isNotEmpty()) categoryId
+        return if (reducedCategoryLevels.isEmpty()) categoryId
         else findCategoryIdByCategoryLevels(
             migrationData,
             amountSignum,
@@ -217,9 +215,10 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
             1 -> "INCOME"
             else -> throw MigrationException("Movement amount is not allowed.")
         }
-        stmt.setString(1, categoryType)
-        parentId?.let { stmt.setInt(2, it) } ?: stmt.setNull(2, Types.INTEGER)
-        stmt.setString(3, name)
+        stmt.setInt(1, 1)
+        stmt.setString(2, categoryType)
+        parentId?.let { stmt.setInt(3, it) } ?: stmt.setNull(3, Types.INTEGER)
+        stmt.setString(4, name)
         stmt.executeUpdate()
         val generatedKeys = stmt.generatedKeys
         if (generatedKeys.next()) {
@@ -293,7 +292,7 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
     private fun insertEntryItems(migrationData: MigrationData, entryItems: List<EntryItemData>, movementId: Int) {
         val insertEntryItemStmt = migrationData.jdbcStatements.entryItemInsert
         logger.debug("Inserting entry items.")
-        entryItems.forEachIndexed{ pos, entryItem ->
+        entryItems.forEachIndexed { pos, entryItem ->
             insertEntryItemStmt.setInt(1, movementId)
             insertEntryItemStmt.setInt(2, pos + 1)
             insertEntryItemStmt.setInt(3, entryItem.categoryId)

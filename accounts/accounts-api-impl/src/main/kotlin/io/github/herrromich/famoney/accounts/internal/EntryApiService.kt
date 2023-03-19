@@ -1,6 +1,6 @@
 package io.github.herrromich.famoney.accounts.internal
 
-import io.github.herrromich.famoney.accounts.api.EntryDataDTO
+import io.github.herrromich.famoney.accounts.api.dto.EntryDataDTO
 import io.github.herrromich.famoney.domain.accounts.movement.Entry
 import io.github.herrromich.famoney.domain.accounts.movement.EntryItem
 import io.github.herrromich.famoney.domain.accounts.movement.Movement

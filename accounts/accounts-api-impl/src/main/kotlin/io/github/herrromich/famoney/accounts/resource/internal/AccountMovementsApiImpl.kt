@@ -3,7 +3,8 @@ package io.github.herrromich.famoney.accounts.resource.internal
 import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.herrromich.famoney.accounts.api.*
 import io.github.herrromich.famoney.accounts.api.resources.AccountMovementsApi
-import io.github.herrromich.famoney.accounts.api.resources.BalanceDataDTO
+import io.github.herrromich.famoney.accounts.api.dto.BalanceDataDTO
+import io.github.herrromich.famoney.accounts.api.dto.*
 import io.github.herrromich.famoney.accounts.events.MovementEventService
 import io.github.herrromich.famoney.accounts.internal.IncompatibleMovementType
 import io.github.herrromich.famoney.accounts.internal.MovementApiService
@@ -13,15 +14,15 @@ import io.github.herrromich.famoney.domain.accounts.movement.*
 import io.github.herrromich.famoney.jaxrs.ApiException
 import io.swagger.v3.oas.annotations.Hidden
 import jakarta.servlet.http.HttpServletResponse
-import jakarta.transaction.Transactional
 import jakarta.ws.rs.core.Context
 import jakarta.ws.rs.core.HttpHeaders
 import jakarta.ws.rs.core.Response.Status
 import jakarta.ws.rs.core.UriInfo
 import jakarta.ws.rs.sse.Sse
 import mu.KotlinLogging
-import org.hibernate.TransactionException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.TransactionException
+import org.springframework.transaction.annotation.Transactional
 import unwrap
 
 @Service

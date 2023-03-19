@@ -27,8 +27,6 @@ include("accounts:accounts-api")
 findProject(":accounts:accounts-api")?.name = "accounts-api"
 include("commons:commons-jaxrs")
 findProject(":commons:commons-jaxrs")?.name = "commons-jaxrs"
-include("commons:commons-immutables")
-findProject(":commons:commons-immutables")?.name = "commons-immutables"
 include("accounts:accounts-api-impl")
 findProject(":accounts:accounts-api-impl")?.name = "accounts-api-impl"
 include("commons:commons-events")
@@ -37,3 +35,9 @@ include("domain")
 include("domain:domain-migration")
 findProject(":domain:domain-migration")?.name = "domain-migration"
 include("swagger-ui")
+include("commons:commons-web")
+findProject(":commons:commons-web")?.name = "commons-web"
+include("master-data:master-data-api")
+findProject(":master-data:master-data-api")?.name = "master-data-api"
+include("master-data:master-data-api-impl")
+findProject(":master-data:master-data-api-impl")?.name = "master-data-api-impl"

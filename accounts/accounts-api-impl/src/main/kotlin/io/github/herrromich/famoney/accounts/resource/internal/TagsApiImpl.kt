@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service
 class TagsApiImpl(private val accountRepository: AccountRepository) : TagsApi, AccountsApiResource {
     private val logger = KotlinLogging.logger {  }
 
-    override fun allAccountTags(): List<String> {
+    override fun getAllAccountTags(): List<String> {
             logger.debug { "Getting account tags." }
             val allTags = accountRepository.findDistinctTags().sorted()
             logger.debug { "Successfully got account tags." }
