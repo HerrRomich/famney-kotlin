@@ -8,12 +8,12 @@ import io.github.herrromich.famoney.domain.accounts.AccountRepository
 import io.github.herrromich.famoney.domain.accounts.movement.Entry
 import io.github.herrromich.famoney.domain.accounts.movement.Movement
 import io.github.herrromich.famoney.domain.accounts.movement.MovementRepository
+import jakarta.persistence.EntityManager
+import jakarta.persistence.LockModeType
 import mu.KotlinLogging
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
-import jakarta.persistence.EntityManager
-import jakarta.persistence.LockModeType
 
 @Service
 class MovementApiService(

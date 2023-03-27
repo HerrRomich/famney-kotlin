@@ -1,8 +1,8 @@
 package io.github.herrromich.famoney.domain.accounts.movement
 
 import io.github.herrromich.famoney.domain.accounts.Account
-import org.springframework.beans.factory.annotation.Autowired
 import jakarta.persistence.EntityManager
+import org.springframework.beans.factory.annotation.Autowired
 
 class CustomMovementRepositoryImpl(private @Autowired val entityManager: EntityManager) : CustomMovementRepository {
     override fun getByAccountOrderByDatePosition(account: Account, offset: Int?, limit: Int?) =

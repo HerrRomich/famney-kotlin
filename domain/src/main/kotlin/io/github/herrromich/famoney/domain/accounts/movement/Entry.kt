@@ -1,8 +1,8 @@
 package io.github.herrromich.famoney.domain.accounts.movement
 
+import jakarta.persistence.*
 import org.eclipse.persistence.annotations.JoinFetch
 import org.eclipse.persistence.annotations.JoinFetchType
-import jakarta.persistence.*
 
 @Entity
 @DiscriminatorValue(Entry.TYPE)

@@ -1,9 +1,9 @@
 package io.github.herrromich.famoney.domain.accounts
 
 import io.github.herrromich.famoney.domain.DomainEntity
+import jakarta.persistence.*
 import java.math.BigDecimal
 import java.time.LocalDate
-import jakarta.persistence.*
 
 @Entity
 @Table(name = "account")

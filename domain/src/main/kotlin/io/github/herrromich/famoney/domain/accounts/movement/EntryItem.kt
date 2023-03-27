@@ -1,8 +1,8 @@
 package io.github.herrromich.famoney.domain.accounts.movement
 
-import java.math.BigDecimal
 import jakarta.persistence.Column
 import jakarta.persistence.Embeddable
+import java.math.BigDecimal
 
 @Embeddable
 class EntryItem {
