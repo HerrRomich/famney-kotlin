@@ -1,3 +1,5 @@
 package io.github.herrromich.famoney.accounts.api
 
-interface AccountsApiResource 
+import io.github.herrromich.famoney.jaxrs.ApiResource
+
+interface AccountsApiResource: ApiResource

@@ -14,7 +14,7 @@
 export interface IncomeCategoryDto { 
     name: string;
     id: number;
-    type: 'income';
+    type: 'INCOME';
     children?: Array<IncomeCategoryDto>;
 }
 

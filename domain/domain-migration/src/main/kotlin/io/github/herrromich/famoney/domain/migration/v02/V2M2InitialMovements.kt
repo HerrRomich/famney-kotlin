@@ -3,6 +3,9 @@ package io.github.herrromich.famoney.domain.migration.v02
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import io.github.herrromich.famoney.commons.persistence.migration.MigrationException
+import io.github.herrromich.famoney.domain.accounts.movement.Balance
+import io.github.herrromich.famoney.domain.accounts.movement.Entry
+import io.github.herrromich.famoney.domain.accounts.movement.Transfer
 import io.github.herrromich.famoney.domain.migration.DomainMigration
 import mu.KotlinLogging
 import org.flywaydb.core.api.MigrationVersion
@@ -10,12 +13,8 @@ import org.flywaydb.core.api.migration.Context
 import org.springframework.stereotype.Service
 import java.math.BigDecimal
 import java.sql.*
-import java.sql.Date
-import java.time.Instant
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
-import java.util.*
 import kotlin.math.sign
 
 @Service
@@ -73,15 +72,16 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
                         id = accountId,
                         name = accountName,
                         movements = movements.map { movement ->
-                            MovementData(
-                                accountId = accountId,
-                                type = MOVEMENT_TYPES.getValue(movement.type),
-                                date = movement.date,
-                                pos = 0,
-                                bookingDate = movement.bookingDate,
-                                budgetPeriod = movement.budgetPeriod,
-                                amount = movement.amount,
-                                entryItems = movement.items?.map { entry ->
+                            val categoryId = movement.category?.let {
+                                findCategoryIdByCategoryFullName(
+                                    migrationData,
+                                    it,
+                                    movement.amount.signum()
+                                )
+                            }
+                            val type = mapImportMovementTypeToEnum(movement.type)
+                            val entryItems: List<EntryItemData>? =
+                                if (type == Entry.TYPE) movement.items?.map { entry ->
                                     EntryItemData(
                                         categoryId = findCategoryIdByCategoryFullName(
                                             migrationData,
@@ -91,14 +91,24 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
                                         amount = entry.amount,
                                         comment = entry.comment
                                     )
-                                },
-                                categoryId = movement.category?.let {
-                                    findCategoryIdByCategoryFullName(
-                                        migrationData,
-                                        it,
-                                        movement.amount.signum()
+                                } ?: listOf(
+                                    EntryItemData(
+                                        categoryId = categoryId!!,
+                                        amount = movement.amount,
+                                        comment = movement.comment
                                     )
-                                },
+                                )
+                                else null
+                            MovementData(
+                                accountId = accountId,
+                                type = type,
+                                date = movement.date,
+                                pos = 0,
+                                bookingDate = movement.bookingDate,
+                                budgetPeriod = movement.budgetPeriod,
+                                amount = movement.amount,
+                                entryItems = entryItems,
+                                categoryId = categoryId,
                                 comment = movement.comment,
                                 oppositAccountId = movement.oppositAccount?.let { accountsNameToId.getValue(it) }
                             )
@@ -129,13 +139,18 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
     ) {
         logger.info { "Inserting initial movements for account: \"${accountData.name}\"." }
         try {
-            accountData.movements.forEach { movement ->
+            var total = BigDecimal.ZERO
+            accountData.movements.sortedWith { a, b ->
+                ChronoUnit.DAYS.between(b.date, a.date).sign
+            }.forEach { movement ->
                 val pos = getMaxPositionByAccountIdAndDate(migrationData, movement.accountId, movement.date) + 1
+                total += movement.amount
                 val movementId = insertMovement(
                     migrationData.jdbcStatements.accountMovementInsert,
                     movement.copy(pos = pos),
+                    total,
                 )
-                if (movement.type == "entry" && !movement.entryItems.isNullOrEmpty()) {
+                if (movement.type == Entry.TYPE && !movement.entryItems.isNullOrEmpty()) {
                     insertEntryItems(
                         migrationData,
                         movement.entryItems,
@@ -143,10 +158,6 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
                     )
                 }
             }
-            insertMovmentSlices(
-                migrationData,
-                accountData.id
-            )
             migrationData.jdbcStatements.connection
                 .commit()
             logger.info { "Initial movements for account: \"${accountData.name}\" are successfully inserted." }
@@ -231,7 +242,8 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
 
     private fun insertMovement(
         insertMovementStatement: PreparedStatement,
-        movement: MovementData
+        movement: MovementData,
+        total: BigDecimal
     ): Int {
         logger.trace {
             """Inserting account movement: 
@@ -240,7 +252,8 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
         try {
             val generatedKeys: ResultSet = callInsertMovement(
                 insertMovementStatement,
-                movement
+                movement,
+                total,
             )
             if (generatedKeys.next()) {
                 val movementId: Int = generatedKeys.getInt(1)
@@ -268,7 +281,8 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
 
     private fun callInsertMovement(
         insertMovementStatement: PreparedStatement,
-        movement: MovementData
+        movement: MovementData,
+        total: BigDecimal
     ): ResultSet {
         insertMovementStatement.setInt(1, movement.accountId)
         insertMovementStatement.setString(2, movement.type)
@@ -285,6 +299,7 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
         movement.oppositAccountId?.run { insertMovementStatement.setInt(9, this) }
             ?: insertMovementStatement.setNull(9, Types.INTEGER)
         insertMovementStatement.setBigDecimal(10, movement.amount)
+        insertMovementStatement.setBigDecimal(11, total)
         insertMovementStatement.executeUpdate()
         return insertMovementStatement.getGeneratedKeys()
     }
@@ -334,137 +349,13 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
         }
     }
 
-    private fun insertMovmentSlices(migrationData: MigrationData, accountId: Int) {
-        try {
-            val accountMovementsMinMaxDatesSelectStmt = migrationData.jdbcStatements.accountMovementsMinMaxDatesSelect
-            val accountMovementsSumCountBetweenMovementDatesSelectStmt =
-                migrationData.jdbcStatements.accountMovementsSumCountBetweenMovementDatesSelect
-            val accountMovementsSumCountBetweenBookingDatesSelectStmt =
-                migrationData.jdbcStatements.accountMovementsSumCountBetweenBookingDatesSelect
-            val insertMovementSliceStmt = migrationData.jdbcStatements.movementSliceInsert
-            accountMovementsMinMaxDatesSelectStmt.setInt(1, accountId)
-            accountMovementsSumCountBetweenMovementDatesSelectStmt.setInt(3, accountId)
-            accountMovementsSumCountBetweenBookingDatesSelectStmt.setInt(3, accountId)
-            insertMovementSliceStmt.setInt(1, accountId)
-            accountMovementsMinMaxDatesSelectStmt.executeQuery().use { resultSet ->
-                if (!resultSet.next()) {
-                    return
-                }
-                val minDateTimestamp = resultSet.getTimestamp(1)
-                val maxDateTimestamp = resultSet.getTimestamp(2)
-                val minBookingDateTimestamp = resultSet.getTimestamp(3)
-                val maxBookingDateTimestamp = resultSet.getTimestamp(4)
-                if (minDateTimestamp == null || maxDateTimestamp == null || minBookingDateTimestamp == null || maxBookingDateTimestamp == null) {
-                    return
-                }
-                val minTime = Math.min(
-                    minDateTimestamp.time,
-                    minBookingDateTimestamp.time
-                )
-                val minDate = LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli(minTime),
-                    TimeZone.getDefault()
-                        .toZoneId()
-                )
-                    .truncatedTo(ChronoUnit.DAYS)
-                val maxTime = Math.max(
-                    maxDateTimestamp.time,
-                    maxBookingDateTimestamp.time
-                )
-                val maxDate = LocalDateTime.ofInstant(
-                    Instant.ofEpochMilli(maxTime),
-                    TimeZone.getDefault()
-                        .toZoneId()
-                )
-                    .truncatedTo(ChronoUnit.DAYS)
-                var startDate = minDate.withDayOfMonth(1)
-                    .plusMonths(1)
-                var prevDate = minDate
-                var movementCount = 0
-                var movementSum = BigDecimal.ZERO
-                var bookingCount = 0
-                var bookingSum = BigDecimal.ZERO
-                while (startDate.compareTo(maxDate) < 0) {
-                    accountMovementsSumCountBetweenMovementDatesSelectStmt.setTimestamp(
-                        1,
-                        Timestamp.valueOf(prevDate)
-                    )
-                    accountMovementsSumCountBetweenMovementDatesSelectStmt.setTimestamp(
-                        2,
-                        Timestamp.valueOf(startDate)
-                    )
-                    accountMovementsSumCountBetweenMovementDatesSelectStmt
-                        .executeQuery().use { countAndSumByMovementDateResultSet ->
-                            if (countAndSumByMovementDateResultSet.next()) {
-                                movementCount += Optional.ofNullable<Int>(countAndSumByMovementDateResultSet.getInt(1))
-                                    .orElse(0)
-                                movementSum = movementSum.add(
-                                    Optional.ofNullable<BigDecimal>(
-                                        countAndSumByMovementDateResultSet
-                                            .getBigDecimal(2)
-                                    )
-                                        .orElse(BigDecimal.ZERO)
-                                )
-                            }
-                        }
-                    accountMovementsSumCountBetweenBookingDatesSelectStmt.setTimestamp(
-                        1,
-                        Timestamp.valueOf(prevDate)
-                    )
-                    accountMovementsSumCountBetweenBookingDatesSelectStmt.setTimestamp(
-                        2,
-                        Timestamp.valueOf(startDate)
-                    )
-                    accountMovementsSumCountBetweenBookingDatesSelectStmt
-                        .executeQuery().use { countAndSumByBookingDateResultSet ->
-                            if (countAndSumByBookingDateResultSet.next()) {
-                                bookingCount += Optional.ofNullable<Int>(countAndSumByBookingDateResultSet.getInt(1))
-                                    .orElse(0)
-                                bookingSum = bookingSum.add(
-                                    Optional.ofNullable<BigDecimal>(
-                                        countAndSumByBookingDateResultSet
-                                            .getBigDecimal(2)
-                                    )
-                                        .orElse(BigDecimal.ZERO)
-                                )
-                            }
-                        }
-                    insertMovementSliceStmt.setTimestamp(
-                        2,
-                        Timestamp.valueOf(startDate)
-                    )
-                    insertMovementSliceStmt.setInt(
-                        3,
-                        movementCount
-                    )
-                    insertMovementSliceStmt.setBigDecimal(
-                        4,
-                        movementSum
-                    )
-                    insertMovementSliceStmt.setInt(
-                        5,
-                        bookingCount
-                    )
-                    insertMovementSliceStmt.setBigDecimal(
-                        6,
-                        bookingSum
-                    )
-                    insertMovementSliceStmt.execute()
-                    prevDate = startDate
-                    startDate = startDate.plusMonths(1)
-                }
-            }
-        } catch (e: SQLException) {
-            throw MigrationException("Error adding movement slices.", e)
-        }
-    }
-
     companion object {
-        private val MOVEMENT_TYPES = mapOf(
-            "check" to "ENTRY",
-            "transfer" to "TRANSFER",
-            "entry" to "ENTRY",
-            "balance" to "BALANCE"
-        )
+        private fun mapImportMovementTypeToEnum(movementType: String) =
+            when (movementType) {
+                "check", "entry" -> Entry.TYPE
+                "transfer" -> Transfer.TYPE
+                "balance" -> Balance.TYPE
+                else -> throw MigrationException("Unknown movement type: $movementType!")
+            }
     }
 }

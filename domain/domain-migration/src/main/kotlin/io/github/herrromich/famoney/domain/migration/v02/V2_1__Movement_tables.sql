@@ -54,7 +54,7 @@ create table entry_item(
   category_id int,
   comments varchar(1000),
   amount decimal(13, 2) not null,
-  constraint entry_item_pk primary key (entry_id, category_id),
+  constraint entry_item_pk primary key (entry_id, pos),
   constraint entry_item_movement_fk foreign key (entry_id) references movement (id)
 );
 comment on table entry_item is 'Entry items for multiple scheck positions.';

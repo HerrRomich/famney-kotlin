@@ -12,10 +12,10 @@
 
 
 export interface RefundDataDto { 
-    date: string;
-    budgetPeriod?: string;
+    date: Date;
     amount: number;
-    bookingDate?: string;
+    bookingDate?: Date;
+    budgetPeriod?: Date;
     type: 'REFUND';
     categoryId: number;
     comments?: string;

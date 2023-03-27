@@ -1,0 +1,134 @@
+@use '@angular/material' as mat;
+@use 'styles/_variables' as v;
+@import 'styles/ghost-animation';
+
+:host {
+  position: relative;
+  flex-direction: column;
+  display: flex;
+  flex: 1 1 auto;
+}
+
+cdk-virtual-scroll-viewport {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+}
+
+mat-list.movements-list {
+  padding-top: 0;
+}
+
+.account-entry:hover {
+  background-color: mat.get-color-from-palette(v.$fm-app-accent, 50);
+  font-weight: 600;
+  cursor: pointer;
+  button.account-entry-action {
+    display: block;
+  }
+}
+
+.account-entry {
+  button.account-entry-action {
+    display: none;
+  }
+}
+
+.account-entry-data {
+  height: 100%;
+}
+
+.account-entry-data-loading {
+  div {
+    background-color: rgba(235, 235, 235, 0.514);
+    border-bottom: 2px solid white;
+    border-radius: 4px 4px 4px 4px;
+    @include animate-ghost-line;
+  }
+}
+
+mat-list-item {
+  display: flex;
+  flex-direction: row;
+  &.account-entry-header {
+    position: sticky;
+    top: 0;
+    font-weight: 700;
+    z-index: 1;
+    background-color: rgba(#ffffff, 1);
+  }
+  div.content {
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 auto;
+    justify-content: flex-start;
+    align-items: center;
+    align-content: center;
+    > div {
+      display: flex;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      align-items: center;
+      align-content: center;
+      flex-grow: 0;
+      flex-shrink: 0;
+      &:not(:last-child) {
+        margin-right: 14px;
+      }
+      &.entry-date {
+        flex-basis: 11ch;
+        justify-content: flex-start;
+      }
+      &.comments {
+        flex-basis: 40%;
+        justify-content: flex-start;
+      }
+      &.name {
+        flex: 1 1 auto;
+        justify-content: flex-start;
+      }
+      &.amount,
+      &.balance {
+        flex-basis: 100px;
+        justify-content: flex-end;
+        &.positive-amount {
+          color: v.$fm-income-color;
+        }
+        &.negative-amount {
+          color: v.$fm-expense-color;
+        }
+      }
+      &.buttons {
+        display: flex;
+        flex-basis: 48px;
+      }
+    }
+  }
+}
+
+mat-list-item {
+  &.account-entry-header,
+  &.account-entry {
+    div.fixed-width {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+  > div.mat-list-item-content {
+    padding: 12px 0 0 0;
+    justify-content: flex-end;
+    align-items: center;
+    align-content: center;
+  }
+}
+
+eco-fab-speed-dial {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  &.hidden.hidden:hover {
+    opacity: 0.45;
+  }
+}

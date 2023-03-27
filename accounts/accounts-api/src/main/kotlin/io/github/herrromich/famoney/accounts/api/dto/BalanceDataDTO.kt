@@ -10,12 +10,21 @@ import java.time.LocalDate
 @Schema(
     name = "BalanceData",
     allOf = [MovementDataDTO::class],
-    extensions = [Extension(properties = [ExtensionProperty(name = "x-discriminator-value", value = "balance")])]
+    extensions = [Extension(
+        properties = [ExtensionProperty(
+            name = "x-discriminator-value",
+            value = BalanceDataDTO.TYPE_NAME
+        )]
+    )]
 )
-@JsonTypeName("BALANCE")
+@JsonTypeName(BalanceDataDTO.TYPE_NAME)
 data class BalanceDataDTO(
     override val date: LocalDate,
     override val bookingDate: LocalDate?,
     override val budgetPeriod: LocalDate?,
     override val amount: BigDecimal,
-) : MovementDataDTO
+) : MovementDataDTO {
+    companion object {
+        const val TYPE_NAME = "BALANCE"
+    }
+}

@@ -13,10 +13,10 @@ import { EntryItemDataDto } from './entry-item-data.dto';
 
 
 export interface EntryDataDto { 
-    date: string;
-    budgetPeriod?: string;
+    date: Date;
     amount: number;
-    bookingDate?: string;
+    bookingDate?: Date;
+    budgetPeriod?: Date;
     type: 'ENTRY';
     entryItems: Array<EntryItemDataDto>;
 }

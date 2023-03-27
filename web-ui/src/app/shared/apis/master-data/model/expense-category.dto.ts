@@ -14,7 +14,7 @@
 export interface ExpenseCategoryDto { 
     name: string;
     id: number;
-    type: 'expense';
+    type: 'EXPENSE';
     children?: Array<ExpenseCategoryDto>;
 }
 

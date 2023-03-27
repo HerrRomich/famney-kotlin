@@ -14,7 +14,7 @@
 export interface AccountDto { 
     name: string;
     tags?: Array<string>;
-    openDate: string;
+    openDate: Date;
     id: number;
     movementCount: number;
     total: number;

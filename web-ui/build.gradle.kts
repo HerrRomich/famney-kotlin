@@ -31,12 +31,6 @@ val apis = mapOf(
   ),
 )
 
-dependencies {
-  apis.forEach {
-    apiDeps(project(it.value.project))
-  }
-}
-
 node {
   version.set("16.13.1")
   npmVersion.set("8.12.1")
@@ -51,7 +45,7 @@ tasks {
           .flatMap { artifact ->
             val projectPath = (artifact.id.componentIdentifier as? ProjectComponentIdentifier)?.projectPath
             val jsonName = apis[projectPath]?.jsonName
-            jsonName?.let { jsonName -> zipTree(artifact.file).filter { it.name == jsonName } } ?: emptyList()
+            jsonName?.let { name -> zipTree(artifact.file).filter { it.name == name } } ?: emptyList()
           }
         from(*jsons.toTypedArray())
         into("$buildDir/api-defs")
@@ -70,7 +64,7 @@ tasks {
         inputSpec.set("$buildDir/api-defs/${it.jsonName}")
         outputDir.set("$projectDir/src/app/shared/apis/${it.destPath}")
         generatorName.set("typescript-angular")
-        typeMappings.set(mapOf("set" to "Array", "DateTime" to "Date"))
+        typeMappings.set(mapOf("set" to "Array", "DateTime" to "Date", "date" to "Date", "date-time" to "Date"))
         configOptions.set(
           mapOf(
             "ngVersion" to "15.0.0",
@@ -89,7 +83,7 @@ tasks {
       }
     }
 
-  val buildFrontend = register<NpxTask>("buildWebUI") {
+  register<NpxTask>("buildWebUI") {
     dependsOn(*generateTasks.toTypedArray(), "npmInstall")
     command.set("ng")
     args.set(listOf("build"))

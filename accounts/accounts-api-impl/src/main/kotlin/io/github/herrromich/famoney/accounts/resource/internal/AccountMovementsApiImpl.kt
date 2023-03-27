@@ -1,10 +1,8 @@
 package io.github.herrromich.famoney.accounts.resource.internal
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import io.github.herrromich.famoney.accounts.api.*
-import io.github.herrromich.famoney.accounts.api.resources.AccountMovementsApi
-import io.github.herrromich.famoney.accounts.api.dto.BalanceDataDTO
 import io.github.herrromich.famoney.accounts.api.dto.*
+import io.github.herrromich.famoney.accounts.api.resources.AccountMovementsApiResource
 import io.github.herrromich.famoney.accounts.events.MovementEventService
 import io.github.herrromich.famoney.accounts.internal.IncompatibleMovementType
 import io.github.herrromich.famoney.accounts.internal.MovementApiService
@@ -33,7 +31,7 @@ class AccountMovementsApiImpl(
     private val movementsApiService: MovementApiService,
     private val movementEventService: MovementEventService,
     private val objectMapper: ObjectMapper,
-) : AccountMovementsApi, AccountsApiResource {
+) : AccountMovementsApiResource {
     private val logger = KotlinLogging.logger { }
 
     @Context
@@ -177,7 +175,7 @@ class AccountMovementsApiImpl(
             )
             httpServletResponse.setStatus(Status.CREATED.statusCode)
             val location = uriInfo.absolutePathBuilder
-                .path(AccountMovementsApi::class.java, "getMovement")
+                .path(AccountMovementsApiResource::class.java, "getMovement")
                 .build(accountId, resultMovement.id)
             httpServletResponse.setHeader(HttpHeaders.LOCATION, location.toString())
             val data: MovementDataDTO = toMovementDataDTO(resultMovement)

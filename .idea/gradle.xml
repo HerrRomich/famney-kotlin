@@ -15,12 +15,15 @@
             <option value="$PROJECT_DIR$/commons" />
             <option value="$PROJECT_DIR$/commons/commons-core" />
             <option value="$PROJECT_DIR$/commons/commons-events" />
-            <option value="$PROJECT_DIR$/commons/commons-immutables" />
             <option value="$PROJECT_DIR$/commons/commons-jaxrs" />
             <option value="$PROJECT_DIR$/commons/commons-persistence" />
+            <option value="$PROJECT_DIR$/commons/commons-web" />
             <option value="$PROJECT_DIR$/domain" />
             <option value="$PROJECT_DIR$/domain/domain-migration" />
             <option value="$PROJECT_DIR$/launcher" />
+            <option value="$PROJECT_DIR$/master-data" />
+            <option value="$PROJECT_DIR$/master-data/master-data-api" />
+            <option value="$PROJECT_DIR$/master-data/master-data-api-impl" />
             <option value="$PROJECT_DIR$/swagger-ui" />
             <option value="$PROJECT_DIR$/web-ui" />
           </set>

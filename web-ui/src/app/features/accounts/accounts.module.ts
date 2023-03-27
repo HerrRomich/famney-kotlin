@@ -3,25 +3,21 @@ import { AngularModule } from '@famoney-shared/modules/angular.module';
 import { MaterialModule } from '@famoney-shared/modules/material.module';
 import { SharedModule } from '@famoney-shared/modules/shared.module';
 import { AccountsRoutingModule } from './accounts-routing.module';
-import { RouterTabModule } from './components/router-tab/router-tab.module';
+import { RouterTabModule } from '../../shared/modules/router-tab.module';
 import { AccountsComponent } from './pages/accounts/accounts.component';
-import {ApiModule as AccountsApiModule, Configuration as AccountsApiConfiguration} from '@famoney-apis/accounts';
-
-const accountsApiConfigFactory = () => {
-  return new AccountsApiConfiguration({
-    basePath: '/apis/accounts-api',
-  });
-};
+import { AccountTableComponent } from './pages/account-table/account-table.component';
+import { AccountEntryDialogComponent } from './components/account-entry-dialog';
+import { MonthPickerModule } from '@famoney-shared/modules/month-picker.module';
 
 @NgModule({
-  declarations: [AccountsComponent],
+  declarations: [AccountsComponent, AccountTableComponent, AccountEntryDialogComponent],
   imports: [
     AngularModule,
     MaterialModule,
     SharedModule,
     AccountsRoutingModule,
     RouterTabModule,
-    AccountsApiModule.forRoot(accountsApiConfigFactory)
+    MonthPickerModule
   ],
 })
 export class AccountsModule {}

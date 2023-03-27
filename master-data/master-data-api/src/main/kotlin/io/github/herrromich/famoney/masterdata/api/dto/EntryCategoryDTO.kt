@@ -9,15 +9,15 @@ import io.swagger.v3.oas.annotations.media.Schema
 @Schema(
     name = "EntryCategory",
     discriminatorProperty = "type",
-    discriminatorMapping = [DiscriminatorMapping(
-        value = "expense",
-        schema = ExpenseCategoryDTO::class
-    ), DiscriminatorMapping(value = "income", schema = IncomeCategoryDTO::class)]
+    discriminatorMapping = [
+        DiscriminatorMapping(value = ExpenseCategoryDTO.TYPE_NAME, schema = ExpenseCategoryDTO::class),
+        DiscriminatorMapping(value = IncomeCategoryDTO.TYPE_NAME, schema = IncomeCategoryDTO::class)
+    ]
 )
 @JsonTypeInfo(property = "type", use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY)
 @JsonSubTypes(
-    JsonSubTypes.Type(name = "expense", value = ExpenseCategoryDTO::class),
-    JsonSubTypes.Type(name = "income", value = IncomeCategoryDTO::class)
+    JsonSubTypes.Type(name = ExpenseCategoryDTO.TYPE_NAME, value = ExpenseCategoryDTO::class),
+    JsonSubTypes.Type(name = IncomeCategoryDTO.TYPE_NAME, value = IncomeCategoryDTO::class)
 )
 interface EntryCategoryDTO<T : EntryCategoryDTO<T>> : IdDTO {
     @get:Schema(required = true)

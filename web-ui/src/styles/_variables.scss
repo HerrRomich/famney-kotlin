@@ -1,0 +1,18 @@
+@use '@angular/material' as mat;
+
+$fm-app-primary: mat.define-palette(mat.$amber-palette);
+$fm-app-accent: mat.define-palette(mat.$blue-gray-palette);
+$fm-app-warn: mat.define-palette(mat.$deep-orange-palette);
+
+$my-app-theme: mat.define-light-theme((
+  color: (
+    primary: $fm-app-primary,
+    accent: $fm-app-accent,
+    warn: $fm-app-warn
+  ),
+  typography: mat.define-typography-config(),
+  density: 0,
+));
+
+$fm-expense-color: #FF0000;
+$fm-income-color: #007F00;

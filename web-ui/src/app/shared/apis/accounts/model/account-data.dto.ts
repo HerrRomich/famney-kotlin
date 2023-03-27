@@ -14,7 +14,7 @@
 export interface AccountDataDto { 
     name: string;
     tags?: Array<string>;
-    openDate: string;
+    openDate: Date;
 }
 
 

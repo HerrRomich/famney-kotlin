@@ -6,15 +6,6 @@ import java.sql.Connection
 class InitialMovementsJdbcStatements(
     public override val connection: Connection
 ) : JdbcMigrationStetemnets() {
-    val accountIdByNameSelect by lazy {
-        getStatement(
-            """
-select a.id from account a
- where a.name = ?
- """
-        )
-    }
-
     val accountsSelect by lazy {
         getStatement(
             """
@@ -47,21 +38,8 @@ values(?
      , ?
      , ?
      , ?
-     , 0)
+     , ?)
 """
-        )
-    }
-
-    val accountMovementsMinMaxDatesSelect by lazy {
-        getStatement(
-            """
-select min(date)
-     , max(date)
-     , min(booking_date)
-     , max(booking_date)
-  from movement
- where account_id = ?
- """
         )
     }
 
@@ -98,60 +76,6 @@ update account a
         )
     }
 
-    val accountMovementsSumCountBetweenMovementDatesSelect by lazy {
-        getStatement(
-            """
-select count(*)
-     , sum(amount)
-  from movement
- where date between ? and ?
-   and account_id = ?
-"""
-        )
-    }
-
-    val accountMovementsSumCountBetweenBookingDatesSelect by lazy {
-        getStatement(
-            """
-select count(*)
-     , sum(amount)
-  from movement
- where booking_date between ? and ?
-   and account_id = ?
-"""
-        )
-    }
-
-    val movementSliceInsert by lazy {
-        getStatement(
-            """
-insert into movement_slice(account_id
-                         , date
-                         , movement_count
-                         , movement_sum
-                         , booking_count
-                         , booking_sum)
-values(?
-     , ?
-     , ?
-     , ?
-     , ?
-     , ?)
-"""
-        )
-    }
-
-    val accountMovementsMaxDateBetweenDatesSelect by lazy {
-        getStatement(
-            """
-select max(date)
-  from movement
- where date between ? and ?
-   and account_id = ?
- """
-        )
-    }
-
     val entryItemInsert by lazy {
         getStatement(
             """
@@ -165,17 +89,6 @@ values(?
      , ?
      , ?
      , ?)
-"""
-        )
-    }
-
-    val categoryByParentName by lazy {
-        getStatement(
-            """
-select id
-  from entry_category
- where parent_id = ?
-   and type = ?
 """
         )
     }

@@ -1,9 +1,8 @@
+import { ScrollingModule } from '@angular/cdk/scrolling';
+import { CommonModule, DecimalPipe } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule, DecimalPipe } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ScrollingModule } from '@angular/cdk/scrolling';
-import { HttpClientModule } from '@angular/common/http';
 
 const ANGULAR_MODULES = [
   FormsModule,

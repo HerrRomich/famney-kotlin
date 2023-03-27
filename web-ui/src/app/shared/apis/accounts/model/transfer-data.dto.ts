@@ -12,10 +12,10 @@
 
 
 export interface TransferDataDto { 
-    date: string;
-    budgetPeriod?: string;
+    date: Date;
     amount: number;
-    bookingDate?: string;
+    bookingDate?: Date;
+    budgetPeriod?: Date;
     type: 'TRANSFER';
     oppositAccountId: number;
     comments?: string;

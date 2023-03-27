@@ -4,13 +4,117 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2f6ca191-61dc-4381-8cb0-6262d42bab95" name="Changes" comment="Migration&#10;&#10; * Angular">
+    <list default="true" id="2f6ca191-61dc-4381-8cb0-6262d42bab95" name="Changes" comment="Accounts and movements.">
+      <change afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/io/github/herrromich/famoney/accounts/AccountsApiConfig.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/commons/commons-jaxrs/src/main/kotlin/io/github/herrromich/famoney/jaxrs/Api.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/commons/commons-jaxrs/src/main/kotlin/io/github/herrromich/famoney/jaxrs/ApiResource.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/commons/commons-jaxrs/src/main/kotlin/io/github/herrromich/famoney/jaxrs/BasisApiResource.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/account-entry-dialog/account-entry-dialog.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/account-entry-dialog/account-entry-dialog.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/account-entry-dialog/account-entry-dialog.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/account-entry-dialog/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/models/account-entry.model.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/models/account-movement.model.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/account-movements.virtual-scroller-strategy.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/account-table.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/account-table.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/account-table.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/movement-data-source.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/services/accounts.guard.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/services/accounts.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/services/movements.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/components/month-picker/month-calendar-header.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/components/month-picker/month-picker-input.directive.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/components/month-picker/month-picker.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/components/router-tab/router-tab-item.directive.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/components/router-tab/router-tab.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/components/router-tab/router-tab.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/components/router-tab/router-tab.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/directives/router-tab.directive.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/misc/index.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/modules/apis.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/modules/month-picker.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/modules/router-tab.module.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/services/entry-category.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/services/parse-numbers.service.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/styles/_variables.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/styles/ghost-animation.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/styles/styles.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/.browserslistrc" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/io/github/herrromich/famoney/accounts/AccountsApiSpecificationImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/io/github/herrromich/famoney/accounts/AccountsApiImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/io/github/herrromich/famoney/accounts/internal/MovementApiService.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/io/github/herrromich/famoney/accounts/internal/MovementApiService.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/io/github/herrromich/famoney/accounts/internal/OperationTimestampRequestFilter.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/io/github/herrromich/famoney/accounts/internal/OperationTimestampResponseFilter.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/io/github/herrromich/famoney/accounts/resource/internal/AccountMovementsApiImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/io/github/herrromich/famoney/accounts/resource/internal/AccountMovementsApiImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/io/github/herrromich/famoney/accounts/resource/internal/AccountsApiImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/io/github/herrromich/famoney/accounts/resource/internal/AccountsApiResourceImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/io/github/herrromich/famoney/accounts/resource/internal/TagsApiImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/io/github/herrromich/famoney/accounts/resource/internal/TagsApiResourceImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/AccountsApiResource.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/AccountsApiResource.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/AccountsApiSpecification.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/AccountsApi.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/dto/BalanceDataDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/dto/BalanceDataDTO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/dto/EntryDataDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/dto/EntryDataDTO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/dto/MovementDataDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/dto/MovementDataDTO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/dto/TransferDataDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/dto/TransferDataDTO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/resources/AccountMovementsApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/resources/AccountMovementsApiResource.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/resources/AccountsApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/resources/AccountsResource.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/resources/TagsApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/resources/TagsApiResource.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/commons/commons-jaxrs/src/main/kotlin/io/github/herrromich/famoney/jaxrs/OperationTimestampProvider.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/commons/commons-jaxrs/src/main/kotlin/io/github/herrromich/famoney/jaxrs/internal/OperationTimestampProviderImpl.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/commons/commons-web/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-web/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/domain/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/domain-migration/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/domain/domain-migration/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/io/github/herrromich/famoney/domain/migration/v02/InitialMovementsJdbcStatements.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/io/github/herrromich/famoney/domain/migration/v02/InitialMovementsJdbcStatements.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/io/github/herrromich/famoney/domain/migration/v02/V2M2InitialMovements.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/io/github/herrromich/famoney/domain/migration/v02/V2M2InitialMovements.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/io/github/herrromich/famoney/domain/migration/v02/V2_1__Movement_tables.sql" beforeDir="false" afterPath="$PROJECT_DIR$/domain/domain-migration/src/main/kotlin/io/github/herrromich/famoney/domain/migration/v02/V2_1__Movement_tables.sql" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/accounts/Account.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/accounts/Account.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/accounts/AccountRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/accounts/AccountRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/accounts/movement/CustomMovementRepositoryImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/accounts/movement/CustomMovementRepositoryImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/accounts/movement/Entry.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/accounts/movement/Entry.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/accounts/movement/EntryItem.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/accounts/movement/EntryItem.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/accounts/movement/Movement.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/accounts/movement/Movement.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/master/EntryCategory.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/master/EntryCategory.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/launcher/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/launcher/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/launcher/src/main/kotlin/io/github/herrromich/famoney/launcher/config/JerseyRestConfig.kt" beforeDir="false" afterPath="$PROJECT_DIR$/launcher/src/main/kotlin/io/github/herrromich/famoney/launcher/config/JerseyRestConfig.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/master-data/master-data-api-impl/src/main/kotlin/io/github/herrromich/famoney/masterdata/MasterDataApiSpecificationImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/master-data/master-data-api-impl/src/main/kotlin/io/github/herrromich/famoney/masterdata/MasterDataApiImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/master-data/master-data-api-impl/src/main/kotlin/io/github/herrromich/famoney/masterdata/internal/EntryCategoriesApiImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/master-data/master-data-api-impl/src/main/kotlin/io/github/herrromich/famoney/masterdata/internal/EntryCategoriesApiResourceImpl.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/master-data/master-data-api/src/main/kotlin/io/github/herrromich/famoney/masterdata/api/MasterDataApiResource.kt" beforeDir="false" afterPath="$PROJECT_DIR$/master-data/master-data-api/src/main/kotlin/io/github/herrromich/famoney/masterdata/api/MasterDataApiResource.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/master-data/master-data-api/src/main/kotlin/io/github/herrromich/famoney/masterdata/api/MasterDataApiSpecification.kt" beforeDir="false" afterPath="$PROJECT_DIR$/master-data/master-data-api/src/main/kotlin/io/github/herrromich/famoney/masterdata/api/MasterDataApi.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/master-data/master-data-api/src/main/kotlin/io/github/herrromich/famoney/masterdata/api/dto/EntryCategoryDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/master-data/master-data-api/src/main/kotlin/io/github/herrromich/famoney/masterdata/api/dto/EntryCategoryDTO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/master-data/master-data-api/src/main/kotlin/io/github/herrromich/famoney/masterdata/api/dto/ExpenseCategoryDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/master-data/master-data-api/src/main/kotlin/io/github/herrromich/famoney/masterdata/api/dto/ExpenseCategoryDTO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/master-data/master-data-api/src/main/kotlin/io/github/herrromich/famoney/masterdata/api/dto/IncomeCategoryDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/master-data/master-data-api/src/main/kotlin/io/github/herrromich/famoney/masterdata/api/dto/IncomeCategoryDTO.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/master-data/master-data-api/src/main/kotlin/io/github/herrromich/famoney/masterdata/api/resources/EntryCategoriesApi.kt" beforeDir="false" afterPath="$PROJECT_DIR$/master-data/master-data-api/src/main/kotlin/io/github/herrromich/famoney/masterdata/api/resources/EntryCategoriesApiResource.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/custom-webpack.config.js" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/web-ui/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web-ui/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/src/test.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/test.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/app.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/accounts-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/accounts-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/accounts.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/accounts.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/router-tab/router-tab-item.directive.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/router-tab/router-tab.component.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/router-tab/router-tab.component.scss" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/router-tab/router-tab.component.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/router-tab/router-tab.directive.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/router-tab/router-tab.module.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/accounts/accounts.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/accounts/accounts.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/apis/accounts/api/accounts-api.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/apis/accounts/api/accounts-api.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/apis/accounts/model/account-data.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/apis/accounts/model/account-data.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/apis/accounts/model/account.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/apis/accounts/model/account.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/apis/accounts/model/entry-data.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/apis/accounts/model/entry-data.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/apis/accounts/model/entry-item-data.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/apis/accounts/model/entry-item-data.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/apis/accounts/model/refund-data.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/apis/accounts/model/refund-data.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/apis/accounts/model/transfer-data.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/apis/accounts/model/transfer-data.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/apis/master-data/model/expense-category.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/apis/master-data/model/expense-category.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/apis/master-data/model/income-category.dto.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/apis/master-data/model/income-category.dto.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/modules/angular.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/modules/angular.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/modules/material.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/modules/material.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/modules/shared.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/modules/shared.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/services/locale.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/services/locale.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/assets/menu-down.svg" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/assets/menu-down.svg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/styles.scss" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,6 +159,9 @@
         <task path="$PROJECT_DIR$/domain/domain-migration">
           <activation />
         </task>
+        <task path="$PROJECT_DIR$/accounts/accounts-api-impl">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand>
@@ -71,64 +178,39 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="FaMoney" type="f1a62948:ProjectNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="build" type="c8890929:TasksNode$1" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="FaMoney" type="f1a62948:ProjectNode" />
-                <item name="accounts" type="2d1252cf:ModuleNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="FaMoney" type="f1a62948:ProjectNode" />
-                <item name="accounts" type="2d1252cf:ModuleNode" />
-                <item name="accounts-api" type="2d1252cf:ModuleNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="FaMoney" type="f1a62948:ProjectNode" />
-                <item name="accounts" type="2d1252cf:ModuleNode" />
-                <item name="accounts-api" type="2d1252cf:ModuleNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
-              </path>
-              <path>
-                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
-                <item name="FaMoney" type="f1a62948:ProjectNode" />
-                <item name="accounts" type="2d1252cf:ModuleNode" />
-                <item name="accounts-api" type="2d1252cf:ModuleNode" />
-                <item name="Tasks" type="e4a08cd1:TasksNode" />
                 <item name="other" type="c8890929:TasksNode$1" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="FaMoney" type="f1a62948:ProjectNode" />
-                <item name="commons" type="2d1252cf:ModuleNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="verification" type="c8890929:TasksNode$1" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="FaMoney" type="f1a62948:ProjectNode" />
-                <item name="domain" type="2d1252cf:ModuleNode" />
+                <item name="accounts" type="2d1252cf:ModuleNode" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="FaMoney" type="f1a62948:ProjectNode" />
-                <item name="domain" type="2d1252cf:ModuleNode" />
-                <item name="domain-migration" type="2d1252cf:ModuleNode" />
+                <item name="accounts" type="2d1252cf:ModuleNode" />
+                <item name="accounts-api-impl" type="2d1252cf:ModuleNode" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="FaMoney" type="f1a62948:ProjectNode" />
-                <item name="domain" type="2d1252cf:ModuleNode" />
-                <item name="domain-migration" type="2d1252cf:ModuleNode" />
+                <item name="accounts" type="2d1252cf:ModuleNode" />
+                <item name="accounts-api-impl" type="2d1252cf:ModuleNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
               </path>
               <path>
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="FaMoney" type="f1a62948:ProjectNode" />
-                <item name="domain" type="2d1252cf:ModuleNode" />
-                <item name="domain-migration" type="2d1252cf:ModuleNode" />
+                <item name="accounts" type="2d1252cf:ModuleNode" />
+                <item name="accounts-api-impl" type="2d1252cf:ModuleNode" />
                 <item name="Tasks" type="e4a08cd1:TasksNode" />
-                <item name="build" type="c8890929:TasksNode$1" />
+                <item name="help" type="c8890929:TasksNode$1" />
               </path>
             </expand>
             <select />
@@ -144,8 +226,8 @@
         <option value="Class" />
         <option value="Kotlin File" />
         <option value="Kotlin Enum" />
-        <option value="Kotlin Interface" />
         <option value="Kotlin Class" />
+        <option value="Kotlin Interface" />
       </list>
     </option>
   </component>
@@ -164,23 +246,24 @@
     <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="ProjectViewState">
+    <option name="showExcludedFiles" value="false" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;jdk.selected.JAVA_MODULE&quot;: &quot;17&quot;,
-    &quot;last_directory_selection&quot;: &quot;C:/Dev/Projects/FaMoneyK/launcher/src/main/kotlin/com/hrrm/famoney&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Dev/Tools/java&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.24971229&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "jdk.selected.JAVA_MODULE": "17",
+    "last_directory_selection": "C:/Dev/Projects/FaMoneyK/launcher/src/main/kotlin/com/hrrm/famoney",
+    "last_opened_file_path": "C:/Dev/Tools/java",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.24971229",
+    "settings.editor.selected.configurable": "Errors"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Dev\Projects\FaMoneyK\domain\src\main\kotlin\com\hrrm\famoney\domain\master" />
@@ -197,6 +280,7 @@
       <recent name="C:\Dev\Projects\FaMoneyK\domain\src\main\resources" />
     </key>
     <key name="CreateKotlinClassDialog.RecentsKey">
+      <recent name="io.github.herrromich.famoney.jaxrs" />
       <recent name="com.hrrm.famoney.domain.migration.v02" />
       <recent name="com.hrrm.famoney.accounts.movement" />
       <recent name="com.hrrm.famoneys.accounts.resource.internal" />
@@ -220,6 +304,8 @@
       <recent name="com.hrrm.famoney.domain.migration.v02" />
     </key>
     <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="io.github.herrromich.famoney.masterdata" />
+      <recent name="io.github.herrromich.famoney.accounts" />
       <recent name="com.hrrm.famoney.accounts.api.resources" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
@@ -230,6 +316,14 @@
       <recent name="com.hrrm.famoney.jaxrs.internal" />
     </key>
   </component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="gradle assemble --dry-run" />
+      <command value="gradle assemble --dry-run -m" />
+      <command value="gradle :classes :testClasses :accounts:classes :accounts:testClasses :commons:classes :commons:testClasses :launcher:classes :launcher:testClasses :accounts:accounts-api:classes :accounts:accounts-api:testClasses :accounts:accounts-api-impl:classes :accounts:accounts-api-impl:testClasses :commons:commons-core:classes :commons:commons-core:testClasses :commons:commons-events:classes :commons:commons-events:testClasses :commons:commons-jaxrs:classes :commons:commons-jaxrs:testClasses :commons:commons-persistence:classes :commons:commons-persistence:testClasses :swagger-ui:classes :swagger-ui:testClasses :master-data:classes :master-data:testClasses :domain:classes :domain:testClasses :domain:domain-migration:classes :domain:domain-migration:testClasses :commons:commons-web:classes :commons:commons-web:testClasses :master-data:master-data-api:classes :master-data:master-data-api:testClasses :master-data:master-data-api-impl:classes :master-data:master-data-api-impl:testClasses assemble --dry-run -m" />
+      <command value="gradle :classes :testClasses :accounts:classes :accounts:testClasses :commons:classes :commons:testClasses :launcher:classes :launcher:testClasses :accounts:accounts-api:classes :accounts:accounts-api:testClasses :accounts:accounts-api-impl:classes :accounts:accounts-api-impl:testClasses :commons:commons-core:classes :commons:commons-core:testClasses :commons:commons-events:classes :commons:commons-events:testClasses :commons:commons-jaxrs:classes :commons:commons-jaxrs:testClasses :commons:commons-persistence:classes :commons:commons-persistence:testClasses :swagger-ui:classes :swagger-ui:testClasses :master-data:classes :master-data:testClasses :domain:classes :domain:testClasses :domain:domain-migration:classes :domain:domain-migration:testClasses :commons:commons-web:classes :commons:commons-web:testClasses :master-data:master-data-api:classes :master-data:master-data-api:testClasses :master-data:master-data-api-impl:classes :master-data:master-data-api-impl:testClasses --dry-run -m" />
+    </option>
+  </component>
   <component name="RunDashboard">
     <option name="configurationTypes">
       <set>
@@ -238,19 +332,128 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Gradle.FaMoneyK [clean]">
-    <configuration name="FaMoneyK [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+  <component name="RunManager" selected="Kotlin.ServerLauncherKt">
+    <configuration name="FaMoneyK [:classes :testClasses :accounts:classes :accounts:testClasses :commons:classes :commons:testClasses :launcher:classes :launcher:testClasses :accounts:accounts-api:classes :accounts:accounts-api:testClasses :accounts:accounts-api-impl:classes :accounts:accounts-api-impl:testClasses :commons:commons-core:classes :commons:commons-core:testClasses :commons:commons-events:classes :commons:commons-events:testClasses :commons:commons-jaxrs:classes :commons:commons-jaxrs:testClasses :commons:commons-persistence:classes :commons:commons-persistence:testClasses :swagger-ui:classes :swagger-ui:testClasses :master-data:classes :master-data:testClasses :domain:classes :domain:testClasses :domain:domain-migration:classes :domain:domain-migration:testClasses :commons:commons-web:classes :commons:commons-web:testClasses :master-data:master-data-api:classes :master-data:master-data-api:testClasses :master-data:master-data-api-impl:classes :master-data:master-data-api-impl:testClasses assemble]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
       <ExternalSystemSettings>
         <option name="executionName" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" />
+        <option name="scriptParameters" value="--dry-run -m" />
         <option name="taskDescriptions">
           <list />
         </option>
         <option name="taskNames">
           <list>
-            <option value="build" />
+            <option value=":classes" />
+            <option value=":testClasses" />
+            <option value=":accounts:classes" />
+            <option value=":accounts:testClasses" />
+            <option value=":commons:classes" />
+            <option value=":commons:testClasses" />
+            <option value=":launcher:classes" />
+            <option value=":launcher:testClasses" />
+            <option value=":accounts:accounts-api:classes" />
+            <option value=":accounts:accounts-api:testClasses" />
+            <option value=":accounts:accounts-api-impl:classes" />
+            <option value=":accounts:accounts-api-impl:testClasses" />
+            <option value=":commons:commons-core:classes" />
+            <option value=":commons:commons-core:testClasses" />
+            <option value=":commons:commons-events:classes" />
+            <option value=":commons:commons-events:testClasses" />
+            <option value=":commons:commons-jaxrs:classes" />
+            <option value=":commons:commons-jaxrs:testClasses" />
+            <option value=":commons:commons-persistence:classes" />
+            <option value=":commons:commons-persistence:testClasses" />
+            <option value=":swagger-ui:classes" />
+            <option value=":swagger-ui:testClasses" />
+            <option value=":master-data:classes" />
+            <option value=":master-data:testClasses" />
+            <option value=":domain:classes" />
+            <option value=":domain:testClasses" />
+            <option value=":domain:domain-migration:classes" />
+            <option value=":domain:domain-migration:testClasses" />
+            <option value=":commons:commons-web:classes" />
+            <option value=":commons:commons-web:testClasses" />
+            <option value=":master-data:master-data-api:classes" />
+            <option value=":master-data:master-data-api:testClasses" />
+            <option value=":master-data:master-data-api-impl:classes" />
+            <option value=":master-data:master-data-api-impl:testClasses" />
+            <option value="assemble" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="FaMoneyK [:classes :testClasses :accounts:classes :accounts:testClasses :commons:classes :commons:testClasses :launcher:classes :launcher:testClasses :accounts:accounts-api:classes :accounts:accounts-api:testClasses :accounts:accounts-api-impl:classes :accounts:accounts-api-impl:testClasses :commons:commons-core:classes :commons:commons-core:testClasses :commons:commons-events:classes :commons:commons-events:testClasses :commons:commons-jaxrs:classes :commons:commons-jaxrs:testClasses :commons:commons-persistence:classes :commons:commons-persistence:testClasses :swagger-ui:classes :swagger-ui:testClasses :master-data:classes :master-data:testClasses :domain:classes :domain:testClasses :domain:domain-migration:classes :domain:domain-migration:testClasses :commons:commons-web:classes :commons:commons-web:testClasses :master-data:master-data-api:classes :master-data:master-data-api:testClasses :master-data:master-data-api-impl:classes :master-data:master-data-api-impl:testClasses]" type="GradleRunConfiguration" factoryName="Gradle">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--dry-run -m" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value=":classes" />
+            <option value=":testClasses" />
+            <option value=":accounts:classes" />
+            <option value=":accounts:testClasses" />
+            <option value=":commons:classes" />
+            <option value=":commons:testClasses" />
+            <option value=":launcher:classes" />
+            <option value=":launcher:testClasses" />
+            <option value=":accounts:accounts-api:classes" />
+            <option value=":accounts:accounts-api:testClasses" />
+            <option value=":accounts:accounts-api-impl:classes" />
+            <option value=":accounts:accounts-api-impl:testClasses" />
+            <option value=":commons:commons-core:classes" />
+            <option value=":commons:commons-core:testClasses" />
+            <option value=":commons:commons-events:classes" />
+            <option value=":commons:commons-events:testClasses" />
+            <option value=":commons:commons-jaxrs:classes" />
+            <option value=":commons:commons-jaxrs:testClasses" />
+            <option value=":commons:commons-persistence:classes" />
+            <option value=":commons:commons-persistence:testClasses" />
+            <option value=":swagger-ui:classes" />
+            <option value=":swagger-ui:testClasses" />
+            <option value=":master-data:classes" />
+            <option value=":master-data:testClasses" />
+            <option value=":domain:classes" />
+            <option value=":domain:testClasses" />
+            <option value=":domain:domain-migration:classes" />
+            <option value=":domain:domain-migration:testClasses" />
+            <option value=":commons:commons-web:classes" />
+            <option value=":commons:commons-web:testClasses" />
+            <option value=":master-data:master-data-api:classes" />
+            <option value=":master-data:master-data-api:testClasses" />
+            <option value=":master-data:master-data-api-impl:classes" />
+            <option value=":master-data:master-data-api-impl:testClasses" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="FaMoneyK [assemble]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" value="--dry-run" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="assemble" />
           </list>
         </option>
         <option name="vmOptions" />
@@ -281,51 +484,10 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <method v="2" />
     </configuration>
-    <configuration name="FaMoneyK:accounts:accounts-api [resolveApi]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/accounts/accounts-api" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="--stacktrace" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="resolveApi" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
-    <configuration name="FaMoneyK:domain:domain-migration [classes]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
-      <ExternalSystemSettings>
-        <option name="executionName" />
-        <option name="externalProjectPath" value="$PROJECT_DIR$/domain/domain-migration" />
-        <option name="externalSystemIdString" value="GRADLE" />
-        <option name="scriptParameters" value="" />
-        <option name="taskDescriptions">
-          <list />
-        </option>
-        <option name="taskNames">
-          <list>
-            <option value="classes" />
-          </list>
-        </option>
-        <option name="vmOptions" />
-      </ExternalSystemSettings>
-      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
-      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
-      <DebugAllEnabled>false</DebugAllEnabled>
-      <method v="2" />
-    </configuration>
     <configuration name="ServerLauncherKt" type="JetRunConfigurationType" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.hrrm.famoney.launcher.ServerLauncherKt" />
+      <option name="MAIN_CLASS_NAME" value="io.github.herrromich.famoney.launcher.ServerLauncherKt" />
       <module name="FaMoney.launcher.main" />
+      <shortenClasspath name="NONE" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
@@ -344,19 +506,18 @@
       </method>
     </configuration>
     <list>
-      <item itemvalue="Gradle.FaMoneyK:domain:domain-migration [classes]" />
-      <item itemvalue="Gradle.FaMoneyK [build]" />
+      <item itemvalue="Gradle.FaMoneyK [:classes :testClasses :accounts:classes :accounts:testClasses :commons:classes :commons:testClasses :launcher:classes :launcher:testClasses :accounts:accounts-api:classes :accounts:accounts-api:testClasses :accounts:accounts-api-impl:classes :accounts:accounts-api-impl:testClasses :commons:commons-core:classes :commons:commons-core:testClasses :commons:commons-events:classes :commons:commons-events:testClasses :commons:commons-jaxrs:classes :commons:commons-jaxrs:testClasses :commons:commons-persistence:classes :commons:commons-persistence:testClasses :swagger-ui:classes :swagger-ui:testClasses :master-data:classes :master-data:testClasses :domain:classes :domain:testClasses :domain:domain-migration:classes :domain:domain-migration:testClasses :commons:commons-web:classes :commons:commons-web:testClasses :master-data:master-data-api:classes :master-data:master-data-api:testClasses :master-data:master-data-api-impl:classes :master-data:master-data-api-impl:testClasses]" />
+      <item itemvalue="Gradle.FaMoneyK [:classes :testClasses :accounts:classes :accounts:testClasses :commons:classes :commons:testClasses :launcher:classes :launcher:testClasses :accounts:accounts-api:classes :accounts:accounts-api:testClasses :accounts:accounts-api-impl:classes :accounts:accounts-api-impl:testClasses :commons:commons-core:classes :commons:commons-core:testClasses :commons:commons-events:classes :commons:commons-events:testClasses :commons:commons-jaxrs:classes :commons:commons-jaxrs:testClasses :commons:commons-persistence:classes :commons:commons-persistence:testClasses :swagger-ui:classes :swagger-ui:testClasses :master-data:classes :master-data:testClasses :domain:classes :domain:testClasses :domain:domain-migration:classes :domain:domain-migration:testClasses :commons:commons-web:classes :commons:commons-web:testClasses :master-data:master-data-api:classes :master-data:master-data-api:testClasses :master-data:master-data-api-impl:classes :master-data:master-data-api-impl:testClasses assemble]" />
+      <item itemvalue="Gradle.FaMoneyK [assemble]" />
       <item itemvalue="Gradle.FaMoneyK [clean]" />
-      <item itemvalue="Gradle.FaMoneyK:accounts:accounts-api [resolveApi]" />
       <item itemvalue="Kotlin.ServerLauncherKt" />
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Gradle.FaMoneyK [clean]" />
-        <item itemvalue="Gradle.FaMoneyK:accounts:accounts-api [resolveApi]" />
         <item itemvalue="Kotlin.ServerLauncherKt" />
-        <item itemvalue="Gradle.FaMoneyK:domain:domain-migration [classes]" />
-        <item itemvalue="Gradle.FaMoneyK [build]" />
+        <item itemvalue="Gradle.FaMoneyK [:classes :testClasses :accounts:classes :accounts:testClasses :commons:classes :commons:testClasses :launcher:classes :launcher:testClasses :accounts:accounts-api:classes :accounts:accounts-api:testClasses :accounts:accounts-api-impl:classes :accounts:accounts-api-impl:testClasses :commons:commons-core:classes :commons:commons-core:testClasses :commons:commons-events:classes :commons:commons-events:testClasses :commons:commons-jaxrs:classes :commons:commons-jaxrs:testClasses :commons:commons-persistence:classes :commons:commons-persistence:testClasses :swagger-ui:classes :swagger-ui:testClasses :master-data:classes :master-data:testClasses :domain:classes :domain:testClasses :domain:domain-migration:classes :domain:domain-migration:testClasses :commons:commons-web:classes :commons:commons-web:testClasses :master-data:master-data-api:classes :master-data:master-data-api:testClasses :master-data:master-data-api-impl:classes :master-data:master-data-api-impl:testClasses assemble]" />
+        <item itemvalue="Gradle.FaMoneyK [assemble]" />
+        <item itemvalue="Gradle.FaMoneyK [clean]" />
       </list>
     </recent_temporary>
   </component>
@@ -446,18 +607,16 @@
     <MESSAGE value="Progress" />
     <MESSAGE value="Migration&#10;&#10; * Spring" />
     <MESSAGE value="Migration&#10;&#10; * Angular" />
-    <option name="LAST_COMMIT_MESSAGE" value="Migration&#10;&#10; * Angular" />
+    <MESSAGE value="Accounts and movements." />
+    <option name="LAST_COMMIT_MESSAGE" value="Accounts and movements." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="kotlin-line">
-          <url>file://$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/com/hrrm/famoney/accounts/resource/internal/AccountsApiImpl.kt</url>
-          <line>98</line>
-          <properties>
-            <option name="lambda-ordinal" value="-1" />
-          </properties>
-          <option name="timeStamp" value="44" />
+        <line-breakpoint enabled="true" type="java-line">
+          <url>jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.eclipse.persistence/eclipselink/4.0.1/97f112fde90d23992f60e2fb21269849af74561b/eclipselink-4.0.1-sources.jar!/org/eclipse/persistence/internal/queries/DatasourceCallQueryMechanism.java</url>
+          <line>279</line>
+          <option name="timeStamp" value="110" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

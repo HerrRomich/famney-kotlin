@@ -1,5 +1,6 @@
 dependencies {
     implementation(project(":commons:commons-persistence"))
+    implementation(project(":domain"))
 }
 
 tasks.classes {

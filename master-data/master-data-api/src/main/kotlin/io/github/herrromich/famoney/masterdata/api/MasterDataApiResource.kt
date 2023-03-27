@@ -1,4 +1,6 @@
 package io.github.herrromich.famoney.masterdata.api
 
-interface MasterDataApiResource {
+import io.github.herrromich.famoney.jaxrs.ApiResource
+
+interface MasterDataApiResource: ApiResource {
 }

@@ -13,8 +13,8 @@
 
 export interface EntryItemDataDto { 
     comments?: string;
-    amount: number;
     categoryId: number;
+    amount: number;
 }
 
 

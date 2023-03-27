@@ -10,7 +10,12 @@ import java.time.LocalDate
 @Schema(
     name = "EntryData",
     allOf = [MovementDataDTO::class],
-    extensions = [Extension(properties = [ExtensionProperty(name = "x-discriminator-value", value = EntryDataDTO.TYPE_NAME)])]
+    extensions = [Extension(
+        properties = [ExtensionProperty(
+            name = "x-discriminator-value",
+            value = EntryDataDTO.TYPE_NAME
+        )]
+    )]
 )
 @JsonTypeName(EntryDataDTO.TYPE_NAME)
 data class EntryDataDTO(

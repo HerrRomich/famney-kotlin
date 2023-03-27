@@ -1,16 +1,30 @@
 
+export type DateFormatName = 'MMM YYYY' | 'L';
+
+const dateFormatters: Record<DateFormatName, Intl.DateTimeFormatOptions> = {
+  'MMM YYYY': {
+    month: "short",
+    year: "numeric",
+  },
+  'L': {
+    dateStyle: 'short',
+  }
+};
+
 export class LocaleService {
-  private _locale: string;
+  private _dateFormatters: Partial<Record<keyof (typeof dateFormatters), Intl.DateTimeFormat>> = {};
 
-  constructor() {
-    this._locale = 'ru';
+  constructor(readonly locale: string) {
   }
 
-  set locale(value: string) {
-    this._locale = value;
-  }
-  get locale(): string {
-    return this._locale;
+  formatDate(date: Date, dateFormatName: DateFormatName){
+    const format = this._dateFormatters[dateFormatName] ?? this.initFormat(dateFormatName);
+    return format.format(date);
   }
 
+  initFormat(dateFormatName: DateFormatName) {
+    const format = Intl.DateTimeFormat(this.locale, dateFormatters[dateFormatName]);
+    this._dateFormatters[dateFormatName] = format;
+    return format;
+  }
 }

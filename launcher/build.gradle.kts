@@ -5,11 +5,12 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-aop")
 
+    implementation(project(":commons:commons-jaxrs"))
     implementation(project(":commons:commons-web"))
-    implementation(project(":domain"))
     implementation(project(":swagger-ui"))
     implementation(project(":accounts:accounts-api-impl"))
     implementation(project(":master-data:master-data-api-impl"))
+    implementation(project(":domain:domain-migration"))
 }
 
 springBoot {
@@ -17,12 +18,6 @@ springBoot {
 }
 
 tasks {
-    jar {
-        from(project(":web-ui").layout.projectDirectory.dir("dist")) {
-            into("static/web-ui")
-        }
-        dependsOn(":web-ui:buildWebUI")
-    }
     bootJar {
         from(project(":web-ui").layout.projectDirectory.dir("dist")) {
             into("BOOT-INF/classes/static/web-ui")
