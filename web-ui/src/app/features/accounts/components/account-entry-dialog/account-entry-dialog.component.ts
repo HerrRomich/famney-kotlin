@@ -1,10 +1,9 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { AbstractControl, FormArray, FormBuilder, FormControl, FormGroup, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { ApiErrorDto, EntryDataDto, EntryItemDataDto, MovementDto } from '@famoney-apis/accounts';
+import { AccountsApiService, ApiErrorDto, EntryDataDto, EntryItemDataDto, MovementDto } from '@famoney-apis/accounts';
 import { AccountEntry, EntryDialogData, EntryItem } from '@famoney-features/accounts/models/account-entry.model';
-import { MovementsService } from '@famoney-features/accounts/services/movements.service';
 import { nullDate, nullNumber, nullString } from '@famoney-shared/misc';
 import { EntryCategoryService, FlatEntryCategoryObject } from '@famoney-shared/services/entry-category.service';
 import { DateFormatName, LocaleService } from '@famoney-shared/services/locale.service';
@@ -34,7 +33,7 @@ export class AccountEntryDialogComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<AccountEntryDialogComponent, MovementDto>,
     private _formBuilder: FormBuilder,
-    private movementsService: MovementsService,
+    private _accountsApiService: AccountsApiService,
     private entryCategoriesService: EntryCategoryService,
     @Optional() @Inject(MAT_DATE_LOCALE) private dateLocale: string,
     private translateService: TranslateService,
@@ -163,8 +162,8 @@ export class AccountEntryDialogComponent implements OnInit {
     const { accountId, movementId } = this.data;
     let storeOperator =
       typeof movementId === 'undefined'
-        ? (entryData: EntryDataDto) => this.movementsService.addMovement(accountId, entryData)
-        : (entryData: EntryDataDto) => this.movementsService.changeMovement(accountId, movementId, entryData);
+        ? (entryData: EntryDataDto) => this._accountsApiService.addMovement(accountId, entryData)
+        : (entryData: EntryDataDto) => this._accountsApiService.changeMovement(accountId, movementId, entryData);
     of(this.entryForm?.value)
       .pipe(
         switchMap(accountEntry =>

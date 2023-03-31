@@ -8,6 +8,9 @@ import { AccountsComponent } from './pages/accounts/accounts.component';
 import { AccountTableComponent } from './pages/account-table/account-table.component';
 import { AccountEntryDialogComponent } from './components/account-entry-dialog';
 import { MonthPickerModule } from '@famoney-shared/modules/month-picker.module';
+import { AccountsStore } from './store/accounts.store';
+import { MovementsStore } from './store/movements.store';
+import { provideComponentStore } from '@ngrx/component-store';
 
 @NgModule({
   declarations: [AccountsComponent, AccountTableComponent, AccountEntryDialogComponent],
@@ -19,5 +22,6 @@ import { MonthPickerModule } from '@famoney-shared/modules/month-picker.module';
     RouterTabModule,
     MonthPickerModule
   ],
+  providers: [provideComponentStore(AccountsStore), provideComponentStore(MovementsStore)]
 })
 export class AccountsModule {}

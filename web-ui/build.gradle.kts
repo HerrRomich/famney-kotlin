@@ -76,15 +76,19 @@ tasks {
             "taggedUnions" to "true",
             "stringEnums" to "false",
             "legacyDiscriminatorBehavior" to "true",
-            "providedIn" to "any"
+            "providedIn" to "any",
           )
         )
         dependsOn(copyApiDeps, deleteApis)
       }
     }
 
+  val generateApiAngularClient = register("generateApiAngularClient") {
+    dependsOn(*generateTasks.toTypedArray())
+  }
+
   register<NpxTask>("buildWebUI") {
-    dependsOn(*generateTasks.toTypedArray(), "npmInstall")
+    dependsOn(generateApiAngularClient, "npmInstall")
     command.set("ng")
     args.set(listOf("build"))
     inputs.files("package.json", "package-lock.json", "angular.json", "tsconfig.json", "tsconfig.app.json")

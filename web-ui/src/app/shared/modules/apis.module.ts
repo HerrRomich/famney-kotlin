@@ -4,7 +4,8 @@ import {
   ApiModule as MasterDataApiModule,
   Configuration as MasterDataApiConfiguration,
 } from '@famoney-apis/master-data';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { DateHttpInterceptor, DATE_ATTRIBUTE_PATHS } from '@famoney-shared/http-interceptors/date.http-Interceptor';
 
 const accountsApiConfigFactory = () => {
   return new AccountsApiConfiguration({
@@ -23,6 +24,18 @@ const masterDataApiConfigFactory = () => {
     AccountsApiModule.forRoot(accountsApiConfigFactory),
     MasterDataApiModule.forRoot(masterDataApiConfigFactory),
     HttpClientModule,
+  ],
+  providers: [
+    {
+      provide: DATE_ATTRIBUTE_PATHS,
+      useValue: ['openDate', 'data->date', 'data->bookingDate', , 'data->budgetPeriod'],
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: DateHttpInterceptor,
+      multi: true,
+      deps: [DATE_ATTRIBUTE_PATHS],
+    },
   ],
 })
 export class ApisModule {}

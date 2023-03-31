@@ -5,13 +5,17 @@
 }
 
 div.menu {
-  flex-direction: row;
   display: flex;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: center;
+  height: 50px;
 }
 
 .accounts-tab-group {
+  display: flex;
+  flex-direction: row;
+  flex: 0 1 auto;
   min-width: 0px;
 }
 

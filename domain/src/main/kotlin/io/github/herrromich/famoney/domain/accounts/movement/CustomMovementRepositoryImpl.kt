@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired
 class CustomMovementRepositoryImpl(private @Autowired val entityManager: EntityManager) : CustomMovementRepository {
     override fun getByAccountOrderByDatePosition(account: Account, offset: Int?, limit: Int?) =
         entityManager.createQuery(
-            "select m from Movement m where m.account = :account order by m.date, m.position",
+            "select m from Movement m where m.account = :account order by m.date desc, m.position desc",
             Movement::class.java
         )
             .setParameter("account", account)

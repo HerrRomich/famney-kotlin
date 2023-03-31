@@ -21,6 +21,9 @@
     "@angular/platform-browser-dynamic": "^15.2.3",
     "@angular/router": "^15.2.3",
     "@ecodev/fab-speed-dial": "^13.0.0",
+    "@ngrx/component-store": "^15.4.0",
+    "@ngrx/entity": "^15.4.0",
+    "@ngrx/router-store": "^15.4.0",
     "@ngrx/store": "^15.4.0",
     "@ngx-translate/core": "^14.0.0",
     "@ngx-translate/http-loader": "^7.0.0",
@@ -32,10 +35,10 @@
     "zone.js": "^0.11.8"
   },
   "devDependencies": {
+    "@angular-builders/custom-webpack": "^15.0.0",
     "@angular-devkit/build-angular": "^15.2.4",
     "@angular/cli": "^15.2.4",
     "@angular/compiler-cli": "^15.2.3",
-    "@angular-builders/custom-webpack": "^15.0.0",
     "@types/jasmine": "~4.0.0",
     "jasmine-core": "~4.1.0",
     "karma": "~6.3.0",

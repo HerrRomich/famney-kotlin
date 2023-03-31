@@ -17,7 +17,7 @@ const routes: Routes = [
       {
         path: ':accountId',
         component: AccountTableComponent,
-        canActivate: [() => canAtivateAccount],
+        canActivate: [canAtivateAccount],
       },
     ],
   },

@@ -3,9 +3,9 @@
     <mat-icon>filter_list</mat-icon>
   </button>
   <div fmSpacer></div>
-  <fm-router-tab fxFlex="0 1 auto" class="accounts-tab-group">
+  <fm-router-tab class="accounts-tab-group">
     <fm-router-tab-item
-      *ngFor="let account of accounts$ | async"
+      *ngFor="let account of accountsStore.accounts$| async"
       [routerLink]="account.id.toString()"
       routerLinkActive
       #rlaRef="routerLinkActive"

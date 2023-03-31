@@ -13,38 +13,11 @@ cdk-virtual-scroll-viewport {
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
+  overflow-y: scroll;
 }
 
 mat-list.movements-list {
   padding-top: 0;
-}
-
-.account-entry:hover {
-  background-color: mat.get-color-from-palette(v.$fm-app-accent, 50);
-  font-weight: 600;
-  cursor: pointer;
-  button.account-entry-action {
-    display: block;
-  }
-}
-
-.account-entry {
-  button.account-entry-action {
-    display: none;
-  }
-}
-
-.account-entry-data {
-  height: 100%;
-}
-
-.account-entry-data-loading {
-  div {
-    background-color: rgba(235, 235, 235, 0.514);
-    border-bottom: 2px solid white;
-    border-radius: 4px 4px 4px 4px;
-    @include animate-ghost-line;
-  }
 }
 
 mat-list-item {
@@ -53,17 +26,44 @@ mat-list-item {
   &.account-entry-header {
     position: sticky;
     top: 0;
-    font-weight: 700;
     z-index: 1;
     background-color: rgba(#ffffff, 1);
+  div {
+      font-weight: 500;
+    }
   }
-  div.content {
+  &.account-entry-data {
+    button.account-entry-action {
+      display: none;
+    }
+    &:hover,
+    &.selected {
+      border-radius: 10px 10px 10px 10px;
+      background-color: mat.get-color-from-palette(v.$fm-app-accent, 50);
+      div {
+        font-weight: 500;
+        cursor: pointer;
+      }
+      button.account-entry-action {
+        display: block;
+      }
+    }
+  }
+  div {
     display: flex;
     flex-direction: row;
     flex: 1 1 auto;
     justify-content: flex-start;
     align-items: center;
     align-content: center;
+    &.loading {
+      div {
+        background-color: rgba(235, 235, 235, 0.514);
+        border-bottom: 2px solid white;
+        border-radius: 4px 4px 4px 4px;
+        @include animate-ghost-line;
+      }
+    }
     > div {
       display: flex;
       overflow: hidden;
@@ -84,7 +84,7 @@ mat-list-item {
         flex-basis: 40%;
         justify-content: flex-start;
       }
-      &.name {
+      &.category {
         flex: 1 1 auto;
         justify-content: flex-start;
       }

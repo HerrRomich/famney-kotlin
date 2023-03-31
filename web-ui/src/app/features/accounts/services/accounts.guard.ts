@@ -1,36 +1,29 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateChildFn, Router, RouterStateSnapshot } from '@angular/router';
 import { map, tap } from 'rxjs/operators';
-import { AccountsService } from './accounts.service';
+import { AccountsStore } from '../store/accounts.store';
+import { MovementsStore } from '../store/movements.store';
 
-export const canAtivateAccount: CanActivateChildFn  = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
-  const accountId = parseInt(route.params['accountId'],  10) || 0;
-  const accountsService = inject(AccountsService);
+export const canAtivateAccount: CanActivateChildFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+  const accountId = parseInt(route.params['accountId'], 10) || 0;
+  const accountsStore = inject(AccountsStore);
+  const movementsStore = inject(MovementsStore);
   const router = inject(Router);
-  return accountsService.accounts$.pipe(
+  return accountsStore.filteredAccounts$.pipe(
     map(accounts => {
-      let result = accounts.find(value => value.id === accountId);
-      if (!result) {
-        result = accounts.find(value => value.id === accountsService.selectedAccountId);
+      const found = accounts.some(account => account.id ===accountId);
+      if (found) {
+        movementsStore.selectAccount(accountId);
+      } else {
+        const accountIdQuery = accounts.length > 0 ? `/${accounts[0].id}` : '';
+        router.navigateByUrl(`/accounts${accountIdQuery}`);
       }
-      if (!result) {
-        return accounts[0].id ?? 0;
-      }
-      return result.id;
+      return found;
     }),
-    tap(value => (accountsService.selectedAccountId = value)),
-    tap(value => {
-      if (value !== accountId) {
-        router.navigate([
-          route.parent?.pathFromRoot
-            .map(ars => ars.url.map(segment => segment.path).join('/'))
-            .filter(part => part.length !== 0)
-            .join('/'),
-          value,
-        ]);
+    tap(result => {
+      if (result) {
+      } else {
       }
     }),
-    map(() => true),
   );
-
-}
+};
