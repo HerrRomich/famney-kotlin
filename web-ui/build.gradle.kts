@@ -6,8 +6,6 @@ plugins {
   id("org.openapi.generator").version("6.3.0")
 }
 
-val apiDeps: Configuration by configurations.creating
-
 data class Api(
   val name: String,
   val project: String,
@@ -30,6 +28,14 @@ val apis = mapOf(
     destPath = "master-data"
   ),
 )
+
+val apiDeps: Configuration by configurations.creating
+
+dependencies {
+  apis.values.forEach{api ->
+    apiDeps(project(api.project))
+  }
+}
 
 node {
   version.set("16.13.1")
