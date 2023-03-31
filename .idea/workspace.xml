@@ -4,36 +4,23 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2f6ca191-61dc-4381-8cb0-6262d42bab95" name="Changes" comment="Accounts and movements.">
-      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/store/accounts.store.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/store/movements.store.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-ui/src/app/shared/http-interceptors/date.http-Interceptor.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/web-ui/src/app/state/accounts/accounts.actions.ts" afterDir="false" />
+    <list default="true" id="2f6ca191-61dc-4381-8cb0-6262d42bab95" name="Changes" comment=" * Movements sort order.&#10; * Tags resource is deleted.&#10; * ngrx stores are introduced.">
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/account-tags-popup/account-tags-popup.component.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/account-tags-popup/account-tags-popup.component.scss" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/account-tags-popup/account-tags-popup.component.ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/account-tags-popup/index.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api-impl/src/main/kotlin/io/github/herrromich/famoney/accounts/resource/internal/TagsApiResourceImpl.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/dto/AccountDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/dto/AccountDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/dto/AccountDataDTO.kt" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/dto/AccountDataDTO.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/accounts-api/src/main/kotlin/io/github/herrromich/famoney/accounts/api/resources/TagsApiResource.kt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/commons/commons-core/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/commons/commons-core/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/accounts/movement/CustomMovementRepositoryImpl.kt" beforeDir="false" afterPath="$PROJECT_DIR$/domain/src/main/kotlin/io/github/herrromich/famoney/domain/accounts/movement/CustomMovementRepositoryImpl.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/build.gradle.kts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web-ui/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web-ui/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/accounts-routing.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/accounts-routing.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/app.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/app.module.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/accounts.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/accounts.module.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/account-entry-dialog/account-entry-dialog.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/components/account-entry-dialog/account-entry-dialog.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/account-movements.virtual-scroller-strategy.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/account-movements.virtual-scroller-strategy.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/account-table.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/account-table.component.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/account-table.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/account-table.component.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/account-table.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/account-table.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/movement-data-source.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/account-table/movement-data-source.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/accounts/accounts.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/accounts/accounts.component.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/accounts/accounts.component.scss" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/accounts/accounts.component.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/accounts/accounts.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/pages/accounts/accounts.component.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/services/accounts.guard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/services/accounts.guard.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/services/accounts.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/services/movements.service.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/modules/apis.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/modules/apis.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/features/accounts/store/accounts.store.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/features/accounts/store/accounts.store.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/directives/spacer.directive.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/directives/spacer.directive.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/app/shared/modules/shared.module.ts" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/app/shared/modules/shared.module.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/web-ui/src/styles/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/web-ui/src/styles/styles.scss" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -515,7 +502,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679950698927</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary=" * Movements sort order.&#10; * Tags resource is deleted.&#10; * ngrx stores are introduced.">
+      <created>1680240119793</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1680240119793</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -537,7 +531,8 @@
     <MESSAGE value="Migration&#10;&#10; * Spring" />
     <MESSAGE value="Migration&#10;&#10; * Angular" />
     <MESSAGE value="Accounts and movements." />
-    <option name="LAST_COMMIT_MESSAGE" value="Accounts and movements." />
+    <MESSAGE value=" * Movements sort order.&#10; * Tags resource is deleted.&#10; * ngrx stores are introduced." />
+    <option name="LAST_COMMIT_MESSAGE" value=" * Movements sort order.&#10; * Tags resource is deleted.&#10; * ngrx stores are introduced." />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

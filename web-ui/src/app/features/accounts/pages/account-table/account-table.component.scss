@@ -107,23 +107,6 @@ mat-list-item {
   }
 }
 
-mat-list-item {
-  &.account-entry-header,
-  &.account-entry {
-    div.fixed-width {
-      overflow: hidden;
-      text-overflow: ellipsis;
-      white-space: nowrap;
-    }
-  }
-  > div.mat-list-item-content {
-    padding: 12px 0 0 0;
-    justify-content: flex-end;
-    align-items: center;
-    align-content: center;
-  }
-}
-
 eco-fab-speed-dial {
   position: absolute;
   right: 12px;

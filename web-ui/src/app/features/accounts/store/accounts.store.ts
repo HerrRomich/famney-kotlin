@@ -11,10 +11,10 @@ import { catchError, map, switchMap, tap } from 'rxjs/operators';
 const ACCOUNT_TAGS_STORAGE = 'ACCOUNT_TAGS_STORAGE';
 const ACCOUNT_ID_STORAGE = 'ACCOUNT_ID_STORAGE';
 
-const getAllTags = (accounts: AccountDto[]): Set<string> => {
+const getAllTags = (accounts: AccountDto[]): string[] => {
   return accounts.reduce(
-    (tags, account) => (account.tags ? new Set([...tags, ...account.tags]) : tags),
-    new Set<string>(),
+    (tags, account) => (account.tags ? [...tags, ...account.tags.filter(tag => !tags.includes(tag))] : tags),
+    Array<string>(),
   );
 };
 
@@ -39,7 +39,7 @@ export class AccountsStore extends ComponentStore<AccountsState> implements OnSt
   readonly accountIds$ = this.select(allAccountIdsSelector).pipe(map(ids => <number[]>ids));
   readonly filteredAccounts$ = this.select(filteredAccountsSelector);
   readonly tags$ = this.select(allTagsSelector);
-  readonly selectedTags = this.select(currentTagsSelector);
+  readonly selectedTags$ = this.select(currentTagsSelector);
 
   constructor(private _accountsApiService: AccountsApiService, private _notificationsService: NotificationsService) {
     super();
@@ -51,9 +51,12 @@ export class AccountsStore extends ComponentStore<AccountsState> implements OnSt
       .pipe(
         tap(accounts => {
           const allTags = getAllTags(accounts);
-          const selectedTags = this.loadSelectedTags().filter(allTags.has).sort();
+          const selectedTags = this.loadSelectedTags().filter(tag =>allTags.includes(tag)).sort();
           this.setState({
-            ...adapter.setAll(accounts, adapter.getInitialState()),
+            ...adapter.setAll(
+              accounts.sort((a, b) => a.id - b.id),
+              adapter.getInitialState(),
+            ),
             selectedTags,
           });
         }),
@@ -63,7 +66,7 @@ export class AccountsStore extends ComponentStore<AccountsState> implements OnSt
         }),
       )
       .subscribe();
-    this.selectedTags.pipe(tap(this.storeSelectedTags), takeUntil(this.destroy$)).subscribe();
+    this.selectedTags$.pipe(tap(this.storeSelectedTags), takeUntil(this.destroy$)).subscribe();
   }
 
   private storeSelectedTags(selectedTags: string[]) {
@@ -74,7 +77,14 @@ export class AccountsStore extends ComponentStore<AccountsState> implements OnSt
     trigger$.pipe(
       switchMap(() =>
         this._accountsApiService.getAllAccounts().pipe(
-          tap(accounts => this.patchState(state => adapter.setAll(accounts, state))),
+          tap(accounts =>
+            this.patchState(state =>
+              adapter.setAll(
+                accounts.sort((a, b) => a.id - b.id),
+                state,
+              ),
+            ),
+          ),
           catchError(e => {
             this._notificationsService.error('Error', "Couldn't load list of accounts.");
             return EMPTY;

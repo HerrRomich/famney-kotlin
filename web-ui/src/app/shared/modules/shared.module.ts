@@ -23,7 +23,7 @@ import { AngularModule } from './angular.module';
       },
     }),
   ],
-  exports: [TranslateModule, SpacerDirective, EcoFabSpeedDialModule],
+  exports: [TranslateModule, SpacerDirective],
   providers: [
     {
       provide: LocaleService,

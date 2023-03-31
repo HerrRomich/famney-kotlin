@@ -1,11 +1,20 @@
 <div class="menu">
-  <button mat-icon-button cdkOverlayOrigin matTooltipClass="wrapped-tooltip">
-    <mat-icon>filter_list</mat-icon>
+  <button
+    mat-icon-button
+    (click)="openAccountTagsPopup()"
+    cdkOverlayOrigin
+    #accountTagsPopupButton="cdkOverlayOrigin"
+    matTooltip="{{ accountTagsText$ | async }}"
+    matTooltipClass="wrapped-tooltip"
+  >
+    <mat-icon matBadge="{{ accountTagsCount$ | async }}" [matBadgeHidden]="(accountTagsCount$ | async) === 0"
+      >filter_list</mat-icon
+    >
   </button>
   <div fmSpacer></div>
   <fm-router-tab class="accounts-tab-group">
     <fm-router-tab-item
-      *ngFor="let account of accountsStore.accounts$| async"
+      *ngFor="let account of accountsStore.filteredAccounts$| async"
       [routerLink]="account.id.toString()"
       routerLinkActive
       #rlaRef="routerLinkActive"

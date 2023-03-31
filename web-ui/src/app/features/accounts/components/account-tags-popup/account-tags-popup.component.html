@@ -1,0 +1,35 @@
+<mat-form-field>
+  <mat-chip-grid #accountTagList>
+    <mat-chip-option
+      *ngFor="let tag of accountsStore.selectedTags$ | async"
+      [selectable]="true"
+      [removable]="true"
+      (removed)="removeTag(tag)"
+    >
+      {{ tag }}
+      <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip-option>
+    <input
+      matInput
+      #tagsInput
+      [placeholder]="'accounts.tagPopup.placeholder' | translate"
+      [matAutocomplete]="tagAutoComplete"
+      [matChipInputFor]="accountTagList"
+      [matChipInputAddOnBlur]="true"
+      (matChipInputTokenEnd)="addTag($event)"
+    />
+    <mat-autocomplete  #tagAutoComplete="matAutocomplete" (optionSelected)="selectTag($event)">
+      <mat-option *ngFor="let tag of filtersAccountTags$ | async" [value]="tag">
+        {{ tag }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-chip-grid>
+  <button
+    mat-icon-button
+    matSuffix
+    (click)="accountsStore.clearSelectedTags()"
+    [matTooltip]="'accounts.tagPopup.buttons.clearAll.tooltip' | translate"
+  >
+    <mat-icon>cancel</mat-icon>
+  </button>
+</mat-form-field>

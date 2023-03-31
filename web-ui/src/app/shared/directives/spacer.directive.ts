@@ -1,5 +1,4 @@
-import { HostBinding } from '@angular/core';
-import { Directive, Input, ElementRef, Renderer2, HostListener } from '@angular/core';
+import { Directive, HostBinding } from '@angular/core';
 
 @Directive({
   selector: '[fmSpacer]',

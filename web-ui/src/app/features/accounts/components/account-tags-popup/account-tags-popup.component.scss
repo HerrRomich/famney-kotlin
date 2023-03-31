@@ -1,0 +1,16 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  flex: auto;
+  position: relative;
+}
+
+mat-form-field {
+  display: flex;
+  flex: auto;
+  mat-chip-grid {
+    display: flex;
+    flex-direction: row;
+    flex: auto;
+  }
+}
