@@ -1,6 +1,11 @@
 @use '@angular/material' as mat;
 @use 'styles/_variables' as v;
 
+mat-dialog-conten {
+  display: flex;
+  flex-direction: column;
+}
+
 .mat-icon-button.small-button {
   height: 20px;
   width: 20px;

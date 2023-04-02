@@ -1,13 +1,11 @@
 import { CdkVirtualScrollViewport, VIRTUAL_SCROLL_STRATEGY } from '@angular/cdk/scrolling';
 import { AfterViewInit, ChangeDetectionStrategy, Component, Inject, OnDestroy, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute } from '@angular/router';
 import { EcoFabSpeedDialActionsComponent, EcoFabSpeedDialComponent } from '@ecodev/fab-speed-dial';
 import { MovementDto } from '@famoney-apis/accounts';
-import { AccountEntryDialogComponent } from '@famoney-features/accounts/components/account-entry-dialog';
+import { MovementEntryDialogComponent } from '@famoney-features/accounts/components/movement-entry-dialog';
 import { EntryDialogData } from '@famoney-features/accounts/models/account-entry.model';
-import { AccountsStore } from '@famoney-features/accounts/store/accounts.store';
-import { MovementData, MovementsStore } from '@famoney-features/accounts/store/movements.store';
+import { AccountsStore, MovementData } from '@famoney-features/accounts/store/accounts.store';
 import { EntryCategoryService } from '@famoney-shared/services/entry-category.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationsService } from 'angular2-notifications';
@@ -31,7 +29,7 @@ const fabSpeedDialDelayOnHover = 350;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AccountTableComponent implements AfterViewInit, OnDestroy {
-  movementDataSource: MovementDataSource = new MovementDataSource(this._movementsStore);
+  movementDataSource: MovementDataSource = new MovementDataSource(this._accountsStore);
 
   @ViewChild('fabSpeedDial', { static: true })
   fabSpeedDial!: EcoFabSpeedDialComponent;
@@ -47,7 +45,7 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
   movementSelection$ = new Subject<number | undefined>();
 
   constructor(
-    private _movementsStore: MovementsStore,
+    private _accountsStore: AccountsStore,
     private _accountEntryDialogComponent: MatDialog,
     private _entryCategoriesService: EntryCategoryService,
     private _notificationsService: NotificationsService,
@@ -176,10 +174,10 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
 
   private openAccountEntryDialog(data: EntryDialogData) {
     const accountEntryDialogRef = this._accountEntryDialogComponent.open<
-      AccountEntryDialogComponent,
+      MovementEntryDialogComponent,
       EntryDialogData,
       MovementDto
-    >(AccountEntryDialogComponent, {
+    >(MovementEntryDialogComponent, {
       width: '520px',
       minWidth: '520px',
       maxWidth: '520px',

@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
+import java.time.LocalDate
 
 @Path("{accountId}/movements")
 @Tag(name = "accounts")
@@ -36,6 +37,16 @@ interface AccountMovementsApiResource: AccountsApiResource {
             description = "Identifier of account, for which the movements will be searched."
         ) @PathParam("accountId") accountId: Int,
         @Parameter(
+            name = "dateFrom",
+            `in` = ParameterIn.QUERY,
+            description = "Identifier of account, for which the movements will be searched."
+        ) @QueryParam("dateFrom") dateFrom: LocalDate?,
+        @Parameter(
+            name = "accountId",
+            `in` = ParameterIn.QUERY,
+            description = "Identifier of account, for which the movements will be searched."
+        ) @QueryParam("dateTo") dateTo: LocalDate?,
+        @Parameter(
             name = "offset",
             `in` = ParameterIn.QUERY,
             description = "Offset in the ordered list of movements. If omited, then from first movement."
@@ -45,7 +56,38 @@ interface AccountMovementsApiResource: AccountsApiResource {
             `in` = ParameterIn.QUERY,
             description = "Count of movements starting from offset. If omitted, then all from offset."
         ) @QueryParam("limit") limit: Int?
-    ): List<MovementDTO?>?
+    ): List<MovementDTO?>
+
+    @GET()
+    @Path("/count")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Operation(description = "Gets count of account movements.")
+    @ApiResponse(description = "Count of account movements of specified account.")
+    @ApiResponse(
+        responseCode = "404",
+        description = "No account was found for specified id.",
+        content = [Content(
+            mediaType = MediaType.APPLICATION_JSON,
+            schema = Schema(implementation = ApiErrorDTO::class)
+        )]
+    )
+    fun getMovementsCount(
+        @Parameter(
+            name = "accountId",
+            `in` = ParameterIn.PATH,
+            description = "Identifier of account, for which the movements will be searched."
+        ) @PathParam("accountId") accountId: Int,
+        @Parameter(
+            name = "dateFrom",
+            `in` = ParameterIn.QUERY,
+            description = "Start date, for which the movements will be searched."
+        ) @QueryParam("dateFrom") dateFrom: LocalDate?,
+        @Parameter(
+            name = "accountId",
+            `in` = ParameterIn.QUERY,
+            description = "End date, for which the movements will be searched."
+        ) @QueryParam("dateTo") dateTo: LocalDate?,
+    ): Int
 
     @GET
     @Path("{movementId}")

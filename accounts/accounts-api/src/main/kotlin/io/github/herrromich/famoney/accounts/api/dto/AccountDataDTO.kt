@@ -10,6 +10,6 @@ interface AccountDataDTO: DTO {
     val name: String
 
     @get:Schema(required = true)
-    val openDate: LocalDate
+    val openingDate: LocalDate
     val tags: Set<String>
 }

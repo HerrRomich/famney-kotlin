@@ -41,9 +41,8 @@ class AccountsApiResourceImpl(
         return AccountDTO(
             id = account.id!!,
             name = account.name,
-            openDate = account.openDate,
+            openingDate = account.openingDate,
             tags = account.tags,
-            movementCount = account.movementCount,
             total = account.movementTotal
         )
     }
@@ -57,7 +56,7 @@ class AccountsApiResourceImpl(
         }
         val account = Account().apply {
             name = accountData.name
-            openDate = accountData.openDate
+            openingDate = accountData.openingDate
             tags = accountData.tags
         }
         val accountId = accountRepository.save(account)
@@ -80,7 +79,7 @@ class AccountsApiResourceImpl(
         val account: Account = getAccountByIdOrThrowNotFound(accountId, AccountsApiError.NO_ACCOUNT_ON_CHANGE)
         account.apply {
             name = accountData.name
-            openDate = accountData.openDate
+            openingDate = accountData.openingDate
             tags = accountData.tags
         }
         accountRepository.save(account)

@@ -23,6 +23,9 @@
 
 .wrapped-tooltip {
   white-space: pre-line;
+  div {
+    text-align: start;
+  }
 }
 
 .fm-tags-panel {

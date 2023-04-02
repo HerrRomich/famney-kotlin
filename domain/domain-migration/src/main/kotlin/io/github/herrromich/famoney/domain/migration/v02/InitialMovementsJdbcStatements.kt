@@ -65,12 +65,11 @@ select max (pos)
 """)
     }
 
-    val accountMovementsSumCountUpdate by lazy {
+    val accountMovementsSumUpdate by lazy {
         getStatement(
             """
 update account a
-  set movement_count = ?
-    , movement_total = ?
+  set movement_total = ?
  where a.id = ?
  """
         )

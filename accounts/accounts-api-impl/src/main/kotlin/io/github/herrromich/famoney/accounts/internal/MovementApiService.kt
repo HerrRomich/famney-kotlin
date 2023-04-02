@@ -70,7 +70,6 @@ class MovementApiService(
 
     private fun adjustAccountMovements(movement: Movement): Movement {
         val account = movement.account.apply {
-            movementCount++
             movementTotal += movement.amount
         }
         accountRepository.save(account)
@@ -121,7 +120,6 @@ class MovementApiService(
         movement.position = -1
         val account = movement.account
             .apply {
-                movementCount--
                 movementTotal -= movement.amount
             }
         movement.account = accountRepository.save(account)

@@ -8,6 +8,6 @@ data class MigrationAccounts (
 data class MigrationAccount(
     val budgetId: Int,
     val name: String,
-    val openDate: LocalDate,
+    val openingDate: LocalDate,
     val tags: List<String>,
 )

@@ -2,7 +2,7 @@
 	"accounts": [
 		{
 			"name": "Кошелек Пупсика",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Избраное",
 				"Наличные деньги"
@@ -10,7 +10,7 @@
 		},
 		{
 			"name": "Кошелек Масички",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Избраное",
 				"Наличные деньги"
@@ -18,7 +18,7 @@
 		},
 		{
 			"name": "Norisbank (Top-Girokonto)",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Избраное",
 				"Безналичные деньги"
@@ -26,7 +26,7 @@
 		},
 		{
 			"name": "Commerzbak Маша",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Избраное",
 				"Безналичные деньги"
@@ -34,14 +34,14 @@
 		},
 		{
 			"name": "Norisbank (Top-Zinskonto)",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Безналичные деньги"
 			]
 		},
 		{
 			"name": "DKB (Пупсик VISA)",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Безналичные деньги",
 				"Visa"
@@ -49,7 +49,7 @@
 		},
 		{
 			"name": "DKB (Масичка VISA)",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Безналичные деньги",
 				"Visa"
@@ -57,7 +57,7 @@
 		},
 		{
 			"name": "Norisbank (Top-Girokonto) (Mastercard Пупсик)",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Безналичные деньги",
 				"Mastercard"
@@ -65,105 +65,105 @@
 		},
 		{
 			"name": "PayPal",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Безналичные деньги"
 			]
 		},
 		{
 			"name": "Стирка",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Наличные деньги"
 			]
 		},
 		{
 			"name": "Купоны",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Наличные деньги"
 			]
 		},
 		{
 			"name": "МОНЕТЫ",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Наличные деньги"
 			]
 		},
 		{
 			"name": "Папа наличка",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Наличные деньги"
 			]
 		},
 		{
 			"name": "Долг Поляковы",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Долги"
 			]
 		},
 		{
 			"name": "Долг (Наталья)",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Долги"
 			]
 		},
 		{
 			"name": "Долг (Папе)",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Долги"
 			]
 		},
 		{
 			"name": "Долг (Мама)",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Долги"
 			]
 		},
 		{
 			"name": "Долг(Макс)",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Долги"
 			]
 		},
 		{
 			"name": "Долг (Мишка)",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Долги"
 			]
 		},
 		{
 			"name": "Долг Настя",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Долги"
 			]
 		},
 		{
 			"name": "Долг Петрушовы",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Долги"
 			]
 		},
 		{
 			"name": "Investmentdepot ebase",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Депозит"
 			]
 		},
 		{
 			"name": "Commerzbank Baby-Sparbuch",
-			"openDate": "2011-01-01",
+			"openingDate": "2011-01-01",
 			"tags": [
 				"Депозит"
 			]

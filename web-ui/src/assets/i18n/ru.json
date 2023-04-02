@@ -66,11 +66,22 @@
         "noAccount": "Кошелек не выбран!"
       }
     },
-    "tagPopup": {
-      "placeholder": "Тэги",
-      "buttons": {
-        "clearAll": {
-          "tooltip": "Очистить все тэги"
+    "filterPopup": {
+      "tags": {
+        "placeholder": "Тэг",
+        "buttons": {
+          "clearAll": {
+            "tooltip": "Очистить все тэги"
+          }
+        }
+      },
+      "dateRange": {
+        "title": "Введите диапазон дат",
+        "startDate": {
+          "placeholder": "Дата начала"
+        },
+        "endDate": {
+          "placeholder": "Дата окончания"
         }
       }
     },
@@ -132,6 +143,11 @@
   "notifications": {
     "title": {
       "error": "Ошибка"
+    }
+  },
+  "formats": {
+    "date": {
+      "short": "dd.MM.yyyy"
     }
   }
 }

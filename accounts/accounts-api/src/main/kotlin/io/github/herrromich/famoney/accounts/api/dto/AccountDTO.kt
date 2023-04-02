@@ -10,10 +10,8 @@ import java.time.LocalDate
 data class AccountDTO(
     override val id: Int,
     override val name: String,
-    override val openDate: LocalDate,
+    override val openingDate: LocalDate,
     override val tags: Set<String>,
-    @get:Schema(required = true)
-    val movementCount: Int,
 
     @get:Schema(required = true)
     val total: BigDecimal,

@@ -10,14 +10,12 @@ class AccountsJdbcStatements(override val connection: Connection) :
         getStatementWithGeneratedKeys(
             """
 insert into account(budget_id
-                  , open_date
+                  , opening_date
                   , name
-                  , movement_count
                   , movement_total)
 values(?
      , ?
      , ?
-     , 0
      , 0)
 """
         )

@@ -1,8 +1,9 @@
 :host {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   flex: auto;
   position: relative;
+  width: 50vw;
 }
 
 mat-form-field {

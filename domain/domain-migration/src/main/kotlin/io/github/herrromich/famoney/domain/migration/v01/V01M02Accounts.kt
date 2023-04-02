@@ -92,7 +92,7 @@ class V01M02Accounts(val resourceLoader: ResourceLoader, val objectMapper: Objec
 
     private fun callInsertAccount(stmt: PreparedStatement, account: MigrationAccount): ResultSet {
         stmt.setInt(1, 1)
-        stmt.setDate(2, Date.valueOf(account.openDate))
+        stmt.setDate(2, Date.valueOf(account.openingDate))
         stmt.setString(3, account.name)
         stmt.executeUpdate()
         return stmt.generatedKeys

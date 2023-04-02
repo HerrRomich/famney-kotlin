@@ -322,28 +322,24 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
 
     private fun updateAccountsMovemntsCountAndSum(migrationData: MigrationData) {
         val accountsMovementsSumCountSelectStmt = migrationData.jdbcStatements.accountsMovementsSumCountSelect
-        val accountMovementsSumCountUpdateStmt = migrationData.jdbcStatements.accountMovementsSumCountUpdate
+        val accountMovementsSumCountUpdateStmt = migrationData.jdbcStatements.accountMovementsSumUpdate
         try {
             accountsMovementsSumCountSelectStmt.executeQuery().use { countsAndSums ->
                 while (countsAndSums.next()) {
-                    accountMovementsSumCountUpdateStmt.setInt(
-                        1,
-                        countsAndSums.getInt(1)
-                    )
                     accountMovementsSumCountUpdateStmt.setBigDecimal(
-                        2,
-                        countsAndSums.getBigDecimal(2)
+                        1,
+                        countsAndSums.getBigDecimal(1)
                     )
                     accountMovementsSumCountUpdateStmt.setInt(
-                        3,
-                        countsAndSums.getInt(3)
+                        2,
+                        countsAndSums.getInt(2)
                     )
                     accountMovementsSumCountUpdateStmt.executeUpdate()
                 }
             }
         } catch (e: SQLException) {
             throw MigrationException(
-                "Cannot update account movements counts and sums.",
+                "Cannot update account movements sums.",
                 e
             )
         }

@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.TransactionException
 import org.springframework.transaction.annotation.Transactional
 import unwrap
+import java.time.LocalDate
 
 @Service
 @Hidden
@@ -47,14 +48,17 @@ class AccountMovementsApiImpl(
     private lateinit var httpHeaders: HttpHeaders
 
     @Transactional
-    override fun getMovements(accountId: Int, offset: Int?, limit: Int?): List<MovementDTO> {
-        logger.debug { "Getting all movemnts of account by id: $accountId, offset: ${offset ?: "\"from beginning\""} and count: ${limit ?: "\"all\""}." }
+    override fun getMovements(accountId: Int, dateFrom: LocalDate?, dateTo: LocalDate?, offset: Int?, limit: Int?): List<MovementDTO> {
+        logger.debug { "Getting all movemnts of account by id: $accountId" +
+                "${dateFrom?.let { " ,since: ${it}"} ?: ""}" +
+                "${dateTo?.let { " ,until: ${it}"} ?: ""}" +
+                ", offset: ${offset ?: "\"from beginning\""} and count: ${limit ?: "\"all\""}." }
         val account = accountsApiService.getAccountByIdOrThrowNotFound(
             accountId,
             AccountsApiError.NO_ACCOUNT_ON_GET_ALL_ACCOUNT_MOVEMENTS
         )
-        val movements = movementRepository.getByAccountOrderByDatePosition(
-            account, offset, limit
+        val movements = movementRepository.getByAccountAndDateRangeOrderByDatePosition(
+            account, dateFrom, dateTo, offset, limit
         )
         val movementDTOs: List<MovementDTO> = movements.map { movement ->
             MovementDTO(
@@ -64,12 +68,30 @@ class AccountMovementsApiImpl(
                 total = movement.total
             )
         }
-        logger.debug { "Got ${movementDTOs.size} movemnts of account by id: $accountId" }
+        logger.debug { "Got ${movementDTOs.size} movemnts of account by id: $accountId" +
+                "${dateFrom?.let { " ,since: ${it}"} ?: ""}" +
+                "${dateTo?.let { " ,until: ${it}"} ?: ""}" +
+                ", offset: ${offset ?: "\"from beginning\""} and count: ${limit ?: "\"all\""}." }
         logger.trace {
             """Got movemnts of account by id: $accountId.
               |${objectMapper.writeValueAsString(movementDTOs)}""".trimMargin()
         }
         return movementDTOs
+    }
+
+    @Transactional
+    override fun getMovementsCount(accountId: Int, dateFrom: LocalDate?, dateTo: LocalDate?): Int {
+        logger.debug { "Getting movemnts count of account by id: $accountId" +
+                "${dateFrom?.let { " ,since: ${it}"} ?: ""}" +
+                "${dateTo?.let { " ,until: ${it}"} ?: ""}" }
+        val account = accountsApiService.getAccountByIdOrThrowNotFound(
+            accountId,
+            AccountsApiError.NO_ACCOUNT_ON_GET_ALL_ACCOUNT_MOVEMENTS
+        )
+        val count = movementRepository.getCountByAccountAndDateRange(
+            account, dateFrom, dateTo)
+        logger.debug { "Got ${count} movements of account by id: $accountId" }
+        return count
     }
 
     @Transactional
