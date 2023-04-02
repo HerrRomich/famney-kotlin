@@ -57,16 +57,17 @@ tasks {
         into("$buildDir/api-defs")
       }
     }
+    outputs.dir("$buildDir/api-defs")
     dependsOn(*apis.values.map { "${it.project}:${it.resolveTask}" }.toTypedArray())
-  }
-
-  val deleteApis = register<Delete>("deleteApis") {
-    delete("$projectDir/src/app/shared/apis")
   }
 
   val generateTasks = apis.values
     .map {
       register<GenerateTask>("generate${it.name}AngularClient") {
+        inputs.file("$buildDir/api-defs/${it.jsonName}")
+        doFirst {
+          delete("$projectDir/src/app/shared/apis/${it.destPath}/*")
+        }
         inputSpec.set("$buildDir/api-defs/${it.jsonName}")
         outputDir.set("$projectDir/src/app/shared/apis/${it.destPath}")
         generatorName.set("typescript-angular")
@@ -85,7 +86,7 @@ tasks {
             "providedIn" to "any",
           )
         )
-        dependsOn(copyApiDeps, deleteApis)
+        dependsOn(copyApiDeps)
       }
     }
 
@@ -93,8 +94,12 @@ tasks {
     dependsOn(*generateTasks.toTypedArray())
   }
 
+  processResources {
+    dependsOn(generateApiAngularClient)
+  }
+
   register<NpxTask>("buildWebUI") {
-    dependsOn(generateApiAngularClient, "npmInstall")
+    dependsOn("npmInstall")
     command.set("ng")
     args.set(listOf("build"))
     inputs.files("package.json", "package-lock.json", "angular.json", "tsconfig.json", "tsconfig.app.json")
