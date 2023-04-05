@@ -6,7 +6,12 @@
   #fabSpeedDial
 >
   <eco-fab-speed-dial-trigger [className]="fabSpeedDialActions.miniFabVisible ? 'shown' : 'hidden'">
-    <button mat-fab (click)="addEntry()" [matTooltip]="'accounts.table.buttons.addEntry.tooltip' | translate">
+    <button
+      mat-fab
+      (click)="addEntry()"
+      [matTooltip]="'accounts.table.buttons.addEntry.tooltip' | translate"
+      [matTooltipPosition]="'left'"
+    >
       <mat-icon>add</mat-icon>
     </button>
   </eco-fab-speed-dial-trigger>
@@ -14,11 +19,17 @@
     <button
       mat-mini-fab
       [matTooltip]="'accounts.table.buttons.addTransfer.tooltip' | translate"
+      [matTooltipPosition]="'left'"
       (click)="addTransfer()"
     >
       <mat-icon>swap_horiz</mat-icon>
     </button>
-    <button mat-mini-fab [matTooltip]="'accounts.table.buttons.addRefund.tooltip' | translate" (click)="addRefund()">
+    <button
+      mat-mini-fab
+      [matTooltip]="'accounts.table.buttons.addRefund.tooltip' | translate"
+      [matTooltipPosition]="'left'"
+      (click)="addRefund()"
+    >
       <mat-icon>redo</mat-icon>
     </button>
   </eco-fab-speed-dial-actions>
@@ -36,8 +47,11 @@
       </div>
       <mat-divider></mat-divider>
     </mat-list-item>
-    <ng-container *cdkVirtualFor="let entry of movementDataSource; let last = last; trackBy: trackByFn;">
-      <mat-list-item class="account-entry-data" [ngClass]="{ selected: (movementSelection$ | async) === (entry?.movement?.id ?? 0) }">
+    <ng-container *cdkVirtualFor="let entry of movementDataSource; let last = last; trackBy: trackByFn">
+      <mat-list-item
+        class="account-entry-data"
+        [ngClass]="{ selected: (movementSelection$ | async) === (entry?.movement?.id ?? 0) }"
+      >
         <div *ngIf="!entry?.movement" class="loading">
           <div class="entry-date">&nbsp;</div>
           <div class="comments">&nbsp;</div>

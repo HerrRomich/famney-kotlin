@@ -9,8 +9,8 @@ import { AccountsStore, MovementData } from '@famoney-features/accounts/store/ac
 import { EntryCategoryService } from '@famoney-shared/services/entry-category.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NotificationsService } from 'angular2-notifications';
-import { EMPTY, Subject } from 'rxjs';
-import { debounceTime, map, takeUntil, tap } from 'rxjs/operators';
+import { EMPTY, interval, of, Subject } from 'rxjs';
+import { debounce, map, takeUntil, tap } from 'rxjs/operators';
 import { AccountMovementsViertualScrollStrategy } from './account-movements.virtual-scroller-strategy';
 import { MovementDataSource } from './movement-data-source';
 
@@ -26,7 +26,7 @@ const fabSpeedDialDelayOnHover = 350;
       useClass: AccountMovementsViertualScrollStrategy,
     },
   ],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountTableComponent implements AfterViewInit, OnDestroy {
   movementDataSource: MovementDataSource = new MovementDataSource(this._accountsStore);
@@ -52,22 +52,25 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
     private _translateService: TranslateService,
     @Inject(VIRTUAL_SCROLL_STRATEGY)
     private _accountMovementsViertualScrollStrategy: AccountMovementsViertualScrollStrategy,
-  ) {
-  }
+  ) {}
 
   ngAfterViewInit() {
-    this.fabSpeedDial.openChange.pipe(
-      tap(opened => {
-        this.fabSpeedDial.fixed = !opened;
-      }),
-      takeUntil(this._subscriptionDestroyed),
-    ).subscribe();
+    this.fabSpeedDial.openChange
+      .pipe(
+        tap(opened => {
+          this.fabSpeedDial.fixed = !opened;
+        }),
+        takeUntil(this._subscriptionDestroyed),
+      )
+      .subscribe();
 
     this._speedDialHovered$
       .pipe(
-        debounceTime(fabSpeedDialDelayOnHover),
+        debounce(hovered => hovered ? of(0) : interval(fabSpeedDialDelayOnHover)),
         tap(hovered => {
-          this.fabSpeedDial!.open = hovered;
+          if (hovered != this.fabSpeedDial.open) {
+            this.fabSpeedDial.toggle();
+          }
         }),
         takeUntil(this._subscriptionDestroyed),
       )
