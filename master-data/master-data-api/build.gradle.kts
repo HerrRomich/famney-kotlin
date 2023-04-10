@@ -18,7 +18,7 @@ val resolveApi = tasks.register<ResolveTask>("resolveApi") {
     resourcePackages = setOf("io.github.herrromich.famoney.masterdata.api")
     classpath = sourceSets.main.get().runtimeClasspath
     buildClasspath = resolveConfig
-    dependsOn(tasks.compileJava)
+    dependsOn(tasks.classes)
 }
 
 tasks.jar {

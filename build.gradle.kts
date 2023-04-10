@@ -1,3 +1,6 @@
+import org.springframework.boot.gradle.plugin.ResolveMainClassName
+import org.springframework.boot.gradle.tasks.bundling.BootJar
+
 plugins {
     id("org.springframework.boot") version "3.0.4" apply false
     id("io.spring.dependency-management") version "1.1.0"
@@ -35,6 +38,14 @@ configure(subprojects) {
 
     tasks.withType<JavaCompile> {
         options.encoding = "UTF-8"
+    }
+
+    tasks.withType<ResolveMainClassName> {
+        enabled = false
+    }
+
+    tasks.withType<BootJar> {
+        enabled = false
     }
 
     tasks.jar {
