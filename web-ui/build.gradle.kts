@@ -55,6 +55,7 @@ tasks {
         }
         inputs.files(project(it.project).tasks.get(it.resolveTask))
         outputs.file("$buildDir/api-defs/${it.jsonName}")
+        dependsOn(project(it.project).tasks.get(it.resolveTask))
       }
       register<GenerateTask>("generate${it.name}AngularClient") {
         inputs.file("$buildDir/api-defs/${it.jsonName}")
@@ -76,7 +77,6 @@ tasks {
             "taggedUnions" to "true",
             "stringEnums" to "false",
             "legacyDiscriminatorBehavior" to "true",
-            "useSingleRequestParameter" to "true",
             "providedIn" to "any",
           )
         )
@@ -93,7 +93,7 @@ tasks {
   }
 
   register<NpxTask>("buildWebUI") {
-    dependsOn("npmInstall")
+    dependsOn("npmInstall", processResources)
     command.set("ng")
     args.set(listOf("build"))
     inputs.files("package.json", "package-lock.json", "angular.json", "tsconfig.json", "tsconfig.app.json")
