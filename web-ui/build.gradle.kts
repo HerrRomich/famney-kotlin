@@ -32,7 +32,7 @@ val apis = mapOf(
 val apiDeps: Configuration by configurations.creating
 
 dependencies {
-  apis.values.forEach{api ->
+  apis.values.forEach { api ->
     apiDeps(project(api.project))
   }
 }
@@ -44,25 +44,18 @@ node {
 }
 
 tasks {
-  val copyApiDeps = register("copyApiDeps") {
-    doFirst {
-      copy {
-        val jsons = apiDeps.resolvedConfiguration.resolvedArtifacts
-          .flatMap { artifact ->
-            val projectPath = (artifact.id.componentIdentifier as? ProjectComponentIdentifier)?.projectPath
-            val jsonName = apis[projectPath]?.jsonName
-            jsonName?.let { name -> zipTree(artifact.file).filter { it.name == name } } ?: emptyList()
-          }
-        from(*jsons.toTypedArray())
-        into("$buildDir/api-defs")
-      }
-    }
-    outputs.dir("$buildDir/api-defs")
-    dependsOn(*apis.values.map { "${it.project}:${it.resolveTask}" }.toTypedArray())
-  }
-
   val generateTasks = apis.values
     .map {
+      val copyApiDepsTask = register("copy${it.name}Deps") {
+        doFirst {
+          copy {
+            from(project("${it.project}").sourceSets.main.get().output.resourcesDir?.resolve(it.jsonName))
+            into("$buildDir/api-defs")
+          }
+        }
+        inputs.files(project(it.project).tasks.get(it.resolveTask))
+        outputs.file("$buildDir/api-defs/${it.jsonName}")
+      }
       register<GenerateTask>("generate${it.name}AngularClient") {
         inputs.file("$buildDir/api-defs/${it.jsonName}")
         doFirst {
@@ -83,10 +76,11 @@ tasks {
             "taggedUnions" to "true",
             "stringEnums" to "false",
             "legacyDiscriminatorBehavior" to "true",
+            "useSingleRequestParameter" to "true",
             "providedIn" to "any",
           )
         )
-        dependsOn(copyApiDeps)
+        dependsOn(copyApiDepsTask)
       }
     }
 

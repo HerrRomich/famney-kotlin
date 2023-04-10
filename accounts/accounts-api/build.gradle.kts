@@ -10,8 +10,6 @@ dependencies {
 }
 
 val resolveApi = tasks.register<ResolveTask>("resolveApi") {
-    inputs.files(sourceSets.main.get().runtimeClasspath)
-    outputs.file(sourceSets.main.get().output.resourcesDir!!.resolve("accounts-api.json"))
     outputDir = sourceSets.main.get().output.resourcesDir
     outputFormat = JSON
     outputFileName = "accounts-api"
