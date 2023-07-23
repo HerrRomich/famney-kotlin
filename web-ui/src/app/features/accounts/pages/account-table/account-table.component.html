@@ -5,7 +5,7 @@
   (mouseleave)="stopSpeedDial()"
   #fabSpeedDial
 >
-  <eco-fab-speed-dial-trigger [className]="fabSpeedDialActions.miniFabVisible ? 'shown' : 'hidden'">
+  <eco-fab-speed-dial-trigger [className]="fabSpeedDialActions?.miniFabVisible ? 'shown' : 'hidden'">
     <button
       mat-fab
       (click)="addEntry()"
@@ -62,14 +62,14 @@
         </div>
         <div *ngIf="entry?.movement as movement" (click)="edit(movement)" class="account-entry-data">
           <div class="entry-date">
-            <span>{{ movement.data.date | date : 'dd.MM.yyyy' }}</span>
+            <span>{{ movement.data?.date | date : 'dd.MM.yyyy' }}</span>
           </div>
           <div class="comments"><span></span>{{ getMovementComments(movement) }}</div>
           <div class="category">
             <span>{{ getMovementCategoryPath$(movement) | async }}</span>
           </div>
-          <div class="amount" [ngClass]="getSumColor(movement.data.amount)">
-            <span>{{ movement.data.amount | number : '1.2-2' }}</span>
+          <div class="amount" [ngClass]="getSumColor(movement.data?.amount)">
+            <span>{{ movement.data?.amount | number : '1.2-2' }}</span>
           </div>
           <div class="balance" [ngClass]="getSumColor(movement.total)">
             <span>{{ movement.total | number : '1.2-2' }}</span>

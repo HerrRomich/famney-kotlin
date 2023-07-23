@@ -1,14 +1,19 @@
-import { registerLocaleData } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import {registerLocaleData} from '@angular/common';
+import {HttpClient} from '@angular/common/http';
 import localeEn from '@angular/common/locales/en';
 import localeRu from '@angular/common/locales/ru';
-import { LOCALE_ID, NgModule } from '@angular/core';
-import { EcoFabSpeedDialModule } from '@ecodev/fab-speed-dial';
-import { LocaleService } from '@famoney-shared/services/locale.service';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { SpacerDirective } from '../directives/spacer.directive';
-import { AngularModule } from './angular.module';
+import {LOCALE_ID, NgModule} from '@angular/core';
+import {LocaleService} from '@famoney-shared/services/locale.service';
+import {TranslateLoader, TranslateModule} from '@ngx-translate/core';
+import {TranslateHttpLoader} from '@ngx-translate/http-loader';
+import {SpacerDirective} from '../directives/spacer.directive';
+import {AngularModule} from './angular.module';
+import {
+  EcoFabSpeedDialActionsComponent,
+  EcoFabSpeedDialComponent,
+  EcoFabSpeedDialTriggerComponent
+} from "@ecodev/fab-speed-dial";
+import {NotifierModule} from "angular-notifier";
 
 @NgModule({
   declarations: [SpacerDirective],
@@ -22,8 +27,12 @@ import { AngularModule } from './angular.module';
         deps: [HttpClient],
       },
     }),
+    NotifierModule,
+    EcoFabSpeedDialComponent,
+    EcoFabSpeedDialActionsComponent,
+    EcoFabSpeedDialTriggerComponent,
   ],
-  exports: [TranslateModule, SpacerDirective],
+  exports: [TranslateModule, SpacerDirective, EcoFabSpeedDialComponent, EcoFabSpeedDialActionsComponent, EcoFabSpeedDialTriggerComponent, NotifierModule],
   providers: [
     {
       provide: LocaleService,

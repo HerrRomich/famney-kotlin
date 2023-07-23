@@ -5,7 +5,6 @@ import { ApiModule as AccountsApiModule, Configuration as AccountsApiConfigurati
 import { ApisModule } from '@famoney-shared/modules/apis.module';
 import { MaterialModule } from '@famoney-shared/modules/material.module';
 import { SharedModule } from '@famoney-shared/modules/shared.module';
-import { SimpleNotificationsModule } from 'angular2-notifications';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
@@ -17,9 +16,6 @@ import { AppComponent } from './app.component';
     BrowserAnimationsModule,
     MaterialModule,
     SharedModule,
-    SimpleNotificationsModule.forRoot({
-      timeOut: 5000,
-    }),
     ApisModule,
   ],
   providers: [],

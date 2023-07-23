@@ -3,11 +3,11 @@ import { AccountDto, AccountsApiService, MovementDto } from '@famoney-apis/accou
 import { ComponentStore, OnStoreInit } from '@ngrx/component-store';
 import { createEntityAdapter, DictionaryNum, EntityState } from '@ngrx/entity';
 import { createSelector } from '@ngrx/store';
-import { NotificationsService } from 'angular2-notifications';
 import { multirange, Range } from 'multi-integer-range';
 import { EMPTY, Observable } from 'rxjs';
 import { takeUntil } from 'rxjs/internal/operators/takeUntil';
-import { catchError, filter, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { NotifierService } from 'angular-notifier';
 
 const ACCOUNTS_FILTER_STORAGE = 'ACCOUNTS_FILTER_STORAGE';
 const ACCOUNT_ID_STORAGE = 'ACCOUNT_ID_STORAGE';
@@ -100,12 +100,15 @@ export class AccountsStore extends ComponentStore<AccountsState> implements OnSt
   readonly currentAccountId$ = this.select(currentAccountIdSelector);
   readonly currentLoadedData$ = this.select(movementsLoadedDataSelector);
 
-  constructor(private _accountsApiService: AccountsApiService, private _notificationsService: NotificationsService) {
+  constructor(
+    private accountsApiService: AccountsApiService,
+    private notifierService: NotifierService,
+  ) {
     super();
   }
 
   ngrxOnStoreInit() {
-    this._accountsApiService
+    this.accountsApiService
       .getAllAccounts()
       .pipe(
         tap(accounts => {
@@ -122,7 +125,7 @@ export class AccountsStore extends ComponentStore<AccountsState> implements OnSt
           });
         }),
         catchError(e => {
-          this._notificationsService.error('Error', "Couldn't load list of accounts.");
+          this.notifierService.notify('error', "Couldn't load list of accounts.");
           return EMPTY;
         }),
       )
@@ -137,7 +140,7 @@ export class AccountsStore extends ComponentStore<AccountsState> implements OnSt
   readonly loadAccounts = this.effect<void>(trigger$ =>
     trigger$.pipe(
       switchMap(() =>
-        this._accountsApiService.getAllAccounts().pipe(
+        this.accountsApiService.getAllAccounts().pipe(
           tap(accounts =>
             this.patchState(state => ({
               accounts: accountsAdapter.setAll(
@@ -147,7 +150,7 @@ export class AccountsStore extends ComponentStore<AccountsState> implements OnSt
             })),
           ),
           catchError(e => {
-            this._notificationsService.error('Error', "Couldn't load list of accounts.");
+            this.notifierService.notify('error', "Couldn't load list of accounts.");
             return EMPTY;
           }),
         ),
@@ -208,10 +211,10 @@ export class AccountsStore extends ComponentStore<AccountsState> implements OnSt
 
   readonly selectAccount = this.effect((accountId$: Observable<number>) =>
     accountId$.pipe(
-      switchMap(accountId => this._accountsApiService.getAccount(accountId)),
+      switchMap(accountId => this.accountsApiService.getAccount(accountId)),
       switchMap((account: AccountDto) => {
         const currState = this.get();
-        return this._accountsApiService
+        return this.accountsApiService
           .getMovementsCount(
             account.id,
             currState.filter.dateRange?.start ?? undefined,
@@ -258,7 +261,7 @@ export class AccountsStore extends ComponentStore<AccountsState> implements OnSt
         const min = request.min();
         const max = request.max();
         if (min !== undefined && max !== undefined) {
-          return this._accountsApiService
+          return this.accountsApiService
             .getMovements(
               accountSelection.account.id,
               currState.filter.dateRange?.start ?? undefined,

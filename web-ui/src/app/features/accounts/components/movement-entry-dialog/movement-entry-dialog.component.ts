@@ -1,7 +1,7 @@
 import { Component, Inject, OnInit, Optional } from '@angular/core';
 import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { AccountsApiService, ApiErrorDto, EntryDataDto, EntryItemDataDto, MovementDto } from '@famoney-apis/accounts';
 import { AccountEntry, EntryDialogData, EntryItem } from '@famoney-features/accounts/models/account-entry.model';
 import { nullDate, nullNumber, nullString } from '@famoney-shared/misc';
@@ -9,9 +9,9 @@ import { EntryCategoryService, FlatEntryCategoryObject } from '@famoney-shared/s
 import { DateFormatName, LocaleService } from '@famoney-shared/services/locale.service';
 import { ParseNumberService } from '@famoney-shared/services/parse-numbers.service';
 import { TranslateService } from '@ngx-translate/core';
-import { NotificationsService } from 'angular2-notifications';
 import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { NotifierService } from 'angular-notifier';
 
 @Component({
   selector: 'fm-movement-entry-dialog',
@@ -37,7 +37,7 @@ export class MovementEntryDialogComponent implements OnInit {
     private entryCategoriesService: EntryCategoryService,
     @Optional() @Inject(MAT_DATE_LOCALE) private dateLocale: string,
     private translateService: TranslateService,
-    private notificationsService: NotificationsService,
+    private notifierService: NotifierService,
     @Inject(MAT_DIALOG_DATA) private data: EntryDialogData,
     private localeService: LocaleService,
     private parseNumberService: ParseNumberService,
@@ -166,33 +166,32 @@ export class MovementEntryDialogComponent implements OnInit {
           ),
         ),
         map(([accountEntry, entryCategories]) => {
-          const entryItems = accountEntry.entryItems?.map(entryItem => {
-            const entryCategory = entryItem?.categoryId ? entryCategories.flatEntryCategories.get(entryItem?.categoryId) : undefined;
-            return {
-              categoryId: entryItem.categoryId ?? 0,
-              amount: (entryCategory?.getCategorySign() ?? 0) * (entryItem?.amount ?? 0),
-              comments: entryItem.comments ?? undefined,
-            };
-          }) ?? [];
+          const entryItems =
+            accountEntry.entryItems?.map(entryItem => {
+              const entryCategory = entryItem?.categoryId
+                ? entryCategories.flatEntryCategories.get(entryItem?.categoryId)
+                : undefined;
+              return {
+                categoryId: entryItem.categoryId ?? 0,
+                amount: (entryCategory?.getCategorySign() ?? 0) * (entryItem?.amount ?? 0),
+                comments: entryItem.comments ?? undefined,
+              };
+            }) ?? [];
           const entry: EntryDataDto = {
             type: 'ENTRY',
             date: accountEntry.entryDate ?? new Date(),
             bookingDate: accountEntry.bookingDate ?? undefined,
-            budgetPeriod: accountEntry.budgetPeriod?? undefined,
+            budgetPeriod: accountEntry.budgetPeriod ?? undefined,
             entryItems: entryItems,
             amount: entryItems.reduce((amount, entryItem) => amount + entryItem.amount, 0),
           };
           return entry;
         }),
         switchMap(storeOperator),
-        tap(data => {
-          this.dialogRef.close(data);
-        }),
-        catchError((err: ApiErrorDto) => {
-          this.notificationsService.error('Error', err.description);
-          return EMPTY;
-        }),
       )
-      .subscribe();
+      .subscribe({
+        next: data => this.dialogRef.close(data),
+        error: (err: ApiErrorDto) => this.notifierService.notify('error', err.description ?? ''),
+      });
   }
 }

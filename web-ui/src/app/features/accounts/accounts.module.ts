@@ -1,6 +1,5 @@
 import { OverlayModule } from '@angular/cdk/overlay';
 import { NgModule } from '@angular/core';
-import { EcoFabSpeedDialModule } from '@ecodev/fab-speed-dial';
 import { AngularModule } from '@famoney-shared/modules/angular.module';
 import { MaterialModule } from '@famoney-shared/modules/material.module';
 import { MonthPickerModule } from '@famoney-shared/modules/month-picker.module';
@@ -23,16 +22,15 @@ import { AccountsStore } from './store/accounts.store';
     AccountTagsPopupComponent,
     AccountDialogComponent,
   ],
-  imports: [
-    AngularModule,
-    OverlayModule,
-    EcoFabSpeedDialModule,
-    MaterialModule,
-    SharedModule,
-    AccountsRoutingModule,
-    RouterTabModule,
-    MonthPickerModule,
-  ],
+    imports: [
+        AngularModule,
+        OverlayModule,
+        MaterialModule,
+        SharedModule,
+        AccountsRoutingModule,
+        RouterTabModule,
+        MonthPickerModule,
+    ],
   providers: [provideComponentStore(AccountsStore)],
 })
 export class AccountsModule {}

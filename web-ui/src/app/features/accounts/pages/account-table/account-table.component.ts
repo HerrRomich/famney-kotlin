@@ -8,11 +8,12 @@ import { EntryDialogData } from '@famoney-features/accounts/models/account-entry
 import { AccountsStore, MovementData } from '@famoney-features/accounts/store/accounts.store';
 import { EntryCategoryService } from '@famoney-shared/services/entry-category.service';
 import { TranslateService } from '@ngx-translate/core';
-import { NotificationsService } from 'angular2-notifications';
 import { EMPTY, interval, of, Subject } from 'rxjs';
 import { debounce, map, takeUntil, tap } from 'rxjs/operators';
 import { AccountMovementsViertualScrollStrategy } from './account-movements.virtual-scroller-strategy';
 import { MovementDataSource } from './movement-data-source';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NotifierService } from 'angular-notifier';
 
 const fabSpeedDialDelayOnHover = 350;
 
@@ -29,57 +30,50 @@ const fabSpeedDialDelayOnHover = 350;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountTableComponent implements AfterViewInit, OnDestroy {
-  movementDataSource: MovementDataSource = new MovementDataSource(this._accountsStore);
+  movementDataSource: MovementDataSource = new MovementDataSource(this.accountsStore);
 
   @ViewChild('fabSpeedDial', { static: true })
-  fabSpeedDial!: EcoFabSpeedDialComponent;
+  fabSpeedDial?: EcoFabSpeedDialComponent;
 
   @ViewChild('fabSpeedDialActions', { static: true })
-  fabSpeedDialActions!: EcoFabSpeedDialActionsComponent;
+  fabSpeedDialActions?: EcoFabSpeedDialActionsComponent;
 
   @ViewChild(CdkVirtualScrollViewport)
-  viewPort!: CdkVirtualScrollViewport;
+  viewPort?: CdkVirtualScrollViewport;
 
   private _speedDialHovered$ = new Subject<boolean>();
-  private _subscriptionDestroyed = new Subject<void>();
   movementSelection$ = new Subject<number | undefined>();
 
   constructor(
-    private _accountsStore: AccountsStore,
-    private _accountEntryDialogComponent: MatDialog,
-    private _entryCategoriesService: EntryCategoryService,
-    private _notificationsService: NotificationsService,
-    private _translateService: TranslateService,
+    private accountsStore: AccountsStore,
+    private accountEntryDialogComponent: MatDialog,
+    private entryCategoriesService: EntryCategoryService,
+    private notifierService: NotifierService,
+    private translateService: TranslateService,
     @Inject(VIRTUAL_SCROLL_STRATEGY)
-    private _accountMovementsViertualScrollStrategy: AccountMovementsViertualScrollStrategy,
+    private accountMovementsViertualScrollStrategy: AccountMovementsViertualScrollStrategy,
   ) {}
 
   ngAfterViewInit() {
-    this.fabSpeedDial.openChange
-      .pipe(
-        tap(opened => {
-          this.fabSpeedDial.fixed = !opened;
-        }),
-        takeUntil(this._subscriptionDestroyed),
-      )
-      .subscribe();
+    this.fabSpeedDial?.openChange.pipe(takeUntilDestroyed()).subscribe(opened => {
+      if (this.fabSpeedDial) {
+        this.fabSpeedDial.fixed = !opened;
+      }
+    });
 
     this._speedDialHovered$
       .pipe(
-        debounce(hovered => hovered ? of(0) : interval(fabSpeedDialDelayOnHover)),
-        tap(hovered => {
-          if (hovered != this.fabSpeedDial.open) {
-            this.fabSpeedDial.toggle();
-          }
-        }),
-        takeUntil(this._subscriptionDestroyed),
+        debounce(hovered => (hovered ? of(0) : interval(fabSpeedDialDelayOnHover))),
+        takeUntilDestroyed(),
       )
-      .subscribe();
+      .subscribe(hovered => {
+        if (this.fabSpeedDial && hovered != this.fabSpeedDial.open) {
+          this.fabSpeedDial.toggle();
+        }
+      });
   }
 
   ngOnDestroy() {
-    this._subscriptionDestroyed.next();
-    this._subscriptionDestroyed.complete();
     this.movementSelection$.complete();
     this._speedDialHovered$.complete();
   }
@@ -135,7 +129,7 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
   }
 
   private getCategoryPathById$(categoryId: number) {
-    return this._entryCategoriesService.entryCategoriesForVisualisation$.pipe(
+    return this.entryCategoriesService.entryCategoriesForVisualisation$.pipe(
       map(entryCategories => entryCategories.flatEntryCategories.get(categoryId)?.fullPath),
     );
   }
@@ -162,21 +156,16 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
   }
 
   private showNoAccountErrorNotification() {
-    this._translateService
+    this.translateService
       .get(['notifications.title.error', 'accounts.table.errors.noAccount'])
-      .pipe(
-        tap((errorMesages: { [key: string]: string }) =>
-          this._notificationsService.error(
-            errorMesages['notifications.title.error'],
-            errorMesages['accounts.table.errors.noAccount'],
-          ),
-        ),
-      )
-      .subscribe();
+      .pipe()
+      .subscribe((errorMesages: { [key: string]: string }) =>
+        this.notifierService.notify('error', errorMesages['accounts.table.errors.noAccount']),
+      );
   }
 
   private openAccountEntryDialog(data: EntryDialogData) {
-    const accountEntryDialogRef = this._accountEntryDialogComponent.open<
+    const accountEntryDialogRef = this.accountEntryDialogComponent.open<
       MovementEntryDialogComponent,
       EntryDialogData,
       MovementDto

@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { EntryCategoryDto, EntryCategoriesDto, MasterDataApiService } from '@famoney-apis/master-data';
+import { EntryCategoriesDto, EntryCategoryDto, MasterDataApiService } from '@famoney-apis/master-data';
 import { exclusiveCheck } from '@famoney-shared/misc';
-import { NotificationsService } from 'angular2-notifications';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
+import { NotifierService } from 'angular-notifier';
 
 export interface EntryCategory {
   id: number;
@@ -48,7 +48,7 @@ export class FlatEntryCategoryObject implements Readonly<FlatEntryCategory> {
       case 'INCOME':
         return 1;
       default:
-        return exclusiveCheck(this.type)        
+        return exclusiveCheck(this.type)
     }
   }
 }
@@ -68,12 +68,12 @@ export class EntryCategoryService {
   readonly entryCategoriesForVisualisation$: Observable<EntryCategories>;
   private _entryCategoriesRefreshSubject = new BehaviorSubject<void>(undefined);
 
-  constructor(private notificationsService: NotificationsService, private masterDataApiService: MasterDataApiService) {
+  constructor(private notifierService: NotifierService, private masterDataApiService: MasterDataApiService) {
     this.entryCategories$ = this._entryCategoriesRefreshSubject.pipe(
       switchMap(() => this.masterDataApiService.getEntryCategories()),
       shareReplay(1),
       catchError(() => {
-        this.notificationsService.error('Error', 'Couldn\t load entry categories.');
+        this.notifierService.notify('error', 'Couldn\t load entry categories.');
         return EMPTY;
       }),
     );
