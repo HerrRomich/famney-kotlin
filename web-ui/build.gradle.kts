@@ -83,19 +83,39 @@ tasks {
         dependsOn(copyApiDepsTask)
       }
     }
+  register<GenerateTask>("generateTest") {
+    doFirst {
+      delete("$projectDir/src/app/shared/apis/admin-center-api/*")
+    }
+    inputSpec.set("$buildDir/api-defs/admin-center-api.yaml")
+    outputDir.set("$projectDir/src/app/shared/apis/admin-center-api")
+    generatorName.set("typescript-angular")
+    typeMappings.set(mapOf("set" to "Array", "DateTime" to "Date", "date" to "Date", "date-time" to "Date"))
+    configOptions.set(
+      mapOf(
+        "ngVersion" to "15.0.0",
+        "serviceSuffix" to "ApiService",
+        "serviceFileSuffix" to "-api.service",
+        "modelFileSuffix" to ".dto",
+        "modelSuffix" to "Dto",
+        "fileNaming" to "kebab-case",
+        "providedIn" to "any",
+      )
+    )
+  }
 
   val generateApiAngularClient = register("generateApiAngularClient") {
     dependsOn(*generateTasks.toTypedArray())
   }
 
-  processResources {
-    dependsOn(generateApiAngularClient)
-  }
-
-  register<NpxTask>("buildWebUI") {
-    dependsOn("npmInstall", processResources)
+  val buildWebUi = register<NpxTask>("buildWebUI") {
+    dependsOn("npmInstall", generateApiAngularClient)
     command.set("ng")
     args.set(listOf("build"))
     inputs.files("package.json", "package-lock.json", "angular.json", "tsconfig.json", "tsconfig.app.json")
+  }
+
+  processResources {
+    dependsOn(buildWebUi)
   }
 }

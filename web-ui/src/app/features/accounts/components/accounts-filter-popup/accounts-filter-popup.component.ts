@@ -1,11 +1,11 @@
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Component, ElementRef, ViewChild } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { AccountsStore } from '@famoney-features/accounts/store/accounts.store';
-import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {Component, ElementRef, ViewChild} from '@angular/core';
+import {FormControl, FormGroup} from '@angular/forms';
+import {MatAutocomplete, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
+import {MatChipInputEvent} from '@angular/material/chips';
+import {AccountsStore} from '@famoney-features/accounts/store/accounts.store';
+import {combineLatest, Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 @Component({
   selector: 'fm-account-tags-popup',
@@ -15,11 +15,13 @@ import { map } from 'rxjs/operators';
 export class AccountTagsPopupComponent {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   public filtersAccountTags$: Observable<string[]>;
-  @ViewChild('tagsInput', { static: true }) tagsInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('tagAutoComplete', { static: true }) matAutocomplete!: MatAutocomplete;
-  range = new FormGroup({
-    start: new FormControl<Date | null>(null),
-    end: new FormControl<Date | null>(null),
+  @ViewChild('tagsInput', {static: true}) tagsInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('tagAutoComplete', {static: true}) matAutocomplete!: MatAutocomplete;
+  filter = new FormGroup({
+    "range": new FormGroup({
+      start: new FormControl<Date | null>(null),
+      end: new FormControl<Date | null>(null),
+    })
   });
 
   constructor(public accountsStore: AccountsStore) {

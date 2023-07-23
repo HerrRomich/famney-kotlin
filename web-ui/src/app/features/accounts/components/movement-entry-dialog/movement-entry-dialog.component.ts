@@ -24,7 +24,7 @@ export class MovementEntryDialogComponent implements OnInit {
     bookingDate: [nullDate],
     budgetPeriod: [nullDate],
     entryItems: this._formBuilder.array([this.addEntryItemFormGroup()]),
-  });;
+  });
   accountEntry$: Observable<AccountEntry>;
   comulatedSum$: Observable<{ amount: number }> = EMPTY;
   extendedDate: string | undefined;
