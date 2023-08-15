@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AccountTableComponent } from './pages/account-table/account-table.component';
 import { AccountsComponent } from './pages/accounts/accounts.component';
-import { canAtivateAccount } from './services/accounts.guard';
+import { canActivateAccount } from './services/accounts.guard';
 
 const routes: Routes = [
   {
@@ -17,7 +17,7 @@ const routes: Routes = [
       {
         path: ':accountId',
         component: AccountTableComponent,
-        canActivate: [canAtivateAccount],
+        canActivate: [canActivateAccount],
       },
     ],
   },

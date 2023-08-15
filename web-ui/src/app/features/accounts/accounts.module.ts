@@ -1,18 +1,26 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { NgModule } from '@angular/core';
+import { inject, NgModule } from '@angular/core';
+import { EntryItemComponent, EntryItemService } from '@famoney-features/accounts/components/entry-item';
+import { AccountTableComponent } from '@famoney-features/accounts/pages/account-table/account-table.component';
+import { AccountsFilterStorageService } from '@famoney-features/accounts/services/accounts-filter-storage.service';
+import { AccountsEffects } from '@famoney-features/accounts/stores/accounts/accounts.effects';
+import { AccountsFacade } from '@famoney-features/accounts/stores/accounts/accounts.facade';
+import { accountsReducer, ACCOUNTS_FEATURE_KEY } from '@famoney-features/accounts/stores/accounts/accounts.reducer';
+import { MovementsEffects } from '@famoney-features/accounts/stores/movements/movements.effects';
+import { MovementsFacade } from '@famoney-features/accounts/stores/movements/movements.facade';
+import { movementsReducer, MOVEMENTS_FEATURE_KEY } from '@famoney-features/accounts/stores/movements/movements.reducer';
 import { AngularModule } from '@famoney-shared/modules/angular.module';
 import { MaterialModule } from '@famoney-shared/modules/material.module';
 import { MonthPickerModule } from '@famoney-shared/modules/month-picker.module';
 import { SharedModule } from '@famoney-shared/modules/shared.module';
-import { provideComponentStore } from '@ngrx/component-store';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { RouterTabModule } from '../../shared/modules/router-tab.module';
 import { AccountsRoutingModule } from './accounts-routing.module';
 import { AccountDialogComponent } from './components/account-dialog';
 import { AccountTagsPopupComponent } from './components/accounts-filter-popup';
 import { MovementEntryDialogComponent } from './components/movement-entry-dialog';
-import { AccountTableComponent } from './pages/account-table/account-table.component';
 import { AccountsComponent } from './pages/accounts/accounts.component';
-import { AccountsStore } from './store/accounts.store';
 
 @NgModule({
   declarations: [
@@ -21,16 +29,26 @@ import { AccountsStore } from './store/accounts.store';
     MovementEntryDialogComponent,
     AccountTagsPopupComponent,
     AccountDialogComponent,
+    EntryItemComponent,
   ],
-    imports: [
-        AngularModule,
-        OverlayModule,
-        MaterialModule,
-        SharedModule,
-        AccountsRoutingModule,
-        RouterTabModule,
-        MonthPickerModule,
-    ],
-  providers: [provideComponentStore(AccountsStore)],
+  imports: [
+    AngularModule,
+    OverlayModule,
+    MaterialModule,
+    SharedModule,
+    AccountsRoutingModule,
+    RouterTabModule,
+    MonthPickerModule,
+    StoreModule.forFeature(ACCOUNTS_FEATURE_KEY, accountsReducer),
+    EffectsModule.forFeature([AccountsEffects]),
+    StoreModule.forFeature(MOVEMENTS_FEATURE_KEY, movementsReducer),
+    EffectsModule.forFeature([MovementsEffects]),
+  ],
+  providers: [EntryItemService, AccountsFilterStorageService, AccountsFacade, MovementsFacade],
 })
-export class AccountsModule {}
+export class AccountsModule {
+  constructor() {
+    const accountsFacade = inject(AccountsFacade);
+    accountsFacade.init();
+  }
+}

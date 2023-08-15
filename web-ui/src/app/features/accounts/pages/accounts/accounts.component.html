@@ -4,17 +4,16 @@
     (click)="openAccountTagsPopup()"
     cdkOverlayOrigin
     #accountTagsPopupButton="cdkOverlayOrigin"
-    matTooltip="{{ accountTagsText$ | async }}"
+    matTooltip="{{ accountsFacade.tagsTexts$ | async }}"
     matTooltipClass="wrapped-tooltip"
+    *ngLet="accountsFacade.tagsCount$ | async as tagsCount"
   >
-    <mat-icon matBadge="{{ accountTagsCount$ | async }}" [matBadgeHidden]="(accountTagsCount$ | async) === 0"
-      >filter_list</mat-icon
-    >
+    <mat-icon matBadge="{{ tagsCount }}" [matBadgeHidden]="tagsCount === 0">filter_list </mat-icon>
   </button>
   <div fmSpacer></div>
   <fm-router-tab class="accounts-tab-group">
     <fm-router-tab-item
-      *ngFor="let account of accountsStore.filteredAccounts$| async"
+      *ngFor="let account of accountsFacade.filteredAccounts$ | async"
       [routerLink]="account.id.toString()"
       routerLinkActive
       #rlaRef="routerLinkActive"
@@ -25,9 +24,9 @@
     <mat-icon>more_vert</mat-icon>
   </button>
   <mat-menu #menuRef="matMenu" [overlapTrigger]="false">
-    <button mat-menu-item translate="accounts.table.menu.newAccount.title"></button>
-    <button mat-menu-item translate="accounts.table.menu.accountProperties.title"></button>
-    <button mat-menu-item translate="accounts.table.menu.deleteAccount.title"></button>
+    <button mat-menu-item>{{ 'accounts.table.menu.newAccount.title' | translate }}</button>
+    <button mat-menu-item>{{ 'accounts.table.menu.accountProperties.title' | translate }}</button>
+    <button mat-menu-item>{{ 'accounts.table.menu.deleteAccount.title' | translate }}</button>
   </mat-menu>
 </div>
 <div class="area">

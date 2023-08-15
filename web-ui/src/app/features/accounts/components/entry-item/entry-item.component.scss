@@ -1,0 +1,67 @@
+@use '@angular/material' as mat;
+@use 'styles/_variables' as v;
+
+div.entry-item {
+  flex: 1 1 0px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  > div.entry-required-data {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+    mat-form-field.entry-item-category {
+      flex: 80%
+    }
+
+    mat-form-field.entry-item-amount {
+      flex: 20%;
+
+      input.mat-input-element,
+      label.mat-form-field-label,
+      mat-error {
+        text-align: right;
+      }
+
+      input.mat-input-element {
+        text-align: right;
+        -moz-appearance: textfield;
+
+        &::-webkit-outer-spin-button,
+        &::-webkit-inner-spin-button {
+          -webkit-appearance: none;
+          margin: 0;
+        }
+      }
+    }
+  }
+}
+
+mat-optgroup.mat-optgroup.fm-optgroup-sticky {
+  label.mat-optgroup-label {
+    padding: 0 8px;
+    line-height: 32px;
+    height: 32px;
+    font-weight: 700;
+    background-color: rgba($color: white, $alpha: 1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+}
+
+mark {
+  background-color: mat.get-color-from-palette(v.$fm-app-accent, 300);
+}
+
+.fm-expense-category {
+  color: rgba(v.$fm-expense-color, 0.87);
+}
+
+.fm-income-category {
+  color: rgba(v.$fm-income-color, 0.87);
+}

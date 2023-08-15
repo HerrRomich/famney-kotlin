@@ -1,27 +1,28 @@
 import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivateChildFn, Router, RouterStateSnapshot } from '@angular/router';
-import { map, tap } from 'rxjs/operators';
-import { AccountsStore } from '../store/accounts.store';
+import { ActivatedRouteSnapshot, CanActivateChildFn, Router } from '@angular/router';
+import { AccountsFacade } from '@famoney-features/accounts/stores/accounts/accounts.facade';
+import { Observable, OperatorFunction, pipe, UnaryFunction } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
-export const canAtivateAccount: CanActivateChildFn = (route: ActivatedRouteSnapshot, state: RouterStateSnapshot) => {
+function filterNullish<T>(): UnaryFunction<Observable<T | null | undefined>, Observable<T>> {
+  return pipe(filter((x) => x !== null && x !== undefined) as OperatorFunction<T | null | undefined, T>);
+}
+
+export const canActivateAccount: CanActivateChildFn = (route: ActivatedRouteSnapshot) => {
   const accountId = parseInt(route.params['accountId'], 10) || 0;
-  const accountsStore = inject(AccountsStore);
+  const accountsFacade = inject(AccountsFacade);
   const router = inject(Router);
-  return accountsStore.filteredAccounts$.pipe(
-    map(accounts => {
-      const found = accounts.some(account => account.id ===accountId);
+  return accountsFacade.filteredAccounts$.pipe(
+    filterNullish(),
+    map((accounts) => {
+      const found = accounts.some((account) => account.id === accountId);
       if (found) {
-        accountsStore.selectAccount(accountId);
-      } else {
-        const accountIdQuery = accounts.length > 0 ? `/${accounts[0].id}` : '';
+        accountsFacade.selectAccount(accountId);
+      } else if (accounts.length > 0) {
+        const accountIdQuery = `/${accounts[0].id}`;
         router.navigateByUrl(`/accounts${accountIdQuery}`);
       }
       return found;
-    }),
-    tap(result => {
-      if (result) {
-      } else {
-      }
     }),
   );
 };

@@ -1,15 +1,15 @@
 <form [formGroup]="filter">
   <mat-form-field>
+    <mat-label>{{ 'accounts.filterPopup.tags.title' | translate }}</mat-label>
     <mat-chip-grid #accountTagList>
-      <mat-chip-option
-        *ngFor="let tag of accountsStore.selectedTags$ | async"
-        [selectable]="false"
+      <mat-chip-row
+        *ngFor="let tag of accountsFacade.selectedTags$ | async"
         [removable]="true"
         (removed)="removeTag(tag)"
       >
         {{ tag }}
         <mat-icon matChipRemove>cancel</mat-icon>
-      </mat-chip-option>
+      </mat-chip-row>
       <input
         matInput
         #tagsInput
@@ -21,7 +21,7 @@
         (matChipInputTokenEnd)="addTag($event)"
       />
       <mat-autocomplete #tagAutoComplete="matAutocomplete" (optionSelected)="selectTag($event)">
-        <mat-option *ngFor="let tag of filtersAccountTags$ | async" [value]="tag">
+        <mat-option *ngFor="let tag of accountsFacade.allTags$ | async" [value]="tag">
           {{ tag }}
         </mat-option>
       </mat-autocomplete>
@@ -29,24 +29,32 @@
     <button
       mat-icon-button
       matSuffix
-      (click)="accountsStore.clearSelectedTags()"
+      (click)="clearSelectedTags()"
       [matTooltip]="'accounts.filterPopup.tags.buttons.clearAll.tooltip' | translate"
     >
       <mat-icon>cancel</mat-icon>
     </button>
   </mat-form-field>
   <mat-form-field>
-    <mat-label>{{'accounts.filterPopup.dateRange.title' | translate}}</mat-label>
+    <mat-label>{{ 'accounts.filterPopup.dateRange.title' | translate }}</mat-label>
     <mat-date-range-input formGroupName="range" [rangePicker]="picker">
-      <input matStartDate formControlName="start"
-             [placeholder]="'accounts.filterPopup.dateRange.startDate.placeholder' | translate">
-      <input matEndDate formControlName="end"
-             [placeholder]="'accounts.filterPopup.dateRange.endDate.placeholder' | translate">
+      <input
+        matStartDate
+        formControlName="start"
+        [placeholder]="'accounts.filterPopup.dateRange.startDate.placeholder' | translate"
+      />
+      <input
+        matEndDate
+        formControlName="end"
+        [placeholder]="'accounts.filterPopup.dateRange.endDate.placeholder' | translate"
+      />
     </mat-date-range-input>
-    <mat-hint>{{'formats.date.short' | translate}} – {{'formats.date.short' | translate}}</mat-hint>
+    <mat-hint>{{ 'formats.date.short' | translate }} – {{ 'formats.date.short' | translate }}</mat-hint>
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-date-range-picker #picker></mat-date-range-picker>
-    <mat-error *ngIf="filter.controls.range.controls.start.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+    <mat-error *ngIf="filter.controls.range.controls.start.hasError('matStartDateInvalid')"
+      >Invalid start date</mat-error
+    >
     <mat-error *ngIf="filter.controls.range.controls.end.hasError('matEndDateInvalid')">Invalid end date</mat-error>
   </mat-form-field>
 </form>

@@ -1,17 +1,17 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { AbstractControl, FormBuilder, ValidationErrors, Validators } from '@angular/forms';
+import { Component, DestroyRef, Inject, OnInit, Optional, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AccountsApiService, ApiErrorDto, EntryDataDto, EntryItemDataDto, MovementDto } from '@famoney-apis/accounts';
+import { EntryItemFormGroup, EntryItemService } from '@famoney-features/accounts/components/entry-item';
 import { AccountEntry, EntryDialogData, EntryItem } from '@famoney-features/accounts/models/account-entry.model';
-import { nullDate, nullNumber, nullString } from '@famoney-shared/misc';
 import { EntryCategoryService, FlatEntryCategoryObject } from '@famoney-shared/services/entry-category.service';
 import { DateFormatName, LocaleService } from '@famoney-shared/services/locale.service';
-import { ParseNumberService } from '@famoney-shared/services/parse-numbers.service';
 import { TranslateService } from '@ngx-translate/core';
-import { EMPTY, Observable, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { NotifierService } from 'angular-notifier';
+import { EMPTY, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'fm-movement-entry-dialog',
@@ -19,76 +19,84 @@ import { NotifierService } from 'angular-notifier';
   styleUrls: ['movement-entry-dialog.component.scss'],
 })
 export class MovementEntryDialogComponent implements OnInit {
-  readonly entryForm = this._formBuilder.group({
-    entryDate: [new Date(), [Validators.required]],
-    bookingDate: [nullDate],
-    budgetPeriod: [nullDate],
-    entryItems: this._formBuilder.array([this.addEntryItemFormGroup()]),
+  readonly entryForm = this.formBuilder.group({
+    entryDate: this.formBuilder.control(new Date(), [Validators.required]),
+    bookingDate: this.formBuilder.control<Date | undefined>({
+      value: undefined,
+      disabled: false,
+    }),
+    budgetPeriod: this.formBuilder.control<Date | undefined>({
+      value: undefined,
+      disabled: false,
+    }),
+    entryItems: this.formBuilder.array<EntryItemFormGroup>([]),
   });
-  accountEntry$: Observable<AccountEntry>;
-  comulatedSum$: Observable<{ amount: number }> = EMPTY;
+  cumulatedSum = signal<number | undefined>(undefined);
+  loaded = signal<boolean>(false);
   extendedDate: string | undefined;
   extendedEntry: string | undefined;
 
   constructor(
     private dialogRef: MatDialogRef<MovementEntryDialogComponent, MovementDto>,
-    private _formBuilder: FormBuilder,
-    private _accountsApiService: AccountsApiService,
+    private formBuilder: NonNullableFormBuilder,
+    private accountsApiService: AccountsApiService,
     private entryCategoriesService: EntryCategoryService,
     @Optional() @Inject(MAT_DATE_LOCALE) private dateLocale: string,
     private translateService: TranslateService,
     private notifierService: NotifierService,
     @Inject(MAT_DIALOG_DATA) private data: EntryDialogData,
     private localeService: LocaleService,
-    private parseNumberService: ParseNumberService,
-  ) {
-    this.accountEntry$ = of(this.data.entryData).pipe(
-      switchMap(entryData =>
-        this.entryCategoriesService.entryCategoriesForVisualisation$.pipe(
-          map(entryCategories => [entryData, entryCategories] as const),
-        ),
-      ),
-      tap(([entryData]) => {
-        this.extendedDate = entryData?.bookingDate || entryData?.budgetPeriod ? 'extended-date' : undefined;
-        this.extendedEntry = (entryData?.entryItems?.length ?? 0) > 1 ? 'extended-entry' : undefined;
-      }),
-      map(([entryData, entryCategories]) => {
-        const accountEntry: AccountEntry = {
-          movementDate: {
-            date: entryData?.date ?? new Date(),
-            bookingDate: entryData?.bookingDate,
-            budgetPeriod: entryData?.budgetPeriod,
-          },
-          entryItems: entryData
-            ? entryData.entryItems.map(entryItem =>
-                this.createEntryItem(entryItem, entryCategories.flatEntryCategories.get(entryItem.categoryId)),
-              )
-            : [],
-        };
-        return accountEntry;
-      }),
-      tap(accountEntry => {
-        if (accountEntry.entryItems.length > 1) {
-          this.entryForm.setControl(
-            'entryItems',
-            this._formBuilder.array(accountEntry.entryItems.map(() => this.addEntryItemFormGroup())),
-          );
+    private entryItemService: EntryItemService,
+    private destroyRef: DestroyRef,
+  ) {}
+
+  ngOnInit(): void {
+    this.dialogRef
+      .keydownEvents()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((event) => {
+        if (event.key === 'Escape') {
+          this.onCancel();
         }
+      });
+    this.dialogRef
+      .backdropClick()
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.onCancel();
+      });
+    of(this.data.entryData)
+      .pipe(
+        switchMap((entryData) =>
+          this.entryCategoriesService.entryCategoriesForVisualisation$.pipe(
+            map((entryCategories) => {
+              this.extendedDate = entryData?.bookingDate || entryData?.budgetPeriod ? 'extended-date' : undefined;
+              this.extendedEntry = (entryData?.entryItems?.length ?? 0) > 1 ? 'extended-entry' : undefined;
+              const accountEntry: AccountEntry = {
+                movementDate: {
+                  date: entryData?.date ?? new Date(),
+                  bookingDate: entryData?.bookingDate,
+                  budgetPeriod: entryData?.budgetPeriod,
+                },
+                entryItems: entryData
+                  ? entryData.entryItems.map((entryItem) =>
+                      this.createEntryItem(entryItem, entryCategories.flatEntryCategories.get(entryItem.categoryId)),
+                    )
+                  : [],
+              };
+              return accountEntry;
+            }),
+          ),
+        ),
+      )
+      .subscribe((accountEntry) => {
+        this.entryForm.setControl(
+          'entryItems',
+          this.formBuilder.array(accountEntry.entryItems.map(() => this.entryItemService.createEntryItemFormGroup())),
+        );
         this.entryForm.patchValue(accountEntry);
-      }),
-    );
-  }
-
-  getEntryItems() {
-    return this.entryForm?.controls['entryItems'];
-  }
-
-  private addEntryItemFormGroup() {
-    return this._formBuilder.group({
-      categoryId: [nullNumber, Validators.required],
-      amount: [nullNumber, [Validators.required, this.validateAmountNotZero]],
-      comments: [nullString],
-    });
+        this.loaded.set(true);
+      });
   }
 
   private createEntryItem(entryItem: EntryItemDataDto, flatEntryCategory?: FlatEntryCategoryObject): EntryItem {
@@ -102,17 +110,6 @@ export class MovementEntryDialogComponent implements OnInit {
     };
   }
 
-  ngOnInit(): void {
-    this.dialogRef.keydownEvents().subscribe(event => {
-      if (event.key === 'Escape') {
-        this.onCancel();
-      }
-    });
-    this.dialogRef.backdropClick().subscribe(() => {
-      this.onCancel();
-    });
-  }
-
   onCancel() {
     this.dialogRef.close();
   }
@@ -123,26 +120,15 @@ export class MovementEntryDialogComponent implements OnInit {
   }
 
   addEntryItem() {
-    this.entryForm?.controls['entryItems'].push(this.addEntryItemFormGroup());
+    this.entryForm.controls.entryItems.push(this.entryItemService.createEntryItemFormGroup());
   }
 
   deleteEntryItem(entryItemIndex: number) {
-    this.entryForm?.controls['entryItems'].removeAt(entryItemIndex);
+    this.entryForm.controls.entryItems.removeAt(entryItemIndex);
   }
 
-  validateAmountNotZero = (control: AbstractControl): ValidationErrors => {
-    const amount = this.parseNumberService.parse(control.value);
-    if (Number.isNaN(amount)) {
-      return { wrongFormat: 'Should be number!' };
-    } else if (amount === 0) {
-      return { zeroValue: 'Should be not Zero!' };
-    } else {
-      return {};
-    }
-  };
-
   getEntryDateError$() {
-    const entryDateControl = this.entryForm?.get('entryDate');
+    const entryDateControl = this.entryForm.get('entryDate');
     if (entryDateControl?.hasError('matDatepickerParse')) {
       return this.translateService.get('accounts.entryDialog.fields.entryDate.errors.invalid');
     } else if (entryDateControl?.getError('required')) {
@@ -156,18 +142,18 @@ export class MovementEntryDialogComponent implements OnInit {
     const { accountId, movementId } = this.data;
     let storeOperator =
       typeof movementId === 'undefined'
-        ? (entryData: EntryDataDto) => this._accountsApiService.addMovement(accountId, entryData)
-        : (entryData: EntryDataDto) => this._accountsApiService.changeMovement(accountId, movementId, entryData);
+        ? (entryData: EntryDataDto) => this.accountsApiService.addMovement(accountId, entryData)
+        : (entryData: EntryDataDto) => this.accountsApiService.changeMovement(accountId, movementId, entryData);
     of(this.entryForm?.value)
       .pipe(
-        switchMap(accountEntry =>
+        switchMap((accountEntry) =>
           this.entryCategoriesService.entryCategoriesForVisualisation$.pipe(
-            map(entryCategories => [accountEntry, entryCategories] as const),
+            map((entryCategories) => [accountEntry, entryCategories] as const),
           ),
         ),
         map(([accountEntry, entryCategories]) => {
           const entryItems =
-            accountEntry.entryItems?.map(entryItem => {
+            accountEntry.entryItems?.map((entryItem) => {
               const entryCategory = entryItem?.categoryId
                 ? entryCategories.flatEntryCategories.get(entryItem?.categoryId)
                 : undefined;
@@ -190,7 +176,7 @@ export class MovementEntryDialogComponent implements OnInit {
         switchMap(storeOperator),
       )
       .subscribe({
-        next: data => this.dialogRef.close(data),
+        next: (data) => this.dialogRef.close(data),
         error: (err: ApiErrorDto) => this.notifierService.notify('error', err.description ?? ''),
       });
   }

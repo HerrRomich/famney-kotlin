@@ -10,11 +10,13 @@ build/
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
+.idea/**/codeStyles
 .idea/**/shelf
 
 .idea/modules.xml
 .idea/jarRepositories.xml
 .idea/compiler.xml
+.idea/prettier.xml
 .idea/libraries/
 *.iws
 *.iml
@@ -51,3 +53,4 @@ out/
 /.idea/inspectionProfiles/Project_Default.xml
 /.idea/kotlinc.xml
 /.idea/misc.xml
+/.idea/intellij-javadocs-4.0.1.xml

@@ -1,9 +1,8 @@
 import { CdkOverlayOrigin, Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { AccountTagsPopupComponent } from '@famoney-features/accounts/components/accounts-filter-popup';
-import { AccountsStore } from '@famoney-features/accounts/store/accounts.store';
-import { map } from 'rxjs';
+import { AccountsFacade } from '@famoney-features/accounts/stores/accounts/accounts.facade';
 
 @Component({
   selector: 'fm-accounts',
@@ -12,18 +11,15 @@ import { map } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountsComponent {
-  readonly accountTagsText$ = this.accountsStore.selectedTags$.pipe(
-    map(selectedTags => selectedTags?.map(tag => '- ' + tag).join('\n')),
-  );
+  accountsFacade = inject(AccountsFacade);
 
-  readonly accountTagsCount$ = this.accountsStore.selectedTags$.pipe(map(selectedTags => selectedTags?.length));
+  @ViewChild('accountTagsPopupButton')
+  accountTagsPopupButton?: CdkOverlayOrigin;
 
-  @ViewChild('accountTagsPopupButton', { static: true }) accountTagsPopupButton!: CdkOverlayOrigin;
+  private readonly accountTagsPopupPortal: ComponentPortal<AccountTagsPopupComponent>;
 
-  private _accountTagsPopupPortal: ComponentPortal<AccountTagsPopupComponent>;
-
-  constructor(public accountsStore: AccountsStore, private overlay: Overlay) {
-    this._accountTagsPopupPortal = new ComponentPortal(AccountTagsPopupComponent);
+  constructor(private overlay: Overlay) {
+    this.accountTagsPopupPortal = new ComponentPortal(AccountTagsPopupComponent);
   }
 
   openAccountTagsPopup() {
@@ -33,7 +29,14 @@ export class AccountsComponent {
     const position = this.overlay
       .position()
       .flexibleConnectedTo(this.accountTagsPopupButton.elementRef)
-      .withPositions([{ originX: 'start', originY: 'bottom', overlayX: 'start', overlayY: 'top' }])
+      .withPositions([
+        {
+          originX: 'start',
+          originY: 'bottom',
+          overlayX: 'start',
+          overlayY: 'top',
+        },
+      ])
       .withFlexibleDimensions(true)
       .withGrowAfterOpen(true);
     const accountTagsPopup = this.overlay.create({
@@ -43,7 +46,7 @@ export class AccountsComponent {
       panelClass: 'fm-tags-panel',
       backdropClass: 'cdk-overlay-dark-backdrop',
     });
-    accountTagsPopup.attach(this._accountTagsPopupPortal);
+    accountTagsPopup.attach(this.accountTagsPopupPortal);
     accountTagsPopup.backdropClick().subscribe(() => accountTagsPopup.detach());
   }
 }

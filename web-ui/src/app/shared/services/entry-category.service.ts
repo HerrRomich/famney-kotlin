@@ -1,28 +1,32 @@
 import { Injectable } from '@angular/core';
-import { EntryCategoriesDto, EntryCategoryDto, MasterDataApiService } from '@famoney-apis/master-data';
+import {
+  EntryCategoriesDto,
+  EntryCategoryDto,
+  MasterDataApiService,
+} from '@famoney-apis/master-data';
 import { exclusiveCheck } from '@famoney-shared/misc';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
 import { NotifierService } from 'angular-notifier';
 
-export interface EntryCategory {
+export type EntryCategory = {
   id: number;
   type: EntryCategoryDto['type'];
   name: string;
-}
+};
 
-export interface HierarchicalEntryCategory {
+export type HierarchicalEntryCategory = {
   id: number;
   type: EntryCategoryDto['type'];
   name: string;
   children: HierarchicalEntryCategory[];
-}
+};
 
-export interface FlatEntryCategory extends EntryCategory {
+export type FlatEntryCategory = EntryCategory & {
   path: string;
   fullPath: string;
   level: number;
-}
+};
 
 export class FlatEntryCategoryObject implements Readonly<FlatEntryCategory> {
   readonly id: number;
@@ -48,18 +52,21 @@ export class FlatEntryCategoryObject implements Readonly<FlatEntryCategory> {
       case 'INCOME':
         return 1;
       default:
-        return exclusiveCheck(this.type)
+        return exclusiveCheck(this.type);
     }
   }
 }
 
-interface EntryCategories {
-  flatEntryCategories: Map<number, FlatEntryCategoryObject>;
+export type FlatEntryCategories = Map<number, FlatEntryCategoryObject>;
+
+export type EntryCategories = {
+  flatEntryCategories: FlatEntryCategories;
   expenses: EntryCategory[];
   incomes: EntryCategory[];
-}
+};
 
 export const pathSeparator = ' ' + String.fromCharCode(8594) + ' ';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -68,7 +75,10 @@ export class EntryCategoryService {
   readonly entryCategoriesForVisualisation$: Observable<EntryCategories>;
   private _entryCategoriesRefreshSubject = new BehaviorSubject<void>(undefined);
 
-  constructor(private notifierService: NotifierService, private masterDataApiService: MasterDataApiService) {
+  constructor(
+    private notifierService: NotifierService,
+    private masterDataApiService: MasterDataApiService,
+  ) {
     this.entryCategories$ = this._entryCategoriesRefreshSubject.pipe(
       switchMap(() => this.masterDataApiService.getEntryCategories()),
       shareReplay(1),
@@ -78,10 +88,16 @@ export class EntryCategoryService {
       }),
     );
     this.entryCategoriesForVisualisation$ = this.entryCategories$.pipe(
-      map(entryCategories => {
+      map((entryCategories) => {
         const flatEntryCategories = new Map<number, FlatEntryCategoryObject>();
-        this.flattenEntryCategories(flatEntryCategories, entryCategories.expenses);
-        this.flattenEntryCategories(flatEntryCategories, entryCategories.incomes);
+        this.flattenEntryCategories(
+          flatEntryCategories,
+          entryCategories.expenses,
+        );
+        this.flattenEntryCategories(
+          flatEntryCategories,
+          entryCategories.incomes,
+        );
         return {
           flatEntryCategories: flatEntryCategories,
           expenses: entryCategories.expenses,
@@ -99,9 +115,10 @@ export class EntryCategoryService {
     path = '',
   ) {
     entryCategories
-      ?.filter(entryCategory => entryCategory.id)
-      .forEach(entryCategory => {
-        const fullPath = (path ? path + pathSeparator : '') + entryCategory.name;
+      ?.filter((entryCategory) => entryCategory.id)
+      .forEach((entryCategory) => {
+        const fullPath =
+          (path ? path + pathSeparator : '') + entryCategory.name;
         result.set(
           entryCategory.id,
           new FlatEntryCategoryObject({
@@ -111,7 +128,12 @@ export class EntryCategoryService {
             level: level,
           }),
         );
-        this.flattenEntryCategories(result, entryCategory.children, level + 1, fullPath);
+        this.flattenEntryCategories(
+          result,
+          entryCategory.children,
+          level + 1,
+          fullPath,
+        );
       });
   }
 

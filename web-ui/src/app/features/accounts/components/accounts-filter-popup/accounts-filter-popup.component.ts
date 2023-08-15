@@ -1,11 +1,9 @@
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import {Component, ElementRef, ViewChild} from '@angular/core';
-import {FormControl, FormGroup} from '@angular/forms';
-import {MatAutocomplete, MatAutocompleteSelectedEvent} from '@angular/material/autocomplete';
-import {MatChipInputEvent} from '@angular/material/chips';
-import {AccountsStore} from '@famoney-features/accounts/store/accounts.store';
-import {combineLatest, Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { Component, ElementRef, inject, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { AccountsFacade } from '@famoney-features/accounts/stores/accounts/accounts.facade';
 
 @Component({
   selector: 'fm-account-tags-popup',
@@ -13,26 +11,19 @@ import {map} from 'rxjs/operators';
   styleUrls: ['accounts-filter-popup.component.scss'],
 })
 export class AccountTagsPopupComponent {
+  accountsFacade = inject(AccountsFacade);
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  public filtersAccountTags$: Observable<string[]>;
-  @ViewChild('tagsInput', {static: true}) tagsInput!: ElementRef<HTMLInputElement>;
-  @ViewChild('tagAutoComplete', {static: true}) matAutocomplete!: MatAutocomplete;
+  @ViewChild('tagsInput', { static: true }) tagsInput!: ElementRef<HTMLInputElement>;
+  @ViewChild('tagAutoComplete', { static: true }) matAutocomplete!: MatAutocomplete;
   filter = new FormGroup({
-    "range": new FormGroup({
+    'range': new FormGroup({
       start: new FormControl<Date | null>(null),
       end: new FormControl<Date | null>(null),
-    })
+    }),
   });
 
-  constructor(public accountsStore: AccountsStore) {
-    this.filtersAccountTags$ = combineLatest([
-      this.accountsStore.tags$,
-      this.accountsStore.selectedTags$,
-    ]).pipe(map(([tagsList, selectedTags]) => tagsList.filter(tag => !selectedTags?.includes(tag))));
-  }
-
   selectTag(event: MatAutocompleteSelectedEvent) {
-    this.accountsStore.addTagToSelection(event.option.viewValue);
+    this.accountsFacade.addTagToSelection(event.option.viewValue);
     this.tagsInput.nativeElement.value = '';
   }
 
@@ -42,20 +33,20 @@ export class AccountTagsPopupComponent {
     }
     const input = event.chipInput.inputElement;
     const value = event.value;
-    if (this.matAutocomplete.options.filter(option => option.value === value.trim()).length !== 1) {
+    if (this.matAutocomplete.options.filter((option) => option.value === value.trim()).length !== 1) {
       return;
     }
-    this.accountsStore.addTagToSelection(value.trim());
+    this.accountsFacade.addTagToSelection(value.trim());
     if (input) {
       input.value = '';
     }
   }
 
   removeTag(tag: string) {
-    this.accountsStore.removeTagFromSelection(tag);
+    this.accountsFacade.removeTagFromSelection(tag);
   }
 
-  clearTags() {
-    this.accountsStore.clearSelectedTags();
+  clearSelectedTags() {
+    this.accountsFacade.clearSelectedTags();
   }
 }

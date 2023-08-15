@@ -1,25 +1,21 @@
 import { CollectionViewer, DataSource } from '@angular/cdk/collections';
-import { AccountsStore, MovementData } from '@famoney-features/accounts/store/accounts.store';
+import { MovementsFacade } from '@famoney-features/accounts/stores/movements/movements.facade';
+import { MovementsEntity } from '@famoney-features/accounts/stores/movements/movements.state';
 import { Subscription } from 'rxjs';
-import { debounceTime, tap } from 'rxjs/operators';
+import { debounceTime } from 'rxjs/operators';
 
-export interface Movement {}
-
-export class MovementDataSource extends DataSource<MovementData> {
+export class MovementDataSource extends DataSource<MovementsEntity> {
   private subscription?: Subscription;
-  constructor(private _accountsStore: AccountsStore) {
+
+  constructor(private movementsFacade: MovementsFacade) {
     super();
   }
 
   connect(collectionViewer: CollectionViewer) {
     this.subscription = collectionViewer.viewChange
-      .pipe(
-        debounceTime(150),
-        tap(range => this._accountsStore.loadData([range.start, range.end])))
-      .subscribe();
-    return this._accountsStore.movements$.pipe(
-      tap(movements => console.log())
-    );
+      .pipe(debounceTime(150))
+      .subscribe((range) => this.movementsFacade.loadMovementsRange([range.start, range.end]));
+    return this.movementsFacade.movements$;
   }
 
   disconnect(collectionViewer: CollectionViewer): void {

@@ -83,6 +83,7 @@ mat-list-item {
       &.comments {
         flex-basis: 40%;
         justify-content: flex-start;
+        align-items: baseline;
       }
       &.category {
         flex: 1 1 auto;

@@ -1,20 +1,45 @@
 @use '@angular/material' as mat;
 @use 'styles/_variables' as v;
 
+div.dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  div.entry-date {
+    display: flex;
+    flex-direction: row;
+    gap: 12px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    mat-form-field {
+      flex: 1 1 0px;
+    }
+    mat-button-toggle {
+      flex: 0 0 16px;
+      height: 56px;
+    }
+  }
+}
+
+.entry-container {
+  display: flex;
+  flex-direction: column;
+}
+
+
+
 .mat-icon-button.small-button {
   height: 20px;
   width: 20px;
   line-height: 20px;
+
   .mat-icon {
     height: 16px;
     width: 16px;
     font-size: 16px;
     line-height: 16px;
   }
-}
-
-.entry-container {
-  position: relative;
 }
 
 .entry-item-list {
@@ -29,6 +54,7 @@
   bottom: 12px;
   right: 12px;
   opacity: 0.45;
+
   &:hover {
     opacity: 1;
   }

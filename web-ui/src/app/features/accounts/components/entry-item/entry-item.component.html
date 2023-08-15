@@ -1,0 +1,58 @@
+<div class="entry-item" [formGroup]="formGroup" *ngIf="entryCategories() as entryCategories">
+  <div matLine class="entry-required-data">
+    <mat-form-field class="entry-item-category" floatLabel="always">
+      <mat-label translate="accounts.entryItem.fields.category.title"></mat-label>
+      <input
+        matInput
+        [placeholder]="'accounts.entryItem.fields.category.placeholder' | translate"
+        [matAutocomplete]="categoryAutocomplete"
+        formControlName="categoryId"
+        required
+      />
+      <mat-error
+        *ngIf="getCategoryErrorMessageCode() as categoryErrorMessageCode">{{ categoryErrorMessageCode | translate }}</mat-error>
+      <mat-hint>{{ categoryPath() }}</mat-hint>
+      <mat-autocomplete #categoryAutocomplete [displayWith]="getCategoryName()">
+        <mat-optgroup
+          [label]="'accounts.entryItem.fields.category.dropdown.group.income' | translate"
+          class="fm-optgroup-sticky"
+        >
+          <mat-option
+            *ngFor="let category of entryCategories.incomes"
+            [value]="category.id"
+            [style.padding-left]="16 + category.level * 16 + 'px'"
+          ><span [innerHtml]="category.optionName"></span>
+          </mat-option>
+        </mat-optgroup>
+        <mat-optgroup
+          [label]="'accounts.entryItem.fields.category.dropdown.group.expense' | translate"
+          class="fm-optgroup-sticky"
+        >
+          <mat-option
+            *ngFor="let category of entryCategories.expenses"
+            [value]="category.id"
+            [style.padding-left]="16 + category.level * 16 + 'px'"
+          ><span [innerHtml]="category.optionName"></span>
+          </mat-option>
+        </mat-optgroup>
+      </mat-autocomplete>
+    </mat-form-field>
+    <mat-form-field class="entry-item-amount" floatLabel="always">
+      <mat-label translate="accounts.entryItem.fields.amount.title"></mat-label>
+      <input
+        type="text"
+        matInput
+        autocomplete="off"
+        formControlName="amount"
+        required
+        [ngClass]="entryItemClass()"
+      />
+      <mat-error
+        *ngIf="getAmountErrorMessageCode() as amountErrorMessageCode">{{ amountErrorMessageCode | translate }}</mat-error>
+    </mat-form-field>
+  </div>
+  <mat-form-field matLine floatLabel="always">
+    <mat-label translate="accounts.entryItem.fields.comments.title"></mat-label>
+    <input matInput autocomplete="off" formControlName="comments"/>
+  </mat-form-field>
+</div>
