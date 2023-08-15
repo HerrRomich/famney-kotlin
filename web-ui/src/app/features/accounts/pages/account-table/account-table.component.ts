@@ -21,7 +21,7 @@ import { MovementsEntity } from '@famoney-features/accounts/stores/movements/mov
 import { EntryCategoryService } from '@famoney-shared/services/entry-category.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NotifierService } from 'angular-notifier';
-import { EMPTY, interval, of, Subject, switchMap } from 'rxjs';
+import { EMPTY, interval, of, Subject, switchMap, withLatestFrom } from 'rxjs';
 import { debounce, map } from 'rxjs/operators';
 import { AccountMovementsViertualScrollStrategy } from './account-movements.virtual-scroller-strategy';
 import { MovementDataSource } from './movement-data-source';
@@ -201,9 +201,11 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
   }
 
   edit(movement: MovementDto) {
-    this.accountsFacade.currentAccountId$
+    of(movement)
       .pipe(
-        switchMap((accountId) => {
+        takeUntilDestroyed(this.destroyRef),
+        withLatestFrom(this.accountsFacade.currentAccountId$),
+        switchMap(([movement, accountId]) => {
           if (accountId && movement.data?.type === 'ENTRY') {
             return this.openAccountEntryDialog({
               accountId: accountId,
