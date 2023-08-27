@@ -1,6 +1,7 @@
 import { movementsAdapter } from '@famoney-features/accounts/stores/accounts/accounts.state';
 import * as movementsActions from '@famoney-features/accounts/stores/movements/movements.actions';
-import { MovementsState } from '@famoney-features/accounts/stores/movements/movements.state';
+import { MovementsEntity, MovementsState } from '@famoney-features/accounts/stores/movements/movements.state';
+import { Update } from '@ngrx/entity';
 import { Action, createReducer, on } from '@ngrx/store';
 import { multirange } from 'multi-integer-range';
 
@@ -35,11 +36,11 @@ const reducer = createReducer(
     }
     const currRange = state.movementsRange.clone();
     const positionsToUpdate = currRange.subtract(requestedRange).append(loadedRange);
-    const updates = positionsToUpdate.toArray().map((pos) => ({
+    const updates = positionsToUpdate.toArray().map<Update<MovementsEntity>>((pos) => ({
       id: pos,
       changes: {
         pos,
-        movement: loadedRange.has(pos) ? loadedMovements[pos - min] : undefined,
+        entry: loadedRange.has(pos) ? loadedMovements[pos - min] : undefined,
       },
     }));
     return movementsAdapter.updateMany(updates, {

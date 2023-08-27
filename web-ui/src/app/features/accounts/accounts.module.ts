@@ -3,6 +3,7 @@ import { inject, NgModule } from '@angular/core';
 import { EntryItemComponent, EntryItemService } from '@famoney-features/accounts/components/entry-item';
 import { AccountTableComponent } from '@famoney-features/accounts/pages/account-table/account-table.component';
 import { AccountsFilterStorageService } from '@famoney-features/accounts/services/accounts-filter-storage.service';
+import { MovementsService } from '@famoney-features/accounts/services/movements.service';
 import { AccountsEffects } from '@famoney-features/accounts/stores/accounts/accounts.effects';
 import { AccountsFacade } from '@famoney-features/accounts/stores/accounts/accounts.facade';
 import { accountsReducer, ACCOUNTS_FEATURE_KEY } from '@famoney-features/accounts/stores/accounts/accounts.reducer';
@@ -44,7 +45,7 @@ import { AccountsComponent } from './pages/accounts/accounts.component';
     StoreModule.forFeature(MOVEMENTS_FEATURE_KEY, movementsReducer),
     EffectsModule.forFeature([MovementsEffects]),
   ],
-  providers: [EntryItemService, AccountsFilterStorageService, AccountsFacade, MovementsFacade],
+  providers: [EntryItemService, MovementsService, AccountsFilterStorageService, AccountsFacade, MovementsFacade],
 })
 export class AccountsModule {
   constructor() {

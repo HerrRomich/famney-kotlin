@@ -12,17 +12,17 @@ import {
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatDialog } from '@angular/material/dialog';
 import { EcoFabSpeedDialActionsComponent, EcoFabSpeedDialComponent } from '@ecodev/fab-speed-dial';
-import { EntryItemDataDto, MovementDataDto, MovementDto } from '@famoney-apis/accounts';
+import { MovementDto } from '@famoney-apis/accounts';
 import { MovementEntryDialogComponent } from '@famoney-features/accounts/components/movement-entry-dialog';
 import { EntryDialogData } from '@famoney-features/accounts/models/account-entry.model';
+import { MovementsService } from '@famoney-features/accounts/services/movements.service';
 import { AccountsFacade } from '@famoney-features/accounts/stores/accounts/accounts.facade';
 import { MovementsFacade } from '@famoney-features/accounts/stores/movements/movements.facade';
 import { MovementsEntity } from '@famoney-features/accounts/stores/movements/movements.state';
-import { EntryCategoryService } from '@famoney-shared/services/entry-category.service';
 import { TranslateService } from '@ngx-translate/core';
 import { NotifierService } from 'angular-notifier';
 import { EMPTY, interval, of, Subject, switchMap, withLatestFrom } from 'rxjs';
-import { debounce, map } from 'rxjs/operators';
+import { debounce } from 'rxjs/operators';
 import { AccountMovementsViertualScrollStrategy } from './account-movements.virtual-scroller-strategy';
 import { MovementDataSource } from './movement-data-source';
 
@@ -37,12 +37,13 @@ const fabSpeedDialDelayOnHover = 350;
       provide: VIRTUAL_SCROLL_STRATEGY,
       useClass: AccountMovementsViertualScrollStrategy,
     },
+    MovementsService,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountTableComponent implements AfterViewInit, OnDestroy {
   private accountEntryDialogComponent = inject(MatDialog);
-  private entryCategoriesService = inject(EntryCategoryService);
+  accountTableService = inject(MovementsService);
   private notifierService = inject(NotifierService);
   private translateService = inject(TranslateService);
   private accountsFacade = inject(AccountsFacade);
@@ -96,7 +97,7 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
     return item.pos;
   }
 
-  getSumColor(sum: number | undefined) {
+  getSumColorClass(sum: number | undefined) {
     return !sum ? undefined : sum > 0 ? 'positive-amount' : 'negative-amount';
   }
 
@@ -106,43 +107,6 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
 
   stopSpeedDial() {
     this.speedDialHovered$.next(false);
-  }
-
-  private getEntryItemData(movement?: MovementDto): EntryItemDataDto | undefined {
-    const movementData = movement?.data;
-    switch (movementData?.type) {
-      case 'ENTRY':
-        return this.singleEntryItem(movementData?.entryItems);
-      case 'REFUND':
-        return movementData;
-      default:
-        return undefined;
-    }
-  }
-
-  getMovementComments(movementData?: MovementDataDto) {
-    switch (movementData?.type) {
-      case 'ENTRY':
-        return this.singleEntryItem(movementData?.entryItems)?.comments;
-      case 'REFUND':
-      case 'TRANSFER':
-        return movementData?.comments;
-      default:
-        return undefined;
-    }
-  }
-
-  private singleEntryItem(entryItems: EntryItemDataDto[] | undefined) {
-    return entryItems?.length === 1 ? entryItems[0] : undefined;
-  }
-
-  getMovementCategory$(movement?: MovementDto) {
-    const categoryId = this.getEntryItemData(movement)?.categoryId;
-    return categoryId
-      ? this.entryCategoriesService.entryCategoriesForVisualisation$.pipe(
-          map((entryCategories) => entryCategories.flatEntryCategories.get(categoryId)),
-        )
-      : EMPTY;
   }
 
   openMenu(movement: MovementDto) {

@@ -47,43 +47,53 @@
       </div>
       <mat-divider></mat-divider>
     </mat-list-item>
-    <ng-container *cdkVirtualFor="let entry of movementDataSource; let last = last; trackBy: trackByFn">
-      <mat-list-item class="account-entry-data" [ngClass]="{ selected: movementSelection() === entry.pos }">
-        <div *ngIf="!entry?.movement" class="loading">
-          <div class="entry-date">&nbsp;</div>
-          <div class="comments">&nbsp;</div>
-          <div class="category">&nbsp;</div>
-          <div class="amount">&nbsp;</div>
-          <div class="balance">&nbsp;</div>
-          <div class="buttons"></div>
-        </div>
-        <div *ngIf="entry.movement as movement" role="listitem" (click)="edit(movement)" class="account-entry-data">
+    <ng-container *cdkVirtualFor="let element of movementDataSource; let last = last; trackBy: trackByFn">
+      <mat-list-item class="account-entry-data" [ngClass]="{ selected: movementSelection() === element.pos }">
+        <div
+          *ngIf="element.entry as entry; else loading"
+          role="listitem"
+          (click)="edit(entry.movement)"
+          class="account-entry-data"
+        >
           <div class="entry-date">
-            <span>{{ movement.data?.date | date: 'dd.MM.yyyy' }}</span>
+            <span>{{ entry.movement.data?.date | date: 'dd.MM.yyyy' }}</span>
           </div>
-          <div class="comments mat-body-2"><span></span>{{ getMovementComments(movement.data) }}</div>
+          <div class="comments mat-body-2">
+            <span>{{ accountTableService.getMovementComments(entry.movement.data) }}</span>
+          </div>
           <div class="category">
-            <span>{{ (getMovementCategory$(movement) | async)?.fullPath }}</span>
+            <span>{{ entry.category?.fullPath }}</span>
+            <span class="tooltip">{{ entry.category?.fullPath }}</span>
           </div>
-          <div class="amount" [ngClass]="getSumColor(movement.data?.amount)">
-            <span>{{ movement.data?.amount | number: '1.2-2' }}</span>
+          <div class="amount" [ngClass]="getSumColorClass(entry.movement.data?.amount)">
+            <span>{{ entry.movement.data?.amount | number: '1.2-2' }}</span>
           </div>
-          <div class="balance" [ngClass]="getSumColor(movement.total)">
-            <span>{{ movement.total | number: '1.2-2' }}</span>
+          <div class="balance" [ngClass]="getSumColorClass(entry.movement.total)">
+            <span>{{ entry.movement.total | number: '1.2-2' }}</span>
           </div>
-          <div class="buttons">
+          <div class="buttons" (click)="$event.stopPropagation()">
             <button
               mat-icon-button
               [matMenuTriggerFor]="menuRef"
               (menuClosed)="closeMenu()"
-              (menuOpened)="openMenu(movement)"
-              [matMenuTriggerData]="{ movement: movement }"
+              (menuOpened)="openMenu(entry.movement)"
+              [matMenuTriggerData]="{ movement: entry.movement }"
               class="account-entry-action"
             >
               <mat-icon>more_vert</mat-icon>
             </button>
           </div>
         </div>
+        <ng-template #loading>
+          <div *ngIf="!element?.entity" class="loading">
+            <div class="entry-date">&nbsp;</div>
+            <div class="comments">&nbsp;</div>
+            <div class="category">&nbsp;</div>
+            <div class="amount">&nbsp;</div>
+            <div class="balance">&nbsp;</div>
+            <div class="buttons"></div>
+          </div>
+        </ng-template>
         <mat-divider *ngIf="!last"></mat-divider>
       </mat-list-item>
     </ng-container>

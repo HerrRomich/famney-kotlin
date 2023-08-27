@@ -140,7 +140,7 @@ export class MovementEntryDialogComponent implements OnInit {
 
   submit() {
     const { accountId, movementId } = this.data;
-    let storeOperator =
+    const storeOperator =
       typeof movementId === 'undefined'
         ? (entryData: EntryDataDto) => this.accountsApiService.addMovement(accountId, entryData)
         : (entryData: EntryDataDto) => this.accountsApiService.changeMovement(accountId, movementId, entryData);
@@ -154,11 +154,10 @@ export class MovementEntryDialogComponent implements OnInit {
         map(([accountEntry, entryCategories]) => {
           const entryItems =
             accountEntry.entryItems?.map((entryItem) => {
-              const entryCategory = entryItem?.categoryId
-                ? entryCategories.flatEntryCategories.get(entryItem?.categoryId)
-                : undefined;
+              const categoryId = typeof entryItem?.categoryId === 'number' ? entryItem?.categoryId : 0;
+              const entryCategory = entryCategories.flatEntryCategories.get(categoryId);
               return {
-                categoryId: entryItem.categoryId ?? 0,
+                categoryId,
                 amount: (entryCategory?.getCategorySign() ?? 0) * (entryItem?.amount ?? 0),
                 comments: entryItem.comments ?? undefined,
               };

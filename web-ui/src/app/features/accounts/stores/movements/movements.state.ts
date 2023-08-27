@@ -1,11 +1,17 @@
 import { MovementDto } from '@famoney-apis/accounts';
 import { DateRange } from '@famoney-features/accounts/stores/accounts/accounts.state';
+import { FlatEntryCategoryObject } from '@famoney-shared/services/entry-category.service';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { MultiRange } from 'multi-integer-range';
 
 export type MovementsEntity = {
   readonly pos: number;
-  readonly movement?: MovementDto;
+  readonly entry?: MovementsEntityEntry;
+};
+
+export type MovementsEntityEntry = {
+  readonly movement: MovementDto;
+  readonly category?: FlatEntryCategoryObject;
 };
 
 export interface MovementsState extends EntityState<MovementsEntity> {

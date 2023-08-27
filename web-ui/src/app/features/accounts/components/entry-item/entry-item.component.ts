@@ -1,37 +1,13 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  DestroyRef,
-  OnInit,
-  signal,
-  Signal,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal, ViewEncapsulation } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ControlContainer } from '@angular/forms';
 import { EntryCategoryDto } from '@famoney-apis/master-data/model/entry-category.dto';
-import {
-  EntryCategories,
-  EntryCategoryService,
-  FlatEntryCategories,
-  FlatEntryCategory,
-} from '@famoney-shared/services/entry-category.service';
-import {
-  combineLatestWith,
-  debounceTime,
-  map,
-  startWith,
-  switchMap, tap,
-} from 'rxjs/operators';
-import {
-  takeUntilDestroyed,
-  toObservable,
-  toSignal,
-} from '@angular/core/rxjs-interop';
 import {
   EntryItemFormGroup,
   EntryItemService,
 } from '@famoney-features/accounts/components/entry-item/entry-item.service';
+import { EntryCategoryService, FlatEntryCategory } from '@famoney-shared/services/entry-category.service';
+import { combineLatestWith, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
 
 interface EntryCategoryWithFilterOption extends FlatEntryCategory {
   optionName: string;
@@ -53,9 +29,7 @@ export type EntryCategoriesForVisualisation = {
 export class EntryItemComponent implements OnInit {
   formGroup = this.entryItemService.createEntryItemFormGroup();
 
-  entryCategories = signal<EntryCategoriesForVisualisation | undefined>(
-    undefined,
-  );
+  entryCategories = signal<EntryCategoriesForVisualisation | undefined>(undefined);
   categoryPath = signal<string | undefined>(undefined);
   entryItemClass = signal<string | undefined>(undefined);
 
@@ -71,26 +45,21 @@ export class EntryItemComponent implements OnInit {
       this.formGroup = this.controlContainer.control as EntryItemFormGroup;
     } else throw Error('formGroup is not set.');
     this.formGroup.controls.categoryId.valueChanges
-      .pipe(debounceTime(350))
       .pipe(
-        startWith(''),
-        map((value) => (typeof value === 'string' ? value : '')),
+        debounceTime(350),
+        startWith(this.formGroup.controls.categoryId.value),
         switchMap((filterValue) =>
           this.entryCategoriesService.entryCategoriesForVisualisation$.pipe(
             map((entryCategories) => {
-              const filter = new RegExp(filterValue, 'i');
+              const filterText =
+                (typeof filterValue === 'number'
+                  ? entryCategories.flatEntryCategories.get(filterValue)?.name
+                  : filterValue) ?? '';
+              const filter = new RegExp(filterText, 'i');
               return {
                 flatEntryCategories: entryCategories.flatEntryCategories,
-                expenses: this.filterCategories(
-                  filter,
-                  entryCategories.flatEntryCategories,
-                  entryCategories.expenses,
-                ),
-                incomes: this.filterCategories(
-                  filter,
-                  entryCategories.flatEntryCategories,
-                  entryCategories.incomes,
-                ),
+                expenses: this.filterCategories(filter, entryCategories.flatEntryCategories, entryCategories.expenses),
+                incomes: this.filterCategories(filter, entryCategories.flatEntryCategories, entryCategories.incomes),
               };
             }),
           ),
@@ -103,15 +72,12 @@ export class EntryItemComponent implements OnInit {
     this.formGroup.controls.categoryId.valueChanges
       .pipe(
         startWith(this.formGroup.controls.categoryId.value),
-        combineLatestWith(
-          this.entryCategoriesService.entryCategoriesForVisualisation$,
-        ),
+        combineLatestWith(this.entryCategoriesService.entryCategoriesForVisualisation$),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(([categoryId, flatEntryCategories]) => {
-        const entryItemCategory = categoryId
-          ? flatEntryCategories?.flatEntryCategories.get(categoryId)
-          : undefined;
+        const entryItemCategory =
+          typeof categoryId === 'number' ? flatEntryCategories?.flatEntryCategories.get(categoryId) : undefined;
         if (entryItemCategory?.type === 'EXPENSE') {
           this.entryItemClass.set('fm-expense-category');
         } else if (entryItemCategory?.type === 'INCOME') {
@@ -119,7 +85,7 @@ export class EntryItemComponent implements OnInit {
         } else {
           this.entryItemClass.set(undefined);
         }
-        this.categoryPath.set(entryItemCategory?.fullPath)
+        this.categoryPath.set(entryItemCategory?.fullPath);
       });
   }
 
@@ -128,42 +94,26 @@ export class EntryItemComponent implements OnInit {
     flatEntryCategories: Map<number, FlatEntryCategory>,
     entryCategories?: EntryCategoryDto[],
   ): EntryCategoryWithFilterOption[] {
-    const filteredEntryCategories = entryCategories?.reduce(
-      (filteredCategories, entryCategory) => {
-        const flattenEntryCategory = entryCategory.id
-          ? flatEntryCategories.get(entryCategory.id)
-          : undefined;
-        const subCategories = this.filterCategories(
-          filter,
-          flatEntryCategories,
-          entryCategory.children,
-        );
-        if (
-          (filter.test(entryCategory.name) || subCategories.length > 0) &&
-          flattenEntryCategory
-        ) {
-          filteredCategories.push({
-            ...flattenEntryCategory,
-            optionName:
-              entryCategory.name.match(filter)?.join().length ?? 0 > 0
-                ? entryCategory.name.replace(
-                    filter,
-                    (subString) => `<mark>${subString}</mark>`,
-                  )
-                : entryCategory.name,
-          });
-          filteredCategories.push(...subCategories);
-        }
-        return filteredCategories;
-      },
-      new Array<EntryCategoryWithFilterOption>(),
-    );
+    const filteredEntryCategories = entryCategories?.reduce((filteredCategories, entryCategory) => {
+      const flattenEntryCategory = entryCategory.id ? flatEntryCategories.get(entryCategory.id) : undefined;
+      const subCategories = this.filterCategories(filter, flatEntryCategories, entryCategory.children);
+      if ((filter.test(entryCategory.name) || subCategories.length > 0) && flattenEntryCategory) {
+        filteredCategories.push({
+          ...flattenEntryCategory,
+          optionName:
+            entryCategory.name.match(filter)?.join().length ?? 0 > 0
+              ? entryCategory.name.replace(filter, (subString) => `<mark>${subString}</mark>`)
+              : entryCategory.name,
+        });
+        filteredCategories.push(...subCategories);
+      }
+      return filteredCategories;
+    }, new Array<EntryCategoryWithFilterOption>());
     return filteredEntryCategories ?? [];
   }
 
   getCategoryName() {
-    return (categoryId: number): string =>
-      this.entryCategories()?.flatEntryCategories.get(categoryId)?.name ?? '';
+    return (categoryId: number): string => this.entryCategories()?.flatEntryCategories.get(categoryId)?.name ?? '';
   }
 
   getCategoryErrorMessageCode() {

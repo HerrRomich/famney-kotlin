@@ -18,7 +18,7 @@ module.exports =  {
     {
       "files": "*.component.html",
       "options": {
-        "singleQuote": true,
+        "singleQuote": false,
         "parser": "angular"
       }
     }

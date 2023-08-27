@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
-import {
-  EntryCategoriesDto,
-  EntryCategoryDto,
-  MasterDataApiService,
-} from '@famoney-apis/master-data';
+import { EntryCategoriesDto, EntryCategoryDto, MasterDataApiService } from '@famoney-apis/master-data';
 import { exclusiveCheck } from '@famoney-shared/misc';
+import { NotifierService } from 'angular-notifier';
 import { BehaviorSubject, EMPTY, Observable } from 'rxjs';
 import { catchError, map, shareReplay, switchMap } from 'rxjs/operators';
-import { NotifierService } from 'angular-notifier';
 
 export type EntryCategory = {
   id: number;
@@ -24,6 +20,7 @@ export type HierarchicalEntryCategory = {
 
 export type FlatEntryCategory = EntryCategory & {
   path: string;
+  name: string;
   fullPath: string;
   level: number;
 };
@@ -90,14 +87,8 @@ export class EntryCategoryService {
     this.entryCategoriesForVisualisation$ = this.entryCategories$.pipe(
       map((entryCategories) => {
         const flatEntryCategories = new Map<number, FlatEntryCategoryObject>();
-        this.flattenEntryCategories(
-          flatEntryCategories,
-          entryCategories.expenses,
-        );
-        this.flattenEntryCategories(
-          flatEntryCategories,
-          entryCategories.incomes,
-        );
+        this.flattenEntryCategories(flatEntryCategories, entryCategories.expenses);
+        this.flattenEntryCategories(flatEntryCategories, entryCategories.incomes);
         return {
           flatEntryCategories: flatEntryCategories,
           expenses: entryCategories.expenses,
@@ -117,8 +108,7 @@ export class EntryCategoryService {
     entryCategories
       ?.filter((entryCategory) => entryCategory.id)
       .forEach((entryCategory) => {
-        const fullPath =
-          (path ? path + pathSeparator : '') + entryCategory.name;
+        const fullPath = (path ? path + pathSeparator : '') + entryCategory.name;
         result.set(
           entryCategory.id,
           new FlatEntryCategoryObject({
@@ -128,12 +118,7 @@ export class EntryCategoryService {
             level: level,
           }),
         );
-        this.flattenEntryCategories(
-          result,
-          entryCategory.children,
-          level + 1,
-          fullPath,
-        );
+        this.flattenEntryCategories(result, entryCategory.children, level + 1, fullPath);
       });
   }
 

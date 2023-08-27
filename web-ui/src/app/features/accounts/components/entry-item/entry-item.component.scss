@@ -2,7 +2,7 @@
 @use 'styles/_variables' as v;
 
 div.entry-item {
-  flex: 1 1 0px;
+  flex: 1 1 0;
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -41,15 +41,15 @@ div.entry-item {
   }
 }
 
-mat-optgroup.mat-optgroup.fm-optgroup-sticky {
-  label.mat-optgroup-label {
+mat-optgroup.mat-mdc-optgroup.fm-optgroup-sticky {
+  span.mat-mdc-optgroup-label {
     padding: 0 8px;
     line-height: 32px;
     height: 32px;
     font-weight: 700;
     background-color: rgba($color: white, $alpha: 1);
     position: sticky;
-    top: 0;
+    top: -8px;
     z-index: 1000;
   }
 }
