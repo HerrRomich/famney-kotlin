@@ -1,29 +1,27 @@
-import { CdkVirtualScrollViewport, VIRTUAL_SCROLL_STRATEGY } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport,VIRTUAL_SCROLL_STRATEGY } from '@angular/cdk/scrolling';
 import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  DestroyRef,
-  inject,
-  OnDestroy,
-  signal,
-  ViewChild,
+AfterViewInit,
+ChangeDetectionStrategy,
+Component,
+DestroyRef,
+effect,
+inject,
+OnDestroy,
+signal,
+ViewChild
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { MatDialog } from '@angular/material/dialog';
-import { EcoFabSpeedDialActionsComponent, EcoFabSpeedDialComponent } from '@ecodev/fab-speed-dial';
+import { takeUntilDestroyed,toSignal } from '@angular/core/rxjs-interop';
+import { EcoFabSpeedDialActionsComponent,EcoFabSpeedDialComponent } from '@ecodev/fab-speed-dial';
 import { MovementDto } from '@famoney-apis/accounts';
-import { MovementEntryDialogComponent } from '@famoney-features/accounts/components/movement-entry-dialog';
-import { EntryDialogData } from '@famoney-features/accounts/models/account-entry.model';
 import { MovementsService } from '@famoney-features/accounts/services/movements.service';
 import { AccountsFacade } from '@famoney-features/accounts/stores/accounts/accounts.facade';
 import { MovementsFacade } from '@famoney-features/accounts/stores/movements/movements.facade';
+
+import { BreakpointObserver,Breakpoints } from '@angular/cdk/layout';
 import { MovementsEntity } from '@famoney-features/accounts/stores/movements/movements.state';
-import { TranslateService } from '@ngx-translate/core';
-import { NotifierService } from 'angular-notifier';
-import { EMPTY, interval, of, Subject, switchMap, withLatestFrom } from 'rxjs';
-import { debounce } from 'rxjs/operators';
-import { AccountMovementsViertualScrollStrategy } from './account-movements.virtual-scroller-strategy';
+import { interval,of,Subject } from 'rxjs';
+import { debounce,map } from 'rxjs/operators';
+import { AccountMovementsVirtualScrollStrategy } from './account-movements.virtual-scroller-strategy';
 import { MovementDataSource } from './movement-data-source';
 
 const fabSpeedDialDelayOnHover = 350;
@@ -35,21 +33,34 @@ const fabSpeedDialDelayOnHover = 350;
   providers: [
     {
       provide: VIRTUAL_SCROLL_STRATEGY,
-      useClass: AccountMovementsViertualScrollStrategy,
+      useClass: AccountMovementsVirtualScrollStrategy,
     },
     MovementsService,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountTableComponent implements AfterViewInit, OnDestroy {
-  private accountEntryDialogComponent = inject(MatDialog);
   accountTableService = inject(MovementsService);
-  private notifierService = inject(NotifierService);
-  private translateService = inject(TranslateService);
   private accountsFacade = inject(AccountsFacade);
   private movementsFacade = inject(MovementsFacade);
   private destroyRef = inject(DestroyRef);
+  layoutBreakpoint = inject(BreakpointObserver).observe([Breakpoints.HandsetPortrait]);
   movementDataSource = new MovementDataSource(this.movementsFacade);
+  private virtualScrollerStrategy = inject(VIRTUAL_SCROLL_STRATEGY);
+  layout = toSignal(this.layoutBreakpoint.pipe(map((state) => (state.matches ? 'item-mobile' : 'item-web'))));
+
+  constructor() {
+    const virtualScrollerStrategy = this.virtualScrollerStrategy;
+    if (virtualScrollerStrategy instanceof AccountMovementsVirtualScrollStrategy) {
+      effect(() => {
+        if (this.layout() === 'item-web') {
+          virtualScrollerStrategy.updateItemAndBufferSize(48, 500, 1000);
+        } else {
+          virtualScrollerStrategy.updateItemAndBufferSize(154, 1500, 3000);
+        }
+      });
+    }
+  }
 
   @ViewChild('fabSpeedDial', { static: true })
   fabSpeedDial?: EcoFabSpeedDialComponent;
@@ -118,42 +129,7 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
   }
 
   addEntry() {
-    console.log('Edit movement.');
-    /*this.stopSpeedDial();
-    if (this._accountDTO === undefined) {
-      this.showNoAccountErrorNotification();
-      return;
-    }
-    const accountId = this._accountDTO.id;
-    this.openAccountEntryDialog({
-      accountId: accountId,
-    }).subscribe();*/
-  }
-
-  private showNoAccountErrorNotification() {
-    this.translateService
-      .get(['notifications.title.error', 'accounts.table.errors.noAccount'])
-      .pipe()
-      .subscribe((errorMesages: { [key: string]: string }) =>
-        this.notifierService.notify('error', errorMesages['accounts.table.errors.noAccount']),
-      );
-  }
-
-  private openAccountEntryDialog(data: EntryDialogData) {
-    const accountEntryDialogRef = this.accountEntryDialogComponent.open<
-      MovementEntryDialogComponent,
-      EntryDialogData,
-      MovementDto
-    >(MovementEntryDialogComponent, {
-      width: '600px',
-      minWidth: '600px',
-      maxWidth: '600px',
-      panelClass: 'account-entry-dialog',
-      disableClose: true,
-      hasBackdrop: true,
-      data: data,
-    });
-    return accountEntryDialogRef.afterClosed();
+    this.movementsFacade.addMovementEntry();
   }
 
   addTransfer() {
@@ -165,23 +141,6 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
   }
 
   edit(movement: MovementDto) {
-    of(movement)
-      .pipe(
-        takeUntilDestroyed(this.destroyRef),
-        withLatestFrom(this.accountsFacade.currentAccountId$),
-        switchMap(([movement, accountId]) => {
-          if (accountId && movement.data?.type === 'ENTRY') {
-            return this.openAccountEntryDialog({
-              accountId: accountId,
-              movementId: movement.id,
-              entryData: movement.data,
-            });
-          } else {
-            this.showNoAccountErrorNotification();
-            return EMPTY;
-          }
-        }),
-      )
-      .subscribe();
+    this.movementsFacade.editMovementEntry(movement);
   }
 }

@@ -1,5 +1,5 @@
-<h1 mat-dialog-title>{{ 'accounts.entryDialog.title' | translate }}</h1>
-<form *ngIf="loaded(); else loading" [formGroup]="entryForm" (ngSubmit)="submit()">
+<h1 mat-dialog-title>{{ "accounts.entryDialog.title" | translate }}</h1>
+<form *ngIf="loaded(); else loading" [formGroup]="entryForm">
   <div mat-dialog-content class="dialog-content">
     <div class="entry-date">
       <mat-form-field floatLabel="always">
@@ -9,32 +9,32 @@
           [matDatepicker]="entryDatePicker"
           autocomplete="off"
           formControlName="entryDate"
-          [placeholder]="getEntryDate('L')"
+          placeholder="{{ this.entryForm.get('entryDate')?.value | date: 'shortDate' }}"
         />
-        <mat-error>{{ getEntryDateError$() | async }}</mat-error>
+        <mat-error *ngIf="getEntryDateError() as errorCode">{{ errorCode | translate }}</mat-error>
         <mat-datepicker-toggle matSuffix [for]="entryDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #entryDatePicker></mat-datepicker>
       </mat-form-field>
-      <mat-form-field *ngIf="(extendedDate || extendedDateToggleGroup.value) === 'extended-date'" floatLabel="always">
+      <mat-form-field *ngIf="(extendedDate() || extendedDateToggleGroup.value) === 'extended-date'" floatLabel="always">
         <mat-label translate="accounts.entryDialog.fields.bookingDate.title"></mat-label>
         <input
           matInput
           [matDatepicker]="bookingDatePicker"
           autocomplete="off"
           formControlName="bookingDate"
-          [placeholder]="getEntryDate('L')"
+          placeholder="{{ this.entryForm.get('entryDate')?.value | date: 'shortDate' }}"
         />
         <mat-datepicker-toggle matSuffix [for]="bookingDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #bookingDatePicker></mat-datepicker>
       </mat-form-field>
-      <mat-form-field *ngIf="(extendedDate || extendedDateToggleGroup.value) === 'extended-date'" floatLabel="always">
+      <mat-form-field *ngIf="(extendedDate() || extendedDateToggleGroup.value) === 'extended-date'" floatLabel="always">
         <mat-label translate="accounts.entryDialog.fields.bookingMonth.title"></mat-label>
         <input
           matInput
           [fmMonthpicker]="budgetPeriodPicker"
           autocomplete="off"
           formControlName="budgetPeriod"
-          [placeholder]="getEntryDate('MMM YYYY')"
+          placeholder="{{ this.entryForm.get('entryDate')?.value | date: 'MMM YYYY' }}"
         />
         <mat-datepicker-toggle matSuffix [for]="budgetPeriodPicker"></mat-datepicker-toggle>
         <fm-monthpicker #budgetPeriodPicker></fm-monthpicker>
@@ -42,42 +42,39 @@
       <mat-button-toggle-group #extendedDateToggleGroup="matButtonToggleGroup" value="{{ extendedDate }}">
         <mat-button-toggle class="fm-narrow-toggle-button" value="extended-date">
           <mat-icon>{{
-            extendedDateToggleGroup.value === 'extended-date' ? 'keyboard_arrow_left' : 'keyboard_arrow_right'
+            extendedDateToggleGroup.value === "extended-date" ? "keyboard_arrow_left" : "keyboard_arrow_right"
           }}</mat-icon>
         </mat-button-toggle>
       </mat-button-toggle-group>
     </div>
-    <div class="entry-container">
-      <ng-container
-        *ngIf="
-          (extendedEntry || extendedEntryToggleGroup.value) === 'extended-entry';
-          then multipleEntry;
-          else singleEntry
-        "
-      ></ng-container>
-      <ng-template #multipleEntry>
+    <div
+      *ngIf="
+        (extendedEntry() || extendedEntryToggleGroup.value) === 'extended-entry';
+        then multipleEntry;
+        else singleEntry
+      "
+    ></div>
+    <ng-template #multipleEntry>
+      <div class="entries-container">
         <div class="entry-item-list">
-          <div
-            fxLayout="row"
-            fxLayoutAlign="start start"
-            class="mat-elevation-z2 entry-item"
+          <mat-card
+            class="mat-elevation-z2 entry-item-wrapper"
             *ngFor="let entryItem of entryForm.controls.entryItems.controls; let entryItemIndex = index"
             fmFocusHighlight="fm-entry-item-highlighted"
             formArrayName="entryItems"
           >
-            <fm-entry-item fxFlex [formGroup]="entryItem"></fm-entry-item>
-            <button mat-icon-button class="small-button" (click)="deleteEntryItem(entryItemIndex)">
+            <div>{{ entryItemIndex + 1 }}.</div>
+            <fm-entry-item [formGroup]="entryItem"></fm-entry-item>
+            <button mat-icon-button class="fm-small-button" (click)="deleteEntryItem(entryItemIndex)">
               <mat-icon>clear</mat-icon>
             </button>
-          </div>
-          <div class="fm-add-entry-item-button">
-            <button mat-mini-fab (click)="addEntryItem()" type="button">
-              <mat-icon>add</mat-icon>
-            </button>
-          </div>
+          </mat-card>
+          <button mat-mini-fab (click)="addEntryItem()" type="button" class="add-entry-item-button">
+            <mat-icon>add</mat-icon>
+          </button>
         </div>
-        <div fxLayout="row">
-          <div fxFlex></div>
+        <div>
+          <div></div>
           <div
             class="mat-body-strong mat-body-2"
             *ngIf="cumulatedSum()"
@@ -86,25 +83,25 @@
             {{ cumulatedSum }}
           </div>
         </div>
-      </ng-template>
-      <ng-template #singleEntry>
-        <fm-entry-item [formGroup]="entryForm.controls.entryItems.controls[0]"></fm-entry-item>
-      </ng-template>
-    </div>
+      </div>
+    </ng-template>
+    <ng-template #singleEntry>
+      <fm-entry-item [formGroup]="entryForm.controls.entryItems.controls[0]"></fm-entry-item>
+    </ng-template>
     <mat-button-toggle-group #extendedEntryToggleGroup="matButtonToggleGroup" value="{{ extendedEntry }}">
       <mat-button-toggle value="extended-entry" class="fm-thin-toggle-button">
         <mat-icon>{{
-          extendedEntryToggleGroup.value === 'extended-entry' ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+          extendedEntryToggleGroup.value === "extended-entry" ? "keyboard_arrow_up" : "keyboard_arrow_down"
         }}</mat-icon>
       </mat-button-toggle>
     </mat-button-toggle-group>
   </div>
   <div mat-dialog-actions fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="12px">
     <div fxFlex></div>
-    <button mat-stroked-button mat-dialog-close>{{ 'accounts.entryDialog.buttons.cancel.title' | translate }}</button>
-    <button mat-stroked-button color="primary" type="submit" [disabled]="!(entryForm.valid && entryForm.dirty)">
-      {{ 'accounts.entryDialog.buttons.save.title' | translate }}
+    <button mat-stroked-button (click)="close()">{{ "accounts.entryDialog.buttons.cancel.title" | translate }}</button>
+    <button mat-stroked-button color="primary" (click)="save()" [disabled]="!(entryForm.valid && entryForm.dirty)">
+      {{ "accounts.entryDialog.buttons.save.title" | translate }}
     </button>
   </div>
 </form>
-<ng-template #loading> Loading stuff.... </ng-template>
+<ng-template #loading> Loading stuff....</ng-template>

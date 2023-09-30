@@ -4,15 +4,18 @@ $fm-app-primary: mat.define-palette(mat.$amber-palette);
 $fm-app-accent: mat.define-palette(mat.$blue-gray-palette);
 $fm-app-warn: mat.define-palette(mat.$deep-orange-palette);
 
+$fm-expense-color: #FF0000;
+$fm-income-color: #007F00;
+
 $my-app-theme: mat.define-light-theme((
   color: (
     primary: $fm-app-primary,
     accent: $fm-app-accent,
-    warn: $fm-app-warn
+    warn: $fm-app-warn,
+    expense: $fm-expense-color,
+    income: $fm-income-color,
   ),
   typography: mat.define-typography-config(),
   density: 0,
 ));
 
-$fm-expense-color: #FF0000;
-$fm-income-color: #007F00;

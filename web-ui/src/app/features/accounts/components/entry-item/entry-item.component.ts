@@ -1,13 +1,14 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, OnInit, signal, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlContainer } from '@angular/forms';
+import { ControlContainer, FormGroupDirective } from '@angular/forms';
 import { EntryCategoryDto } from '@famoney-apis/master-data/model/entry-category.dto';
 import {
   EntryItemFormGroup,
   EntryItemService,
 } from '@famoney-features/accounts/components/entry-item/entry-item.service';
 import { EntryCategoryService, FlatEntryCategory } from '@famoney-shared/services/entry-category.service';
-import { combineLatestWith, debounceTime, map, startWith, switchMap } from 'rxjs/operators';
+import { of, timer } from 'rxjs';
+import { combineLatestWith, debounce, map, startWith, switchMap } from 'rxjs/operators';
 
 interface EntryCategoryWithFilterOption extends FlatEntryCategory {
   optionName: string;
@@ -23,11 +24,11 @@ export type EntryCategoriesForVisualisation = {
   selector: '[formGroup] fm-entry-item, [formGroupName] fm-entry-item',
   templateUrl: 'entry-item.component.html',
   styleUrls: ['entry-item.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class EntryItemComponent implements OnInit {
   formGroup = this.entryItemService.createEntryItemFormGroup();
+  destroyRef = inject(DestroyRef);
 
   entryCategories = signal<EntryCategoriesForVisualisation | undefined>(undefined);
   categoryPath = signal<string | undefined>(undefined);
@@ -37,7 +38,6 @@ export class EntryItemComponent implements OnInit {
     private entryItemService: EntryItemService,
     private entryCategoriesService: EntryCategoryService,
     private controlContainer: ControlContainer,
-    private destroyRef: DestroyRef,
   ) {}
 
   ngOnInit() {
@@ -46,7 +46,7 @@ export class EntryItemComponent implements OnInit {
     } else throw Error('formGroup is not set.');
     this.formGroup.controls.categoryId.valueChanges
       .pipe(
-        debounceTime(350),
+        debounce((value) => (value ? timer(350) : of(0))), // On delete no deboumce
         startWith(this.formGroup.controls.categoryId.value),
         switchMap((filterValue) =>
           this.entryCategoriesService.entryCategoriesForVisualisation$.pipe(
@@ -79,9 +79,9 @@ export class EntryItemComponent implements OnInit {
         const entryItemCategory =
           typeof categoryId === 'number' ? flatEntryCategories?.flatEntryCategories.get(categoryId) : undefined;
         if (entryItemCategory?.type === 'EXPENSE') {
-          this.entryItemClass.set('fm-expense-category');
+          this.entryItemClass.set('expense-category');
         } else if (entryItemCategory?.type === 'INCOME') {
-          this.entryItemClass.set('fm-income-category');
+          this.entryItemClass.set('income-category');
         } else {
           this.entryItemClass.set(undefined);
         }
@@ -136,5 +136,9 @@ export class EntryItemComponent implements OnInit {
     } else {
       return undefined;
     }
+  }
+
+  clearCategory() {
+    this.formGroup.controls.categoryId.setValue(undefined);
   }
 }

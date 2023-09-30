@@ -1,7 +1,7 @@
 dependencies {
-    api("io.swagger.core.v3:swagger-annotations-jakarta:2.2.8")
-    api("io.swagger.core.v3:swagger-core-jakarta:2.2.8")
-    api("io.swagger.parser.v3:swagger-parser-v3:2.1.12")
+    api("io.swagger.core.v3:swagger-annotations-jakarta:2.2.16")
+    api("io.swagger.core.v3:swagger-core-jakarta:2.2.16")
+    api("io.swagger.parser.v3:swagger-parser-v3:2.1.16")
 
     implementation(project(":commons:commons-core"))
     api(project(":commons:commons-web"))

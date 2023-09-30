@@ -1,42 +1,48 @@
-import { Component, Inject, OnInit, Optional } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { Component, DestroyRef, inject, Inject, OnInit, Optional } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AccountDto } from '@famoney-apis/accounts';
-import { EntryDialogData } from '@famoney-features/accounts/models/account-entry.model';
-import { nullDate, nullString } from '@famoney-shared/misc';
-import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'fm-account-dialog',
   templateUrl: 'account-dialog.component.html',
   styleUrls: ['account-dialog.component.scss'],
 })
-export class AccountDialogComponent implements OnInit {
-  readonly accountForm = this._formBuilder.group({
-    name: [nullString],
-    openingDate: [new Date(), [Validators.required]],
-    bookingDate: [nullDate],
-    budgetPeriod: [nullDate],
-    tags: [nullString],
-  });
-  constructor(
-    private dialogRef: MatDialogRef<AccountDialogComponent, AccountDto>,
-    private _formBuilder: FormBuilder,
-    @Optional() @Inject(MAT_DATE_LOCALE) private dateLocale: string,
-    private translateService: TranslateService,
-    @Inject(MAT_DIALOG_DATA) private data: EntryDialogData,
-  ) {}
+export class AccountDialogComponent {
+  private dialogRef: MatDialogRef<AccountDialogComponent, AccountDto> = inject(
+    MatDialogRef<AccountDialogComponent, AccountDto>,
+  );
+  private formBuilder = inject(NonNullableFormBuilder);
 
-  ngOnInit(): void {
-    this.dialogRef.keydownEvents().subscribe(event => {
-      if (event.key === 'Escape') {
+  readonly accountForm = this.formBuilder.group({
+    name: this.formBuilder.control<string | undefined>({ value: undefined, disabled: false }),
+    openingDate: this.formBuilder.control<Date>(new Date(), [Validators.required]),
+    bookingDate: this.formBuilder.control<Date | undefined>({ value: undefined, disabled: false }),
+    budgetPeriod: this.formBuilder.control<Date | undefined>({ value: undefined, disabled: false }),
+    tags: this.formBuilder.control<string | undefined>({ value: undefined, disabled: false }),
+  });
+
+  constructor(
+    @Optional() @Inject(MAT_DATE_LOCALE) private dateLocale: string,
+    @Inject(MAT_DIALOG_DATA) private data: AccountDto,
+    destroyRef: DestroyRef,
+  ) {
+    this.dialogRef
+      .keydownEvents()
+      .pipe(takeUntilDestroyed(destroyRef))
+      .subscribe((event) => {
+        if (event.key === 'Escape') {
+          this.onCancel();
+        }
+      });
+    this.dialogRef
+      .backdropClick()
+      .pipe(takeUntilDestroyed(destroyRef))
+      .subscribe(() => {
         this.onCancel();
-      }
-    });
-    this.dialogRef.backdropClick().subscribe(() => {
-      this.onCancel();
-    });
+      });
   }
 
   onCancel() {

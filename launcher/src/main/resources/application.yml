@@ -1,6 +1,7 @@
 server:
   port: 9400
   http2.enabled: true
+
   ssl:
     key-store: classpath:springboot.p12
     key-store-password: password

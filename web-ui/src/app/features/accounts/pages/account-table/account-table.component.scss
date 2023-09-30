@@ -1,6 +1,7 @@
 @use '@angular/material' as mat;
 @use 'styles/_variables' as v;
 @import 'styles/ghost-animation';
+
 $background-color: mat.get-color-from-palette(v.$fm-app-accent, 50);
 $tooltip-frame: mat.get-color-from-palette(v.$fm-app-accent, 100);
 
@@ -18,119 +19,54 @@ cdk-virtual-scroll-viewport {
   overflow-y: scroll;
 }
 
-mat-list.movements-list {
+.movements-table {
   padding-top: 0;
-}
+  padding-bottom: 8px;
 
-mat-list-item {
-  display: flex;
-  flex-direction: row;
-
-  &.account-entry-header {
-    position: sticky;
-    top: 0;
-    z-index: 1;
-    background-color: rgba(#ffffff, 1);
-
-    div {
-      font-weight: 500;
-    }
-  }
-
-  &.account-entry-data {
-    button.account-entry-action {
-      display: none;
-    }
-
-    &:hover,
-    &.selected {
-      border-radius: 10px;
-      background-color: $background-color;
-
-      div {
-        font-weight: 500;
-        cursor: pointer;
-      }
-
-      button.account-entry-action {
-        display: block;
-      }
-    }
-  }
-
-  div {
+  .movements-row {
+    padding: 0 16px;
     display: flex;
     flex-direction: row;
-    flex: 1 1 auto;
-    justify-content: flex-start;
-    align-items: center;
-    align-content: center;
 
-    &.loading {
-      div {
-        background-color: $background-color;
-        border-bottom: 2px solid white;
-        border-radius: 4px;
-        @include animate-ghost-line;
-      }
+    &.item-web {
+      height: 48px;
     }
 
-    > div {
-      display: flex;
+    &.item-mobile {
+      height: 88px;
+    }
 
-      > span {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
+    &.movements-header {
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      background-color: rgba(#ffffff, 1);
+      font-weight: 500;
+    }
+
+    &.movements-body {
+
+      button.account-entry-action {
+        display: none;
       }
 
-      align-items: center;
-      align-content: center;
-      flex-grow: 0;
-      flex-shrink: 0;
-      min-width: 0;
+      &:hover,
+      &.selected {
+        border-radius: 10px;
+        background-color: $background-color;
 
-      &:not(:last-child) {
-        margin-right: 14px;
-      }
-
-      &.entry-date {
-        flex-basis: 11ch;
-        justify-content: flex-start;
-      }
-
-      &.comments {
-        flex-basis: 40%;
-        justify-content: flex-start;
-        align-items: baseline;
-      }
-
-      &.category {
-        flex: 1 1 auto;
-        justify-content: flex-start;
-
-        > span {
-          padding: 3px;
+        div {
+          font-weight: 500;
+          cursor: pointer;
         }
 
-        .tooltip {
-          opacity: 0;
-          position: absolute;
-          overflow: visible;
-
-          &:hover {
-            opacity: 1;
-            background-color: $background-color;
-            transition: opacity 0s 250ms;
-          }
+        button.account-entry-action {
+          display: block;
         }
       }
 
-      &.amount,
-      &.balance {
-        flex-basis: 100px;
-        justify-content: flex-end;
-
+      .amount,
+      .balance {
         &.positive-amount {
           color: v.$fm-income-color;
         }
@@ -139,11 +75,171 @@ mat-list-item {
           color: v.$fm-expense-color;
         }
       }
+    }
 
-      &.buttons {
-        display: flex;
-        flex-basis: 48px;
+    .buttons {
+      display: flex;
+      flex-basis: 48px;
+    }
+
+    .row-cells {
+      justify-content: center;
+      .amount,
+      .balance {
+        flex: 0 0 100px;
+        justify-content: flex-end;
       }
+    }
+
+    .row-lane {
+      display: flex;
+      flex-direction: row;
+
+      > div {
+        display: flex;
+        flex-grow: 0;
+        flex-shrink: 0;
+        min-width: 0;
+
+        > span {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+      }
+    }
+
+    &.item-mobile .row-cells {
+      display: flex;
+      flex-direction: column;
+      flex: 1 1 auto;
+
+      .entry-date {
+        flex: 1 1 auto;
+      }
+
+      .comments {
+        flex: 1 1 auto;
+      }
+
+      &.category {
+        flex: 1 1 auto;
+      }
+    }
+
+    &.item-web .row-cells {
+      display: flex;
+      flex-direction: row;
+      flex: 1 1 auto;
+      align-items: center;
+      gap: 14px;
+
+      &.loading {
+        div {
+          background-color: $background-color;
+          border-bottom: 2px solid white;
+          border-radius: 4px;
+          @include animate-ghost-line;
+        }
+      }
+
+      .entry-date {
+        flex: 0 0 11ch;
+      }
+
+      .comments {
+        flex: 0 0 40%;
+        justify-content: flex-start;
+        align-items: baseline;
+      }
+
+      .category {
+        flex: 1 0 0;
+        justify-content: flex-start;
+        > span {
+          padding: 3px;
+
+          &.tooltip {
+            opacity: 0;
+            padding: 2px;
+            position: absolute;
+            overflow: visible;
+            border: black solid 1px;
+
+            &:hover {
+              opacity: 1;
+              background-color: $background-color;
+              transition: opacity 0s 250ms;
+            }
+          }
+        }
+      }
+
+      /*> div {
+        display: flex;
+        > span {
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        align-items: center;
+        align-content: center;
+        flex-grow: 0;
+        flex-shrink: 0;
+        flex-basis: auto;
+        min-width: 0;
+        gap: 14px;
+
+        &.entry-date {
+          &.item-web {
+            flex-basis: 11ch;
+          }
+          justify-content: flex-start;
+        }
+
+        &.comments {
+          flex-basis: 40%;
+          justify-content: flex-start;
+          align-items: baseline;
+        }
+
+        &.category {
+          flex: 1 1 auto;
+          justify-content: flex-start;
+
+          > span {
+            padding: 3px;
+          }
+
+          .tooltip {
+            opacity: 0;
+            position: absolute;
+            overflow: visible;
+
+            &:hover {
+              opacity: 1;
+              background-color: $background-color;
+              transition: opacity 0s 250ms;
+            }
+          }
+        }
+
+        &.amount,
+        &.balance {
+          flex-basis: 100px;
+          justify-content: flex-end;
+
+          &.positive-amount {
+            color: v.$fm-income-color;
+          }
+
+          &.negative-amount {
+            color: v.$fm-expense-color;
+          }
+        }
+
+      }*/
     }
   }
 }

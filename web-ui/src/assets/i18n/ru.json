@@ -123,6 +123,11 @@
               "expense": "Расходы"
             }
           },
+          "buttons": {
+            "clearAll": {
+              "tooltip": "Очистить категорию"
+            }
+          },
           "errors": {
             "required": "Категория не выбрана!"
           }

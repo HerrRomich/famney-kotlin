@@ -1,9 +1,4 @@
-import { EntryDataDto } from '@famoney-apis/accounts';
-import { AccountMovement, MovementDialogData } from './account-movement.model';
-
-export interface EntryDialogData extends MovementDialogData {
-  readonly entryData?: EntryDataDto;
-}
+import { AccountMovement } from './account-movement.model';
 
 export interface AccountEntry extends AccountMovement {
   entryItems: EntryItem[];

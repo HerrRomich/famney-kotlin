@@ -4,7 +4,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatChipsModule } from '@angular/material/chips';
-import { DateAdapter, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MatLineModule, MatNativeDateModule, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,6 +15,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LocaleService } from '@famoney-shared/services/locale.service';
+import { MatCardModule } from '@angular/material/card';
 
 export const MY_FORMATS = {
   parse: {
@@ -30,6 +31,7 @@ export const MY_FORMATS = {
 
 const MATERIAL_MODULES = [
   MatToolbarModule,
+  MatCardModule,
   MatIconModule,
   MatNativeDateModule,
   MatBadgeModule,
@@ -44,6 +46,7 @@ const MATERIAL_MODULES = [
   MatFormFieldModule,
   MatDatepickerModule,
   MatDialogModule,
+  MatLineModule,
 ];
 
 @NgModule({
@@ -58,6 +61,6 @@ const MATERIAL_MODULES = [
       deps: [LocaleService],
     },
     { provide: MAT_DATE_FORMATS, useValue: MY_FORMATS },
-  ]
+  ],
 })
 export class MaterialModule {}

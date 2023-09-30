@@ -6,18 +6,6 @@ mat-dialog-conten {
   flex-direction: column;
 }
 
-.mat-icon-button.small-button {
-  height: 20px;
-  width: 20px;
-  line-height: 20px;
-  .mat-icon {
-    height: 16px;
-    width: 16px;
-    font-size: 16px;
-    line-height: 16px;
-  }
-}
-
 .entry-container {
   position: relative;
 }
@@ -29,7 +17,7 @@ mat-dialog-conten {
   max-height: 404px;
 }
 
-.fm-add-entry-item-button {
+.add-entry-item-button {
   position: absolute;
   bottom: 12px;
   right: 12px;

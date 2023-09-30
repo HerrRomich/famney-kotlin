@@ -1,8 +1,3 @@
-export interface MovementDialogData {
-  readonly accountId: number;
-  readonly movementId?: number;
-}
-
 export interface MovementDate {
   date: Date;
   bookingDate?: Date;
@@ -10,5 +5,5 @@ export interface MovementDate {
 }
 
 export interface AccountMovement {
-  movementDate?: MovementDate;
+  movementDate: MovementDate;
 }
