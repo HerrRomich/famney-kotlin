@@ -142,6 +142,7 @@ export class MovementsEffects {
     >(MovementEntryDialogComponent, {
       width: 'min(100vw, max(60vw, 400px))',
       maxWidth: '100vw',
+      maxHeight: '100vh',
       panelClass: 'fm-account-entry-dialog',
       disableClose: true,
       hasBackdrop: true,

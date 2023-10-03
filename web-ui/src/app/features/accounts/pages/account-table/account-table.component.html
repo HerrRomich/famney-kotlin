@@ -68,11 +68,6 @@
             </div>
           </div>
           <div class="row-lane">
-            <div class="comments">
-              <span translate="accounts.table.columns.comments.name"></span>
-            </div>
-          </div>
-          <div class="row-lane">
             <div class="category">
               <span translate="accounts.table.columns.category.name"></span>
             </div>
@@ -89,7 +84,7 @@
           [ngSwitch]="layout"
           (click)="edit(entry.movement)"
           class="movements-row"
-          [ngClass]="[movementSelection() === element.pos ? 'selected' : '', layout]"
+          [ngClass]="[movementSelection() === entry.movement.id ? 'selected' : '', layout]"
         >
           <div class="row-cells row-lane" *ngSwitchCase="'web'">
             <div class="entry-date">
@@ -119,11 +114,6 @@
               </div>
               <div class="balance" [ngClass]="getSumColorClass(entry.movement.total)">
                 <span>{{ entry.movement.total | number: "1.2-2" }}</span>
-              </div>
-            </div>
-            <div class="row-lane">
-              <div class="comments">
-                <span>{{ accountTableService.getMovementComments(entry.movement.data) }}</span>
               </div>
             </div>
             <div class="row-lane">
@@ -162,8 +152,9 @@
               <div class="amount">&nbsp;</div>
               <div class="balance">&nbsp;</div>
             </div>
-            <div class="comments row-lane loading">&nbsp;</div>
-            <div class="category row-lane loading">&nbsp;</div>
+            <div class="row-lane loading">
+              <div class="category">&nbsp;</div>
+            </div>
           </div>
           <div class="buttons"></div>
         </div>

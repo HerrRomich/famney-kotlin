@@ -15,7 +15,8 @@
     justify-content: flex-start;
 
     mat-form-field.entry-item-category {
-      flex: 1 1 0
+      flex: 1 1 0;
+      width: 0;
     }
 
     mat-form-field.entry-item-amount {

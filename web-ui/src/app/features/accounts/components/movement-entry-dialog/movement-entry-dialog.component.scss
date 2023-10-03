@@ -2,7 +2,7 @@
 @use 'styles/_variables' as v;
 @import 'styles/thin-toggle-button';
 
-div.dialog-content {
+.dialog-content {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -31,7 +31,7 @@ div.dialog-content {
     flex-direction: column;
     overflow-y: scroll;
     font-size: 14px;
-    max-height: 404px;
+    max-height: 368px;
 
     > .entry-item-wrapper {
       display: flex;
@@ -67,7 +67,6 @@ div.negative-amount {
 
 .dialog-actions {
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   gap: 12px;
-
 }

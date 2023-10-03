@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  effect,
   inject,
   OnDestroy,
   signal,
@@ -44,21 +43,24 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
   private accountsFacade = inject(AccountsFacade);
   private movementsFacade = inject(MovementsFacade);
   private destroyRef = inject(DestroyRef);
-  layoutBreakpoint = inject(BreakpointObserver).observe([Breakpoints.HandsetPortrait]);
-  movementDataSource = new MovementDataSource(this.movementsFacade);
+  protected layoutBreakpoint = inject(BreakpointObserver).observe([Breakpoints.HandsetPortrait]);
+  protected movementDataSource = new MovementDataSource(this.movementsFacade);
   private virtualScrollerStrategy = inject(VIRTUAL_SCROLL_STRATEGY);
-  layout = toSignal(this.layoutBreakpoint.pipe(map((state) => (state.matches ? 'mobile' : 'web'))));
-  scrolledIndex = toSignal(this.virtualScrollerStrategy.scrolledIndexChange);
+  private layout$ = this.layoutBreakpoint.pipe(map((state) => (state.matches ? 'mobile' : 'web')));
+  protected layout = toSignal(this.layout$);
+  private scrolledIndex = toSignal(this.virtualScrollerStrategy.scrolledIndexChange);
+  private speedDialHovered$ = new Subject<boolean>();
+  protected movementSelection = signal<number | undefined>(undefined);
 
   constructor() {
     const virtualScrollerStrategy = this.virtualScrollerStrategy;
     if (virtualScrollerStrategy instanceof AccountMovementsVirtualScrollStrategy) {
-      effect(() => {
+      this.layout$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((layout) => {
         const scrolledIndex = this.scrolledIndex() ?? 0;
-        if (this.layout() === 'web') {
+        if (layout === 'web') {
           virtualScrollerStrategy.updateItemAndBufferSize(49, 500, 1000);
         } else {
-          virtualScrollerStrategy.updateItemAndBufferSize(75, 800, 1600);
+          virtualScrollerStrategy.updateItemAndBufferSize(54, 800, 1600);
         }
         virtualScrollerStrategy.scrollToIndex(scrolledIndex, 'auto');
       });
@@ -73,9 +75,6 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
 
   @ViewChild(CdkVirtualScrollViewport)
   viewPort?: CdkVirtualScrollViewport;
-
-  private speedDialHovered$ = new Subject<boolean>();
-  movementSelection = signal<number | undefined>(undefined);
 
   ngAfterViewInit() {
     this.fabSpeedDial?.openChange.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((opened) => {
