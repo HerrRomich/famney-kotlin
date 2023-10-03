@@ -1,6 +1,5 @@
 import { Directive, Input } from '@angular/core';
 
-
 @Directive({ selector: 'fm-router-tab-item' })
 export class RouterTabItemDirective {
   @Input()

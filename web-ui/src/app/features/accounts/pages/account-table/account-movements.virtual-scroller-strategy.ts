@@ -4,6 +4,6 @@ import { Injectable } from '@angular/core';
 @Injectable()
 export class AccountMovementsVirtualScrollStrategy extends FixedSizeVirtualScrollStrategy {
   constructor() {
-    super(48, 500, 1000);
+    super(49, 500, 1000);
   }
 }

@@ -4,29 +4,35 @@
     (click)="openAccountTagsPopup()"
     cdkOverlayOrigin
     #accountTagsPopupButton="cdkOverlayOrigin"
-    matTooltip="{{ accountsFacade.tagsTexts$ | async }}"
+    matTooltip="{{ tagsTexts() }}"
     matTooltipClass="wrapped-tooltip"
-    *ngLet="accountsFacade.tagsCount$ | async as tagsCount"
+    *ngLet="tagsCount() as tagsCount"
   >
     <mat-icon matBadge="{{ tagsCount }}" [matBadgeHidden]="tagsCount === 0">filter_list </mat-icon>
   </button>
-  <div fmSpacer></div>
-  <fm-router-tab class="accounts-tab-group">
-    <fm-router-tab-item
-      *ngFor="let account of accountsFacade.filteredAccounts$ | async"
-      [routerLink]="account.id.toString()"
-      routerLinkActive
-      #rlaRef="routerLinkActive"
-      label="{{ account.name }}"
-    ></fm-router-tab-item>
-  </fm-router-tab>
+  <ng-container *ngIf="layout() === 'web'; then web; else mobile"></ng-container>
+  <ng-template #web>
+    <fm-router-tab class="accounts-tab-group">
+      <fm-router-tab-item
+        *ngFor="let account of filteredAccounts()"
+        [routerLink]="account.id.toString()"
+        routerLinkActive
+        #rlaRef="routerLinkActive"
+        label="{{ account.name }}"
+      ></fm-router-tab-item> </fm-router-tab
+  ></ng-template>
+  <ng-template #mobile>
+    <mat-select [value]="currentAccountId()" hideSingleSelectionIndicator="true" (selectionChange)="selectAccount($event)" >
+      <mat-option *ngFor="let account of filteredAccounts()" [value]="account.id">{{ account.name }}</mat-option>
+    </mat-select>
+  </ng-template>
   <button mat-icon-button [matMenuTriggerFor]="menuRef">
     <mat-icon>more_vert</mat-icon>
   </button>
   <mat-menu #menuRef="matMenu" [overlapTrigger]="false">
-    <button mat-menu-item>{{ 'accounts.table.menu.newAccount.title' | translate }}</button>
-    <button mat-menu-item>{{ 'accounts.table.menu.accountProperties.title' | translate }}</button>
-    <button mat-menu-item>{{ 'accounts.table.menu.deleteAccount.title' | translate }}</button>
+    <button mat-menu-item>{{ "accounts.table.menu.newAccount.title" | translate }}</button>
+    <button mat-menu-item>{{ "accounts.table.menu.accountProperties.title" | translate }}</button>
+    <button mat-menu-item>{{ "accounts.table.menu.deleteAccount.title" | translate }}</button>
   </mat-menu>
 </div>
 <div class="area">

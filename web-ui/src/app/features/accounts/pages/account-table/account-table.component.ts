@@ -1,26 +1,26 @@
-import { CdkVirtualScrollViewport,VIRTUAL_SCROLL_STRATEGY } from '@angular/cdk/scrolling';
+import { CdkVirtualScrollViewport, VIRTUAL_SCROLL_STRATEGY } from '@angular/cdk/scrolling';
 import {
-AfterViewInit,
-ChangeDetectionStrategy,
-Component,
-DestroyRef,
-effect,
-inject,
-OnDestroy,
-signal,
-ViewChild
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  DestroyRef,
+  effect,
+  inject,
+  OnDestroy,
+  signal,
+  ViewChild,
 } from '@angular/core';
-import { takeUntilDestroyed,toSignal } from '@angular/core/rxjs-interop';
-import { EcoFabSpeedDialActionsComponent,EcoFabSpeedDialComponent } from '@ecodev/fab-speed-dial';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { EcoFabSpeedDialActionsComponent, EcoFabSpeedDialComponent } from '@ecodev/fab-speed-dial';
 import { MovementDto } from '@famoney-apis/accounts';
 import { MovementsService } from '@famoney-features/accounts/services/movements.service';
 import { AccountsFacade } from '@famoney-features/accounts/stores/accounts/accounts.facade';
 import { MovementsFacade } from '@famoney-features/accounts/stores/movements/movements.facade';
 
-import { BreakpointObserver,Breakpoints } from '@angular/cdk/layout';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MovementsEntity } from '@famoney-features/accounts/stores/movements/movements.state';
-import { interval,of,Subject } from 'rxjs';
-import { debounce,map } from 'rxjs/operators';
+import { interval, of, Subject } from 'rxjs';
+import { debounce, map } from 'rxjs/operators';
 import { AccountMovementsVirtualScrollStrategy } from './account-movements.virtual-scroller-strategy';
 import { MovementDataSource } from './movement-data-source';
 
@@ -47,17 +47,20 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
   layoutBreakpoint = inject(BreakpointObserver).observe([Breakpoints.HandsetPortrait]);
   movementDataSource = new MovementDataSource(this.movementsFacade);
   private virtualScrollerStrategy = inject(VIRTUAL_SCROLL_STRATEGY);
-  layout = toSignal(this.layoutBreakpoint.pipe(map((state) => (state.matches ? 'item-mobile' : 'item-web'))));
+  layout = toSignal(this.layoutBreakpoint.pipe(map((state) => (state.matches ? 'mobile' : 'web'))));
+  scrolledIndex = toSignal(this.virtualScrollerStrategy.scrolledIndexChange);
 
   constructor() {
     const virtualScrollerStrategy = this.virtualScrollerStrategy;
     if (virtualScrollerStrategy instanceof AccountMovementsVirtualScrollStrategy) {
       effect(() => {
-        if (this.layout() === 'item-web') {
-          virtualScrollerStrategy.updateItemAndBufferSize(48, 500, 1000);
+        const scrolledIndex = this.scrolledIndex() ?? 0;
+        if (this.layout() === 'web') {
+          virtualScrollerStrategy.updateItemAndBufferSize(49, 500, 1000);
         } else {
-          virtualScrollerStrategy.updateItemAndBufferSize(154, 1500, 3000);
+          virtualScrollerStrategy.updateItemAndBufferSize(75, 800, 1600);
         }
+        virtualScrollerStrategy.scrollToIndex(scrolledIndex, 'auto');
       });
     }
   }

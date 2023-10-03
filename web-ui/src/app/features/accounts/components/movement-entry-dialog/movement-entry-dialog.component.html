@@ -1,15 +1,15 @@
 <h1 mat-dialog-title>{{ "accounts.entryDialog.title" | translate }}</h1>
 <form *ngIf="loaded(); else loading" [formGroup]="entryForm">
   <div mat-dialog-content class="dialog-content">
-    <div class="entry-date">
+    <div class="entry-date" formGroupName="movementDate">
       <mat-form-field floatLabel="always">
         <mat-label translate="accounts.entryDialog.fields.entryDate.title"></mat-label>
         <input
           matInput
           [matDatepicker]="entryDatePicker"
           autocomplete="off"
-          formControlName="entryDate"
-          placeholder="{{ this.entryForm.get('entryDate')?.value | date: 'shortDate' }}"
+          formControlName="date"
+          placeholder="{{ this.entryForm.controls.movementDate.value.date | date: 'shortDate' }}"
         />
         <mat-error *ngIf="getEntryDateError() as errorCode">{{ errorCode | translate }}</mat-error>
         <mat-datepicker-toggle matSuffix [for]="entryDatePicker"></mat-datepicker-toggle>
@@ -22,7 +22,7 @@
           [matDatepicker]="bookingDatePicker"
           autocomplete="off"
           formControlName="bookingDate"
-          placeholder="{{ this.entryForm.get('entryDate')?.value | date: 'shortDate' }}"
+          placeholder="{{ this.entryForm.controls.movementDate.value.date | date: 'shortDate' }}"
         />
         <mat-datepicker-toggle matSuffix [for]="bookingDatePicker"></mat-datepicker-toggle>
         <mat-datepicker #bookingDatePicker></mat-datepicker>
@@ -34,7 +34,7 @@
           [fmMonthpicker]="budgetPeriodPicker"
           autocomplete="off"
           formControlName="budgetPeriod"
-          placeholder="{{ this.entryForm.get('entryDate')?.value | date: 'MMM YYYY' }}"
+          placeholder="{{ this.entryForm.controls.movementDate.value.date | date: 'MMM YYYY' }}"
         />
         <mat-datepicker-toggle matSuffix [for]="budgetPeriodPicker"></mat-datepicker-toggle>
         <fm-monthpicker #budgetPeriodPicker></fm-monthpicker>
@@ -96,12 +96,11 @@
       </mat-button-toggle>
     </mat-button-toggle-group>
   </div>
-  <div mat-dialog-actions fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="12px">
-    <div fxFlex></div>
-    <button mat-stroked-button (click)="close()">{{ "accounts.entryDialog.buttons.cancel.title" | translate }}</button>
+  <div mat-dialog-actions class="dialog-actions">
     <button mat-stroked-button color="primary" (click)="save()" [disabled]="!(entryForm.valid && entryForm.dirty)">
       {{ "accounts.entryDialog.buttons.save.title" | translate }}
     </button>
+    <button mat-stroked-button (click)="close()">{{ "accounts.entryDialog.buttons.cancel.title" | translate }}</button>
   </div>
 </form>
 <ng-template #loading> Loading stuff....</ng-template>

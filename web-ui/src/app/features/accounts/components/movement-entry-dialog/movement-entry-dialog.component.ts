@@ -20,14 +20,16 @@ export class MovementEntryDialogComponent {
   private formBuilder = inject(NonNullableFormBuilder);
 
   readonly entryForm = this.formBuilder.group({
-    entryDate: this.formBuilder.control(new Date(), [Validators.required]),
-    bookingDate: this.formBuilder.control<Date | undefined>({
-      value: undefined,
-      disabled: false,
-    }),
-    budgetPeriod: this.formBuilder.control<Date | undefined>({
-      value: undefined,
-      disabled: false,
+    movementDate: this.formBuilder.group({
+      date: this.formBuilder.control(new Date(), [Validators.required]),
+      bookingDate: this.formBuilder.control<Date | undefined>({
+        value: undefined,
+        disabled: false,
+      }),
+      budgetPeriod: this.formBuilder.control<Date | undefined>({
+        value: undefined,
+        disabled: false,
+      }),
     }),
     entryItems: this.formBuilder.array<EntryItemFormGroup>([]),
   });
@@ -114,7 +116,7 @@ export class MovementEntryDialogComponent {
   }
 
   getEntryDateError() {
-    const entryDateControl = this.entryForm.get('entryDate');
+    const entryDateControl = this.entryForm.controls.movementDate.controls.date;
     if (entryDateControl?.hasError('matDatepickerParse')) {
       return 'accounts.entryDialog.fields.entryDate.errors.invalid';
     } else if (entryDateControl?.getError('required')) {
@@ -145,9 +147,9 @@ export class MovementEntryDialogComponent {
             }) ?? [];
           const entry: EntryDataDto = {
             type: 'ENTRY',
-            date: accountEntry.entryDate ?? new Date(),
-            bookingDate: accountEntry.bookingDate ?? undefined,
-            budgetPeriod: accountEntry.budgetPeriod ?? undefined,
+            date: accountEntry.movementDate?.date ?? new Date(),
+            bookingDate: accountEntry.movementDate?.bookingDate ?? undefined,
+            budgetPeriod: accountEntry.movementDate?.budgetPeriod ?? undefined,
             entryItems: entryItems,
             amount: entryItems.reduce((amount, entryItem) => amount + entryItem.amount, 0),
           };

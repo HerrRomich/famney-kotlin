@@ -13,5 +13,8 @@ export class RouterTabDirective {
     exact: boolean;
   };
 
-  constructor(public tab: MatTab, public routerLink: RouterLink) {}
+  constructor(
+    public tab: MatTab,
+    public routerLink: RouterLink,
+  ) {}
 }

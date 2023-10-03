@@ -23,70 +23,72 @@ cdk-virtual-scroll-viewport {
   padding-top: 0;
   padding-bottom: 8px;
 
+  .movements-header {
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: rgba(#ffffff, 1);
+    font-weight: 500;
+  }
+
   .movements-row {
     padding: 0 16px;
     display: flex;
     flex-direction: row;
 
-    &.item-web {
+    &.web {
       height: 48px;
     }
 
-    &.item-mobile {
-      height: 88px;
+    &.mobile {
+      height: 74px;
     }
 
-    &.movements-header {
-      position: sticky;
-      top: 0;
-      z-index: 1;
-      background-color: rgba(#ffffff, 1);
-      font-weight: 500;
+    &.web button.account-entry-action {
+      display: none;
     }
 
-    &.movements-body {
+    &.web:hover,
+    &.selected {
+      border-radius: 10px;
+      background-color: $background-color;
+
+      div {
+        font-weight: 500;
+        cursor: pointer;
+      }
 
       button.account-entry-action {
-        display: none;
+        display: block;
+      }
+    }
+
+    .amount,
+    .balance {
+      &.positive-amount {
+        color: v.$fm-income-color;
       }
 
-      &:hover,
-      &.selected {
-        border-radius: 10px;
-        background-color: $background-color;
-
-        div {
-          font-weight: 500;
-          cursor: pointer;
-        }
-
-        button.account-entry-action {
-          display: block;
-        }
-      }
-
-      .amount,
-      .balance {
-        &.positive-amount {
-          color: v.$fm-income-color;
-        }
-
-        &.negative-amount {
-          color: v.$fm-expense-color;
-        }
+      &.negative-amount {
+        color: v.$fm-expense-color;
       }
     }
 
     .buttons {
       display: flex;
       flex-basis: 48px;
+      align-items: center;
+      justify-content: center;
     }
 
     .row-cells {
       justify-content: center;
+
       .amount,
       .balance {
-        flex: 0 0 100px;
+        flex: 0 0 85px;
         justify-content: flex-end;
       }
     }
@@ -94,70 +96,66 @@ cdk-virtual-scroll-viewport {
     .row-lane {
       display: flex;
       flex-direction: row;
+      gap: 4px;
+
+      &.loading {
+        border-bottom: 2px solid white;
+
+        div {
+          background-color: $background-color;
+          border-radius: 4px;
+          @include animate-ghost-line;
+        }
+      }
 
       > div {
         display: flex;
-        flex-grow: 0;
-        flex-shrink: 0;
         min-width: 0;
+        width: 0;
 
         > span {
           overflow: hidden;
           text-overflow: ellipsis;
           white-space: nowrap;
+
+          &:empty:before {
+            content: "\200b";
+          }
         }
       }
     }
 
-    &.item-mobile .row-cells {
-      display: flex;
+    &.mobile .row-cells {
       flex-direction: column;
-      flex: 1 1 auto;
 
       .entry-date {
-        flex: 1 1 auto;
+        flex: 1 1 0;
       }
 
-      .comments {
-        flex: 1 1 auto;
-      }
-
-      &.category {
-        flex: 1 1 auto;
-      }
     }
 
-    &.item-web .row-cells {
-      display: flex;
-      flex-direction: row;
-      flex: 1 1 auto;
+    &.web .row-cells {
       align-items: center;
-      gap: 14px;
+    }
 
-      &.loading {
-        div {
-          background-color: $background-color;
-          border-bottom: 2px solid white;
-          border-radius: 4px;
-          @include animate-ghost-line;
-        }
-      }
+    .row-cells {
+      display: flex;
+      flex: 1 1 auto;
 
       .entry-date {
         flex: 0 0 11ch;
       }
 
       .comments {
-        flex: 0 0 40%;
+        flex: 1 1 0;
         justify-content: flex-start;
-        align-items: baseline;
       }
 
       .category {
-        flex: 1 0 0;
+        flex: 1 1 0;
         justify-content: flex-start;
+
         > span {
-          padding: 3px;
 
           &.tooltip {
             opacity: 0;
@@ -174,72 +172,6 @@ cdk-virtual-scroll-viewport {
           }
         }
       }
-
-      /*> div {
-        display: flex;
-        > span {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-        }
-
-        align-items: center;
-        align-content: center;
-        flex-grow: 0;
-        flex-shrink: 0;
-        flex-basis: auto;
-        min-width: 0;
-        gap: 14px;
-
-        &.entry-date {
-          &.item-web {
-            flex-basis: 11ch;
-          }
-          justify-content: flex-start;
-        }
-
-        &.comments {
-          flex-basis: 40%;
-          justify-content: flex-start;
-          align-items: baseline;
-        }
-
-        &.category {
-          flex: 1 1 auto;
-          justify-content: flex-start;
-
-          > span {
-            padding: 3px;
-          }
-
-          .tooltip {
-            opacity: 0;
-            position: absolute;
-            overflow: visible;
-
-            &:hover {
-              opacity: 1;
-              background-color: $background-color;
-              transition: opacity 0s 250ms;
-            }
-          }
-        }
-
-        &.amount,
-        &.balance {
-          flex-basis: 100px;
-          justify-content: flex-end;
-
-          &.positive-amount {
-            color: v.$fm-income-color;
-          }
-
-          &.negative-amount {
-            color: v.$fm-expense-color;
-          }
-        }
-
-      }*/
     }
   }
 }

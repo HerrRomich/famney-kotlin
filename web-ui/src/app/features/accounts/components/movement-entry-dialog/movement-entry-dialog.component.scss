@@ -64,3 +64,10 @@ div.positive-amount {
 div.negative-amount {
   color: v.$fm-expense-color;
 }
+
+.dialog-actions {
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 12px;
+
+}

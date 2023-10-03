@@ -58,18 +58,31 @@ mark {
   background-color: mat.get-color-from-palette(v.$fm-app-accent, 300);
 }
 
-.expense-category.mat-mdc-input-element.mat-mdc-input-element {
-  color: rgba(v.$fm-expense-color, 0.87);
+.entry-item-amount .mat-mdc-input-element.mat-mdc-input-element {
+  text-align: right;
+  opacity: 0.87;
+
+  &.expense-category {
+    color: v.$fm-expense-color;
+  }
+
+  &.income-category {
+    color: v.$fm-income-color;
+  }
 }
 
-.income-category.mat-mdc-input-element.mat-mdc-input-element {
-  color: rgba(v.$fm-income-color, 0.87);
+.category-hint.mat-mdc-form-field-hint {
+  opacity: 0.6;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &.expense-category {
+    color: v.$fm-expense-color;
+  }
+
+  &.income-category {
+    color: v.$fm-income-color;
+  }
 }
 
-.expense-category.category-hint.mat-mdc-form-field-hint {
-  color: rgba(v.$fm-expense-color, 0.6);
-}
-
-.income-category.category-hint.mat-mdc-form-field-hint {
-  color: rgba(v.$fm-income-color, 0.6);
-}

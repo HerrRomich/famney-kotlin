@@ -1,8 +1,12 @@
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { CdkOverlayOrigin, Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { AccountTagsPopupComponent } from '@famoney-features/accounts/components/accounts-filter-popup';
 import { AccountsFacade } from '@famoney-features/accounts/stores/accounts/accounts.facade';
+import { map } from 'rxjs/operators';
+import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'fm-accounts',
@@ -11,7 +15,14 @@ import { AccountsFacade } from '@famoney-features/accounts/stores/accounts/accou
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountsComponent {
-  accountsFacade = inject(AccountsFacade);
+  private accountsFacade = inject(AccountsFacade);
+  layoutBreakpoint = inject(BreakpointObserver).observe([Breakpoints.HandsetPortrait]);
+  layout = toSignal(this.layoutBreakpoint.pipe(map((state) => (state.matches ? 'mobile' : 'web'))));
+
+  protected filteredAccounts = toSignal(this.accountsFacade.filteredAccounts$);
+  protected tagsCount = toSignal(this.accountsFacade.tagsCount$);
+  protected tagsTexts = toSignal(this.accountsFacade.tagsTexts$);
+  protected currentAccountId = toSignal(this.accountsFacade.currentAccountId$);
 
   @ViewChild('accountTagsPopupButton')
   accountTagsPopupButton?: CdkOverlayOrigin;
@@ -48,5 +59,9 @@ export class AccountsComponent {
     });
     accountTagsPopup.attach(this.accountTagsPopupPortal);
     accountTagsPopup.backdropClick().subscribe(() => accountTagsPopup.detach());
+  }
+
+  selectAccount(event: MatSelectChange) {
+    this.accountsFacade.selectAccount(event.value);
   }
 }
