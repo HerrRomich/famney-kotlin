@@ -1,5 +1,5 @@
-import { LocaleService } from '@famoney-shared/services/locale.service';
 import { Injectable } from '@angular/core';
+import { LocaleService } from '@famoney-shared/services/locale.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,10 +16,10 @@ export class ParseNumberService {
       ...new Intl.NumberFormat(localeService.locale, { useGrouping: false }).format(9876543210),
     ].reverse();
     const index = new Map(numerals.map((d, i) => [d.toString(), i.toString()]));
-    this._group = new RegExp(`[${parts.find(d => d.type === 'group')?.value}]`, 'g');
-    this._decimal = new RegExp(`[${parts.find(d => d.type === 'decimal')?.value}]`);
+    this._group = new RegExp(`[${parts.find((d) => d.type === 'group')?.value}]`, 'g');
+    this._decimal = new RegExp(`[${parts.find((d) => d.type === 'decimal')?.value}]`);
     this._numeral = new RegExp(`[${numerals.join('')}]`, 'g');
-    this._index = d => index.get(d) ?? '';
+    this._index = (d) => index.get(d) ?? '';
   }
 
   parse(value: string | undefined) {

@@ -16,7 +16,7 @@ import { MatCalendarHeader } from '@angular/material/datepicker';
           cdkAriaLive="polite"
         >
           {{ periodButtonText }}
-          <div class="mat-calendar-arrow" [class.mat-calendar-invert]="calendar.currentView != 'month'"></div>
+          <div class="mat-calendar-arrow" [class.mat-calendar-invert]="calendar.currentView !== 'month'"></div>
         </button>
 
         <div class="mat-calendar-spacer"></div>

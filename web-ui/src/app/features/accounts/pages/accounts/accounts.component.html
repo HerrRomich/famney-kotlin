@@ -22,7 +22,11 @@
       ></fm-router-tab-item> </fm-router-tab
   ></ng-template>
   <ng-template #mobile>
-    <mat-select [value]="currentAccountId()" hideSingleSelectionIndicator="true" (selectionChange)="selectAccount($event)" >
+    <mat-select
+      [value]="currentAccountId()"
+      hideSingleSelectionIndicator="true"
+      (selectionChange)="selectAccount($event)"
+    >
       <mat-option *ngFor="let account of filteredAccounts()" [value]="account.id">{{ account.name }}</mat-option>
     </mat-select>
   </ng-template>

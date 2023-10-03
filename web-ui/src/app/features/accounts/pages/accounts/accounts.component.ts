@@ -3,10 +3,10 @@ import { CdkOverlayOrigin, Overlay } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
 import { ChangeDetectionStrategy, Component, inject, ViewChild } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { MatSelectChange } from '@angular/material/select';
 import { AccountTagsPopupComponent } from '@famoney-features/accounts/components/accounts-filter-popup';
 import { AccountsFacade } from '@famoney-features/accounts/stores/accounts/accounts.facade';
 import { map } from 'rxjs/operators';
-import { MatSelectChange } from '@angular/material/select';
 
 @Component({
   selector: 'fm-accounts',

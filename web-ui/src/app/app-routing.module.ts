@@ -9,12 +9,12 @@ const routes: Routes = [
   },
   {
     path: 'accounts',
-    loadChildren: () => import('./features/accounts/accounts.module').then(m => m.AccountsModule),
+    loadChildren: () => import('./features/accounts/accounts.module').then((m) => m.AccountsModule),
   },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

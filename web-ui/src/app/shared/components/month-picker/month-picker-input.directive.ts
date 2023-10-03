@@ -1,8 +1,6 @@
 import { Directive, forwardRef, Input } from '@angular/core';
 import { NG_VALIDATORS, NG_VALUE_ACCESSOR } from '@angular/forms';
-import {
-  MatDatepicker, MatDatepickerInput
-} from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerInput } from '@angular/material/datepicker';
 import { MAT_INPUT_VALUE_ACCESSOR } from '@angular/material/input';
 
 export const APP_MONTHPICKER_VALUE_ACCESSOR: any = {

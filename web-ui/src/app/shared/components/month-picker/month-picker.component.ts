@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { MAT_DATE_FORMATS, MatDateFormats } from '@angular/material/core';
+import { MatDateFormats, MAT_DATE_FORMATS } from '@angular/material/core';
 import { MatDatepicker, MAT_SINGLE_DATE_SELECTION_MODEL_PROVIDER } from '@angular/material/datepicker';
 import { MonthCalendarHeaderComponent } from './month-calendar-header.component';
 

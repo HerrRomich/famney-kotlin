@@ -1,10 +1,10 @@
-import { RouterTabComponent } from '../components/router-tab/router-tab.component';
-import { RouterTabItemDirective } from '../components/router-tab/router-tab-item.directive';
-import { RouterTabDirective } from '../directives/router-tab.directive';
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { NgModule } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
+import { RouterModule } from '@angular/router';
+import { RouterTabItemDirective } from '../components/router-tab/router-tab-item.directive';
+import { RouterTabComponent } from '../components/router-tab/router-tab.component';
+import { RouterTabDirective } from '../directives/router-tab.directive';
 
 @NgModule({
   imports: [CommonModule, RouterModule, MatTabsModule],

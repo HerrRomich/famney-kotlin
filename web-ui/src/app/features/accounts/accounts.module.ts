@@ -22,7 +22,6 @@ import { AccountDialogComponent } from './components/account-dialog';
 import { AccountTagsPopupComponent } from './components/accounts-filter-popup';
 import { MovementEntryDialogComponent } from './components/movement-entry-dialog';
 import { AccountsComponent } from './pages/accounts/accounts.component';
-import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ControlContainer, FormGroupDirective } from '@angular/forms';
+import { ControlContainer } from '@angular/forms';
 import { EntryCategoryDto } from '@famoney-apis/master-data/model/entry-category.dto';
 import {
   EntryItemFormGroup,
