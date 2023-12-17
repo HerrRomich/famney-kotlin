@@ -2,8 +2,8 @@ import com.github.gradle.node.npm.task.NpxTask
 import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 
 plugins {
-  id("com.github.node-gradle.node") version "3.5.1"
-  id("org.openapi.generator").version("6.3.0")
+  id("com.github.node-gradle.node").version("7.0.1")
+  id("org.openapi.generator").version("7.1.0")
 }
 
 data class Api(
@@ -38,9 +38,13 @@ dependencies {
 }
 
 node {
-  version.set("16.13.1")
-  npmVersion.set("8.12.1")
-  nodeProjectDir.set(file("."))
+  download = true
+  distBaseUrl = "https://nodejs.org/dist"
+  version ="18.19.0"
+  npmVersion ="10.2.3"
+  workDir = file("${project.projectDir}/.gradle/nodejs")
+  npmWorkDir = file("${project.projectDir}/.gradle/npm")
+  nodeProjectDir = file(".")
 }
 
 tasks {
@@ -50,25 +54,25 @@ tasks {
         doFirst {
           copy {
             from(project("${it.project}").sourceSets.main.get().output.resourcesDir?.resolve(it.jsonName))
-            into("$buildDir/api-defs")
+            into(layout.buildDirectory.file("api-defs"))
           }
         }
         inputs.files(project(it.project).tasks.get(it.resolveTask))
-        outputs.file("$buildDir/api-defs/${it.jsonName}")
+        outputs.file(layout.buildDirectory.file("api-defs/${it.jsonName}"))
         dependsOn(project(it.project).tasks.get(it.resolveTask))
       }
       register<GenerateTask>("generate${it.name}AngularClient") {
-        inputs.file("$buildDir/api-defs/${it.jsonName}")
+        inputs.file(layout.buildDirectory.file("api-defs/${it.jsonName}"))
         doFirst {
-          delete("$projectDir/src/app/shared/apis/${it.destPath}/*")
+          delete("${layout.projectDirectory}/src/app/shared/apis/${it.destPath}/*")
         }
-        inputSpec.set("$buildDir/api-defs/${it.jsonName}")
-        outputDir.set("$projectDir/src/app/shared/apis/${it.destPath}")
+        inputSpec.set(layout.buildDirectory.file("api-defs/${it.jsonName}").get().toString())
+        outputDir.set("${layout.projectDirectory}/src/app/shared/apis/${it.destPath}")
         generatorName.set("typescript-angular")
         typeMappings.set(mapOf("set" to "Array", "DateTime" to "Date", "date" to "Date", "date-time" to "Date"))
         configOptions.set(
           mapOf(
-            "ngVersion" to "15.0.0",
+            "ngVersion" to "17.0.0",
             "serviceSuffix" to "ApiService",
             "serviceFileSuffix" to "-api.service",
             "modelFileSuffix" to ".dto",
@@ -85,15 +89,15 @@ tasks {
     }
   register<GenerateTask>("generateTest") {
     doFirst {
-      delete("$projectDir/src/app/shared/apis/admin-center-api/*")
+      delete("${layout.projectDirectory}/src/app/shared/apis/admin-center-api/*")
     }
-    inputSpec.set("$buildDir/api-defs/admin-center-api.yaml")
-    outputDir.set("$projectDir/src/app/shared/apis/admin-center-api")
+    inputSpec.set("${layout.buildDirectory}/api-defs/admin-center-api.yaml")
+    outputDir.set("${layout.projectDirectory}/src/app/shared/apis/admin-center-api")
     generatorName.set("typescript-angular")
     typeMappings.set(mapOf("set" to "Array", "DateTime" to "Date", "date" to "Date", "date-time" to "Date"))
     configOptions.set(
       mapOf(
-        "ngVersion" to "15.0.0",
+        "ngVersion" to "17.0.0",
         "serviceSuffix" to "ApiService",
         "serviceFileSuffix" to "-api.service",
         "modelFileSuffix" to ".dto",

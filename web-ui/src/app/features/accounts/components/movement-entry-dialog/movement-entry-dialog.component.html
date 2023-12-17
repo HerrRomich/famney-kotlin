@@ -38,7 +38,7 @@
       <mat-datepicker-toggle matSuffix [for]="budgetPeriodPicker"></mat-datepicker-toggle>
       <fm-monthpicker #budgetPeriodPicker></fm-monthpicker>
     </mat-form-field>
-    <mat-button-toggle-group #extendedDateToggleGroup="matButtonToggleGroup" value="{{ extendedDate }}">
+    <mat-button-toggle-group #extendedDateToggleGroup="matButtonToggleGroup" value="{{ extendedDate() }}">
       <mat-button-toggle class="fm-narrow-toggle-button" value="extended-date">
         <mat-icon>{{
           extendedDateToggleGroup.value === "extended-date" ? "keyboard_arrow_left" : "keyboard_arrow_right"
@@ -76,8 +76,8 @@
         <div></div>
         <div
           class="mat-body-strong mat-body-2"
-          *ngIf="cumulatedSum()"
-          [ngClass]="(cumulatedSum() ?? 0) > 0 ? 'positive-amount' : 'negative-amount'"
+          *ngIf="cumulatedSum() as cumulatedSum"
+          [ngClass]="(cumulatedSum ?? 0) > 0 ? 'positive-amount' : 'negative-amount'"
         >
           {{ cumulatedSum }}
         </div>
@@ -87,7 +87,7 @@
   <ng-template #singleEntry>
     <fm-entry-item [formGroup]="entryForm.controls.entryItems.controls[0]"></fm-entry-item>
   </ng-template>
-  <mat-button-toggle-group #extendedEntryToggleGroup="matButtonToggleGroup" value="{{ extendedEntry }}">
+  <mat-button-toggle-group #extendedEntryToggleGroup="matButtonToggleGroup" value="{{ extendedEntry() }}">
     <mat-button-toggle value="extended-entry" class="fm-thin-toggle-button">
       <mat-icon>{{
         extendedEntryToggleGroup.value === "extended-entry" ? "keyboard_arrow_up" : "keyboard_arrow_down"

@@ -80,10 +80,10 @@
           },
           "configurations": {
             "production": {
-              "browserTarget": "famoney:build:production"
+              "buildTarget": "famoney:build:production"
             },
             "development": {
-              "browserTarget": "famoney:build:development"
+              "buildTarget": "famoney:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -91,7 +91,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "famoney:build"
+            "buildTarget": "famoney:build"
           }
         },
         "test": {

@@ -2,11 +2,11 @@ import org.springframework.boot.gradle.plugin.ResolveMainClassName
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
 plugins {
-    id("org.springframework.boot") version "3.1.2" apply false
-    id("io.spring.dependency-management") version "1.1.0"
-    kotlin("jvm") version "1.8.0"
-    kotlin("plugin.spring") version "1.8.0" apply false
-    kotlin("plugin.jpa") version "1.8.0" apply false
+    id("org.springframework.boot") version "3.1.6" apply false
+    id("io.spring.dependency-management") version "1.1.4"
+    kotlin("jvm") version "1.9.21"
+    kotlin("plugin.spring") version "1.9.21" apply false
+    kotlin("plugin.jpa") version "1.9.21" apply false
     id("io.swagger.core.v3.swagger-gradle-plugin") version "2.2.8" apply false
 }
 
@@ -29,7 +29,7 @@ configure(subprojects) {
     }
 
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(21)
     }
 
     tasks.withType<Test> {
