@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, DestroyRef, inject, Inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiErrorDto, EntryDataDto, EntryItemDataDto } from '@famoney-apis/accounts';
 import { EntryItemFormGroup, EntryItemService } from '@famoney-features/accounts/components/entry-item';
 import { AccountEntry, EntryItem } from '@famoney-features/accounts/models/account-entry.model';
 import { EntryCategoryService, FlatEntryCategoryObject } from '@famoney-shared/services/entry-category.service';
+import { ReactiveFormErrorHandlerService } from '@famoney-shared/services/reactive-form-error-handler.service';
 import { NotifierService } from 'angular-notifier';
 import { mergeWith, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
@@ -18,6 +19,7 @@ import { filter, map, switchMap } from 'rxjs/operators';
 })
 export class MovementEntryDialogComponent {
   private formBuilder = inject(NonNullableFormBuilder);
+  private errorHandlerService = inject(ReactiveFormErrorHandlerService);
 
   readonly entryForm = this.formBuilder.group({
     movementDate: this.formBuilder.group({
@@ -33,6 +35,10 @@ export class MovementEntryDialogComponent {
     }),
     entryItems: this.formBuilder.array<EntryItemFormGroup>([]),
   });
+  readonly entryDateError$ = this.errorHandlerService.provideErrorHandler$(
+    this.entryForm.controls.movementDate.controls.date,
+    'accounts.entryDialog.fields.entryDate.errors',
+  );
   cumulatedSum = signal<number | undefined>(undefined);
   loaded = signal<boolean>(false);
   extendedDate = signal<'extended-date' | undefined>(undefined);
@@ -69,7 +75,7 @@ export class MovementEntryDialogComponent {
                   ? entryData.entryItems.map((entryItem) =>
                       this.createEntryItem(entryItem, entryCategories.flatEntryCategories.get(entryItem.categoryId)),
                     )
-                  : [],
+                  : [this.createEntryItem()],
               };
               return accountEntry;
             }),
@@ -83,23 +89,24 @@ export class MovementEntryDialogComponent {
         } = accountEntry;
         this.extendedDate.set(bookingDate || budgetPeriod ? 'extended-date' : undefined);
         this.extendedEntry.set(entryItems.length > 1 ? 'extended-entry' : undefined);
+        const entryItemControls = entryItems.map(() => this.entryItemService.createEntryItemFormGroup());
         this.entryForm.setControl(
           'entryItems',
-          this.formBuilder.array(entryItems.map(() => this.entryItemService.createEntryItemFormGroup())),
+          this.formBuilder.array(entryItemControls),
         );
         this.entryForm.patchValue(accountEntry);
         this.loaded.set(true);
       });
   }
 
-  private createEntryItem(entryItem: EntryItemDataDto, flatEntryCategory?: FlatEntryCategoryObject): EntryItem {
+  private createEntryItem(entryItem?: EntryItemDataDto, flatEntryCategory?: FlatEntryCategoryObject): EntryItem {
     const entryItemAmount = entryItem?.amount;
     const sign = flatEntryCategory?.getCategorySign();
     const amount = entryItemAmount && sign ? entryItemAmount * sign : 0;
     return {
-      categoryId: entryItem.categoryId,
+      categoryId: entryItem?.categoryId ?? 0,
       amount: amount,
-      comments: entryItem.comments,
+      comments: entryItem?.comments,
     };
   }
 
@@ -113,17 +120,6 @@ export class MovementEntryDialogComponent {
 
   deleteEntryItem(entryItemIndex: number) {
     this.entryForm.controls.entryItems.removeAt(entryItemIndex);
-  }
-
-  getEntryDateError() {
-    const entryDateControl = this.entryForm.controls.movementDate.controls.date;
-    if (entryDateControl?.hasError('matDatepickerParse')) {
-      return 'accounts.entryDialog.fields.entryDate.errors.invalid';
-    } else if (entryDateControl?.getError('required')) {
-      return 'accounts.entryDialog.fields.entryDate.errors.required';
-    } else {
-      return undefined;
-    }
   }
 
   save() {

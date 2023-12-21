@@ -1,6 +1,6 @@
 import { AccountDto } from '@famoney-apis/accounts';
 import { MovementsEntity, MovementsState } from '@famoney-features/accounts/stores/movements/movements.state';
-import { createEntityAdapter, EntityState } from '@ngrx/entity';
+import { EntityState, createEntityAdapter } from '@ngrx/entity';
 
 export type AccountEntity = AccountDto;
 

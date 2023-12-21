@@ -52,6 +52,18 @@ const reducer = createReducer(
     ...state,
     error,
   })),
+  on(movementsActions.storeMovementSuccess, (state, { pos, entity, operation }) => {
+    if (pos) {
+      state = movementsAdapter.removeOne(pos, state);
+    }
+    if (entity) {
+      state = movementsAdapter.addOne(entity, state);
+    }
+    return {
+      ...state,
+      operation,
+    };
+  }),
 );
 
 export function movementsReducer(state: MovementsState | undefined, action: Action) {

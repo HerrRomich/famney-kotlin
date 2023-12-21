@@ -34,139 +34,168 @@
     </button>
   </eco-fab-speed-dial-actions>
 </eco-fab-speed-dial>
-<cdk-virtual-scroll-viewport #virtualScrollViewport>
-  <div class="movements-table">
-    <div class="movements-header" [style.top]="inverseTranslation">
-      <div class="movements-row" *ngIf="layout() as layout" [ngSwitch]="layout" [ngClass]="layout">
-        <div class="row-cells row-lane" *ngSwitchCase="'web'">
-          <div class="entry-date">
-            <span translate="accounts.table.columns.entryDate.name"></span>
-          </div>
-          <div class="comments">
-            <span translate="accounts.table.columns.comments.name"></span>
-          </div>
-          <div class="category">
-            <span translate="accounts.table.columns.category.name"></span>
-          </div>
-          <div class="amount">
-            <span translate="accounts.table.columns.amount.name"></span>
-          </div>
-          <div class="balance">
-            <span translate="accounts.table.columns.balance.name"></span>
-          </div>
-        </div>
-        <div class="row-cells" *ngSwitchCase="'mobile'">
-          <div class="row-lane">
-            <div class="entry-date">
-              <span translate="accounts.table.columns.entryDate.name"></span>
-            </div>
-            <div class="amount">
-              <span translate="accounts.table.columns.amount.name"></span>
-            </div>
-            <div class="balance">
-              <span translate="accounts.table.columns.balance.name"></span>
-            </div>
-          </div>
-          <div class="row-lane">
-            <div class="category">
-              <span translate="accounts.table.columns.category.name"></span>
-            </div>
-          </div>
-        </div>
-        <div class="buttons"></div>
-      </div>
-      <mat-divider></mat-divider>
-    </div>
-    <ng-container *cdkVirtualFor="let element of movementDataSource; let last = last; trackBy: trackByFn">
-      <ng-container *ngIf="element.entry as entry; else loading">
-        <div
-          *ngIf="layout() as layout"
-          [ngSwitch]="layout"
-          (click)="edit(entry.movement)"
-          class="movements-row"
-          [ngClass]="[movementSelection() === entry.movement.id ? 'selected' : '', layout]"
-        >
-          <div class="row-cells row-lane" *ngSwitchCase="'web'">
-            <div class="entry-date">
-              <span>{{ entry.movement.data?.date | date: "dd.MM.yyyy" }}</span>
-            </div>
-            <div class="comments mat-body-2">
-              <span>{{ accountTableService.getMovementComments(entry.movement.data) }}</span>
-            </div>
-            <div class="category">
-              <span>{{ entry.category?.fullPath }}</span>
-              <span class="tooltip">{{ entry.category?.fullPath }}</span>
-            </div>
-            <div class="amount" [ngClass]="getSumColorClass(entry.movement.data?.amount)">
-              <span>{{ entry.movement.data?.amount | number: "1.2-2" }}</span>
-            </div>
-            <div class="balance" [ngClass]="getSumColorClass(entry.movement.total)">
-              <span>{{ entry.movement.total | number: "1.2-2" }}</span>
-            </div>
-          </div>
-          <div class="row-cells" *ngSwitchCase="'mobile'">
-            <div class="row-lane">
-              <div class="entry-date">
-                <span>{{ entry.movement.data?.date | date: "dd.MM.yyyy" }}</span>
+@if (layout$ | async; as layout) {
+  <cdk-virtual-scroll-viewport #virtualScrollViewport>
+    <div class="movements-table">
+      <div class="movements-header" [style.top]="inverseTranslation">
+        <div class="movements-row" [ngClass]="layout">
+          @switch (layout) {
+            @case ("web") {
+              <div class="row-cells row-lane">
+                <div class="entry-date">
+                  <span translate="accounts.table.columns.entryDate.name"></span>
+                </div>
+                <div class="comments">
+                  <span translate="accounts.table.columns.comments.name"></span>
+                </div>
+                <div class="category">
+                  <span translate="accounts.table.columns.category.name"></span>
+                </div>
+                <div class="amount">
+                  <span translate="accounts.table.columns.amount.name"></span>
+                </div>
+                <div class="balance">
+                  <span translate="accounts.table.columns.balance.name"></span>
+                </div>
               </div>
-              <div class="amount" [ngClass]="getSumColorClass(entry.movement.data?.amount)">
-                <span>{{ entry.movement.data?.amount | number: "1.2-2" }}</span>
+            }
+            @case ("mobile") {
+              <div class="row-cells">
+                <div class="row-lane">
+                  <div class="entry-date">
+                    <span translate="accounts.table.columns.entryDate.name"></span>
+                  </div>
+                  <div class="amount">
+                    <span translate="accounts.table.columns.amount.name"></span>
+                  </div>
+                  <div class="balance">
+                    <span translate="accounts.table.columns.balance.name"></span>
+                  </div>
+                </div>
+                <div class="row-lane">
+                  <div class="category">
+                    <span translate="accounts.table.columns.category.name"></span>
+                  </div>
+                </div>
               </div>
-              <div class="balance" [ngClass]="getSumColorClass(entry.movement.total)">
-                <span>{{ entry.movement.total | number: "1.2-2" }}</span>
-              </div>
-            </div>
-            <div class="row-lane">
-              <div class="category">
-                <span>{{ entry.category?.fullPath }}</span>
-                <span class="tooltip">{{ entry.category?.fullPath }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="buttons" (click)="$event.stopPropagation()">
-            <button
-              mat-icon-button
-              [matMenuTriggerFor]="menuRef"
-              (menuClosed)="closeMenu()"
-              (menuOpened)="openMenu(entry.movement)"
-              [matMenuTriggerData]="{ movement: entry.movement }"
-              class="account-entry-action"
-            >
-              <mat-icon>more_vert</mat-icon>
-            </button>
-          </div>
-        </div>
-      </ng-container>
-      <ng-template #loading>
-        <div *ngIf="layout() as layout" [ngSwitch]="layout" class="movements-row" [ngClass]="layout">
-          <div class="item-web row-cells row-lane loading" *ngSwitchCase="'web'">
-            <div class="entry-date">&nbsp;</div>
-            <div class="comments">&nbsp;</div>
-            <div class="category">&nbsp;</div>
-            <div class="amount">&nbsp;</div>
-            <div class="balance">&nbsp;</div>
-          </div>
-          <div class="mobile row-cells" *ngSwitchCase="'mobile'">
-            <div class="row-lane loading">
-              <div class="entry-date">&nbsp;</div>
-              <div class="amount">&nbsp;</div>
-              <div class="balance">&nbsp;</div>
-            </div>
-            <div class="row-lane loading">
-              <div class="category">&nbsp;</div>
-            </div>
-          </div>
+            }
+          }
           <div class="buttons"></div>
         </div>
-      </ng-template>
-      <mat-divider *ngIf="!last"></mat-divider>
-    </ng-container>
-  </div>
-</cdk-virtual-scroll-viewport>
-<mat-menu #menuRef="matMenu" [overlapTrigger]="false">
-  <ng-template matMenuContent let-movement="movement">
-    <button mat-menu-item (click)="edit(movement)">{{ "accounts.table.element.menu.change.title" | translate }}</button>
-    <button mat-menu-item>{{ "accounts.table.element.menu.move.title" | translate }}</button>
-    <button mat-menu-item>{{ "accounts.table.element.menu.delete.title" | translate }}</button>
-  </ng-template>
-</mat-menu>
+        <mat-divider></mat-divider>
+      </div>
+      <ng-container
+        *cdkVirtualFor="
+          let element of movementDataSource;
+          let last = last;
+          let pos = index;
+          let even = even;
+          trackBy: trackByFn
+        "
+      >
+        @if (element.entry; as entry) {
+          <div
+            (click)="edit(pos)"
+            class="movements-row"
+            [ngClass]="[movementSelection() === pos ? 'selected' : '', layout, even ? 'even' : '']"
+          >
+            @switch (layout) {
+              @case ("web") {
+                <div class="row-cells row-lane">
+                  <div class="entry-date">
+                    <span>{{ entry.movement.data?.date | date: "dd.MM.yyyy" }}</span>
+                  </div>
+                  <div class="comments mat-body-2">
+                    <span>{{ accountTableService.getMovementComments(entry.movement.data) }}</span>
+                  </div>
+                  <div class="category">
+                    <span>{{ entry.category?.fullPath }}</span>
+                    <span class="tooltip">{{ entry.category?.fullPath }}</span>
+                  </div>
+                  <div class="amount" [ngClass]="getSumColorClass(entry.movement.data?.amount)">
+                    <span>{{ entry.movement.data?.amount | number: "1.2-2" }}</span>
+                  </div>
+                  <div class="balance" [ngClass]="getSumColorClass(entry.movement.total)">
+                    <span>{{ entry.movement.total | number: "1.2-2" }}</span>
+                  </div>
+                </div>
+              }
+              @case ("mobile") {
+                <div class="row-cells">
+                  <div class="row-lane">
+                    <div class="entry-date">
+                      <span>{{ entry.movement.data?.date | date: "dd.MM.yyyy" }}</span>
+                    </div>
+                    <div class="amount" [ngClass]="getSumColorClass(entry.movement.data?.amount)">
+                      <span>{{ entry.movement.data?.amount | number: "1.2-2" }}</span>
+                    </div>
+                    <div class="balance" [ngClass]="getSumColorClass(entry.movement.total)">
+                      <span>{{ entry.movement.total | number: "1.2-2" }}</span>
+                    </div>
+                  </div>
+                  <div class="row-lane">
+                    <div class="category">
+                      <span>{{ entry.category?.fullPath }}</span>
+                      <span class="tooltip">{{ entry.category?.fullPath }}</span>
+                    </div>
+                  </div>
+                </div>
+              }
+            }
+            <div class="buttons" (click)="$event.stopPropagation()">
+              <button
+                mat-icon-button
+                [matMenuTriggerFor]="menuRef"
+                (menuClosed)="closeMenu()"
+                (menuOpened)="openMenu(pos)"
+                [matMenuTriggerData]="{ pos }"
+                class="account-entry-action"
+              >
+                <mat-icon>more_vert</mat-icon>
+              </button>
+            </div>
+          </div>
+        } @else {
+          <div class="movements-row" [ngClass]="layout">
+            @switch (layout) {
+              @case ("web") {
+                <div class="item-web row-cells row-lane loading">
+                  <div class="entry-date">&nbsp;</div>
+                  <div class="comments">&nbsp;</div>
+                  <div class="category">&nbsp;</div>
+                  <div class="amount">&nbsp;</div>
+                  <div class="balance">&nbsp;</div>
+                </div>
+              }
+              @case ("mobile") {
+                <div class="mobile row-cells">
+                  <div class="row-lane loading">
+                    <div class="entry-date">&nbsp;</div>
+                    <div class="amount">&nbsp;</div>
+                    <div class="balance">&nbsp;</div>
+                  </div>
+                  <div class="row-lane loading">
+                    <div class="category">&nbsp;</div>
+                  </div>
+                </div>
+              }
+            }
+            <div class="buttons"></div>
+          </div>
+        }
+        @if (!last) {
+          <mat-divider></mat-divider>
+        }
+      </ng-container>
+    </div>
+  </cdk-virtual-scroll-viewport>
+  <mat-menu #menuRef="matMenu" [overlapTrigger]="false">
+    <ng-template matMenuContent let-pos="pos">
+      <button mat-menu-item (click)="edit(pos)">
+        {{ "accounts.table.element.menu.change.title" | translate }}
+      </button>
+      <button mat-menu-item>{{ "accounts.table.element.menu.move.title" | translate }}</button>
+      <button mat-menu-item (click)="delete(pos)">{{ "accounts.table.element.menu.delete.title" | translate }}</button>
+    </ng-template>
+  </mat-menu>
+}

@@ -1,0 +1,14 @@
+<h2 mat-dialog-title>{{ "main.dialogs.confirmation.title" | translate }}</h2>
+<mat-dialog-content class="dialog-content">
+  <mat-icon class="warning-icon">warning</mat-icon>
+  <h3>{{ message }}</h3></mat-dialog-content
+>
+<mat-dialog-actions class="dialog-actions">
+  <div class="fm-spacer"></div>
+  <button mat-stroked-button color="primary" (click)="ok()">
+    {{ "main.dialogs.confirmation..buttons.ok.title" | translate }}
+  </button>
+  <button mat-stroked-button (click)="cancel()">
+    {{ "main.dialogs.confirmation..buttons.cancel.title" | translate }}
+  </button>
+</mat-dialog-actions>

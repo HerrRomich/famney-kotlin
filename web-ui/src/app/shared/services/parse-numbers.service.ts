@@ -7,8 +7,8 @@ import { LocaleService } from '@famoney-shared/services/locale.service';
 export class ParseNumberService {
   private _group: RegExp;
   private _decimal: RegExp;
-  private _numeral: RegExp;
-  private _index: (d: string) => string;
+  private readonly _numeral: RegExp;
+  private readonly _index: (d: string) => string;
 
   constructor(localeService: LocaleService) {
     const parts = new Intl.NumberFormat(localeService.locale).formatToParts(12345.6);

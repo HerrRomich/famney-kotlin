@@ -9,13 +9,13 @@ import { DateHttpInterceptor, DATE_ATTRIBUTE_PATHS } from '@famoney-shared/http-
 
 const accountsApiConfigFactory = () => {
   return new AccountsApiConfiguration({
-    basePath: '/apis/accounts-api',
+    basePath: '/apis/accounts-management',
   });
 };
 
 const masterDataApiConfigFactory = () => {
   return new MasterDataApiConfiguration({
-    basePath: '/apis/master-data-api',
+    basePath: '/apis/master-data-management',
   });
 };
 

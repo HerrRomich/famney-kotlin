@@ -17,22 +17,22 @@ import jakarta.ws.rs.core.MediaType
 interface AccountsResource: AccountsApiResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Gets a list of accounts.")
+    @Operation(summary = "Reads a list of accounts.")
     @ApiResponse(description = "A list of all accounts")
-    fun getAllAccounts(): List<AccountDTO>
+    fun readAccounts(): List<AccountDTO>
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
-    @Operation(description = "Adds a new account.")
+    @Operation(summary = "Creates a new account.")
     @ApiResponse(description = "Account is created.", responseCode = "204")
-    fun addAccount(accountData: AccountDataDTO)
+    fun createAccount(accountData: AccountDataDTO)
 
     @PUT
     @Path("/{accountId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Changes a specified account.")
-    @ApiResponse(description = "A changed account.")
+    @Operation(summary = "Updates a specified account.")
+    @ApiResponse(description = "Account is updated.")
     @ApiResponse(
         responseCode = "404",
         description = "No account was found for specified id.",

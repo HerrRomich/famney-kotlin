@@ -11,6 +11,6 @@ class AccountsApiImpl(
     override val resources: List<AccountsApiResource>
 ) : AccountsApi() {
     override val name = "Accounts"
-    override val apiPath = "accounts-api"
+    override val apiPath = "accounts-management"
     override val description = "API Specification regarding Accounts."
 }

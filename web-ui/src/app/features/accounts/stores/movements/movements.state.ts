@@ -1,6 +1,7 @@
 import { MovementDto } from '@famoney-apis/accounts';
 import { DateRange } from '@famoney-features/accounts/stores/accounts/accounts.state';
 import { FlatEntryCategoryObject } from '@famoney-shared/services/entry-category.service';
+import { StoreOperation } from '@famoney-shared/stores';
 import { createEntityAdapter, EntityState } from '@ngrx/entity';
 import { MultiRange } from 'multi-integer-range';
 
@@ -14,10 +15,14 @@ export type MovementsEntityEntry = {
   readonly category?: FlatEntryCategoryObject;
 };
 
+export type MovementOperationType = 'createMovement' | 'updateMovement' | 'deleteMovement';
+export type MovementOperation = StoreOperation<MovementOperationType>;
+
 export interface MovementsState extends EntityState<MovementsEntity> {
   readonly dateRange: DateRange;
   readonly movementsRange: MultiRange;
   error?: MovementsStateError;
+  operation?: MovementOperation;
 }
 
 export type MovementsStateError = {

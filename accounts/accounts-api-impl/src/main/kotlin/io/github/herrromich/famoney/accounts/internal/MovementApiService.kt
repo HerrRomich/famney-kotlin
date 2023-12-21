@@ -86,9 +86,9 @@ class MovementApiService(
 
     @Transactional
     fun updateMovement(movement: Movement, movementDataDTO: MovementDataDTO): Movement {
-        logger.debug { "Updateing movement by id: ${movement.id}." }
+        logger.debug { "Updating movement by id: ${movement.id}." }
         logger.trace {
-            """Updateing movement by id: ${movement.id}.
+            """Updating movement by id: ${movement.id}.
                        |${objectMapper.writeValueAsString(movementDataDTO)}""".trimMargin()
         }
         entityManager.lock(movement.account, LockModeType.PESSIMISTIC_WRITE)

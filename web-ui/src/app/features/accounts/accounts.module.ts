@@ -3,13 +3,14 @@ import { inject, NgModule } from '@angular/core';
 import { EntryItemComponent, EntryItemService } from '@famoney-features/accounts/components/entry-item';
 import { AccountTableComponent } from '@famoney-features/accounts/pages/account-table/account-table.component';
 import { AccountsFilterStorageService } from '@famoney-features/accounts/services/accounts-filter-storage.service';
+import { MovementDialogService } from '@famoney-features/accounts/services/movement-dialog.service';
 import { MovementsService } from '@famoney-features/accounts/services/movements.service';
 import { AccountsEffects } from '@famoney-features/accounts/stores/accounts/accounts.effects';
 import { AccountsFacade } from '@famoney-features/accounts/stores/accounts/accounts.facade';
-import { accountsReducer, ACCOUNTS_FEATURE_KEY } from '@famoney-features/accounts/stores/accounts/accounts.reducer';
+import { ACCOUNTS_FEATURE_KEY, accountsReducer } from '@famoney-features/accounts/stores/accounts/accounts.reducer';
 import { MovementsEffects } from '@famoney-features/accounts/stores/movements/movements.effects';
 import { MovementsFacade } from '@famoney-features/accounts/stores/movements/movements.facade';
-import { movementsReducer, MOVEMENTS_FEATURE_KEY } from '@famoney-features/accounts/stores/movements/movements.reducer';
+import { MOVEMENTS_FEATURE_KEY, movementsReducer } from '@famoney-features/accounts/stores/movements/movements.reducer';
 import { AngularModule } from '@famoney-shared/modules/angular.module';
 import { MaterialModule } from '@famoney-shared/modules/material.module';
 import { MonthPickerModule } from '@famoney-shared/modules/month-picker.module';
@@ -45,7 +46,14 @@ import { AccountsComponent } from './pages/accounts/accounts.component';
     StoreModule.forFeature(MOVEMENTS_FEATURE_KEY, movementsReducer),
     EffectsModule.forFeature([MovementsEffects]),
   ],
-  providers: [EntryItemService, MovementsService, AccountsFilterStorageService, AccountsFacade, MovementsFacade],
+  providers: [
+    EntryItemService,
+    MovementsService,
+    AccountsFilterStorageService,
+    AccountsFacade,
+    MovementsFacade,
+    MovementDialogService,
+  ],
 })
 export class AccountsModule {
   constructor() {

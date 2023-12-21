@@ -11,6 +11,6 @@ class MasterDataApiImpl(
     override val resources: List<MasterDataApiResource>
 ) : MasterDataApi() {
     override val name = "Master data"
-    override val apiPath = "master-data-api"
+    override val apiPath = "master-data-management"
     override val description = "API Specification regarding master data."
 }

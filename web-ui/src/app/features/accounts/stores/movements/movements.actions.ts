@@ -1,5 +1,10 @@
-import { EntryDataDto, MovementDataDto } from '@famoney-apis/accounts';
-import { MovementsEntityEntry, MovementsStateError } from '@famoney-features/accounts/stores/movements/movements.state';
+import { MovementDataDto, MovementDto } from '@famoney-apis/accounts';
+import {
+  MovementOperation, MovementsEntity,
+  MovementsEntityEntry,
+  MovementsStateError
+} from '@famoney-features/accounts/stores/movements/movements.state';
+import { StoreOperation } from '@famoney-shared/stores';
 import { createAction, props } from '@ngrx/store';
 import { MultiRange, Range } from 'multi-integer-range';
 
@@ -30,32 +35,39 @@ export const loadMovementsRangeFailure = createAction(
     error: MovementsStateError;
   }>(),
 );
-export const addMovementEntry = createAction('[ Movements] Add Movement Entry');
-export const editMovementEntry = createAction(
-  '[ Movements] Edit Movement Entry',
+export const createMovement = createAction(
+  '[ Movements] Create Movement',
   props<{
-    id: number;
-    entryData: EntryDataDto;
+    movementType: MovementDataDto['type'];
+    operation: StoreOperation<'createMovement'>;
+  }>(),
+);
+export const updateMovement = createAction(
+  '[ Movements] Update Movement',
+  props<{
+    pos: number;
+    operation: StoreOperation<'updateMovement'>;
   }>(),
 );
 export const deleteMovement = createAction(
   '[ Movements] Delete Movement',
   props<{
-    id: number;
+    pos: number;
+    operation: StoreOperation<'deleteMovement'>;
   }>(),
 );
-export const storeMovement = createAction(
-  '[ Movements] Store Movement',
-  props<{
-    accountId: number;
-    movementId?: number;
-    movementData?: MovementDataDto;
-  }>(),
+export const storeMovementSuccess = createAction(
+  '[ Movements] Store Movement Success',
+  props<{ pos?: number; entity?: MovementsEntity; operation: MovementOperation }>(),
 );
-export const storeMovementSuccess = createAction('[ Movements] Store Movement Success');
+export const storeMovementCanceled = createAction(
+  '[ Movements] Store Movement Canceled',
+  props<{ operation: MovementOperation }>(),
+);
 export const storeMovementFailure = createAction(
   '[ Movements] Store Movement Failure',
   props<{
     error: MovementsStateError;
+    operation: MovementOperation;
   }>(),
 );

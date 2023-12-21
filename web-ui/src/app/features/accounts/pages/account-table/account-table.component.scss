@@ -2,7 +2,8 @@
 @use 'styles/_variables' as v;
 @import 'styles/ghost-animation';
 
-$background-color: mat.get-color-from-palette(v.$fm-app-accent, 50);
+$even-color: mat.get-color-from-palette(v.$fm-app-accent, 50);
+$background-color: mat.get-color-from-palette(v.$fm-app-accent, 100);
 $tooltip-frame: mat.get-color-from-palette(v.$fm-app-accent, 100);
 
 :host {
@@ -63,6 +64,9 @@ cdk-virtual-scroll-viewport {
       button.account-entry-action {
         display: block;
       }
+    }
+    &.even {
+      background-color: $even-color;
     }
 
     .amount,
@@ -147,12 +151,12 @@ cdk-virtual-scroll-viewport {
       }
 
       .comments {
-        flex: 1 1 0;
+        flex: 3 1 0;
         justify-content: flex-start;
       }
 
       .category {
-        flex: 1 1 0;
+        flex: 5 1 0;
         justify-content: flex-start;
 
         > span {

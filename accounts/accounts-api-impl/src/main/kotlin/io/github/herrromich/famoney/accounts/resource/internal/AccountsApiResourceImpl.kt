@@ -23,7 +23,7 @@ class AccountsApiResourceImpl(
     private val objectMapper: ObjectMapper,
 ) : BasisApiResource(), AccountsResource, AccountsApiService {
     @Transactional
-    override fun getAllAccounts(): List<AccountDTO> {
+    override fun readAccounts(): List<AccountDTO> {
         logger.debug { "Getting all accounts." }
         val accountsSequence = accountRepository.findAll()
             .asSequence()
@@ -48,7 +48,7 @@ class AccountsApiResourceImpl(
     }
 
     @Transactional
-    override fun addAccount(accountData: AccountDataDTO) {
+    override fun createAccount(accountData: AccountDataDTO) {
         logger.debug { "Creating new account with name: ${accountData.name}." }
         logger.trace {
             """Creating new account

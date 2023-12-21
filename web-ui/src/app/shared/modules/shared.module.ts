@@ -8,6 +8,7 @@ import {
   EcoFabSpeedDialTriggerComponent,
 } from '@ecodev/fab-speed-dial';
 import { FocusHighlightDirective } from '@famoney-shared/directives/focus-highlight.directive';
+import { ConfirmationDialogService } from '@famoney-shared/services/confirmation-dialog.service';
 import { LocaleService } from '@famoney-shared/services/locale.service';
 import { TranslateModule } from '@ngx-translate/core';
 import { NotifierModule } from 'angular-notifier';
@@ -44,6 +45,7 @@ import { AngularModule } from './angular.module';
       },
       deps: [LocaleService],
     },
+    ConfirmationDialogService,
   ],
 })
 export class SharedModule {

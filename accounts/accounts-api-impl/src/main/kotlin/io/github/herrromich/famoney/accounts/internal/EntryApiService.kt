@@ -10,7 +10,7 @@ import java.math.BigDecimal
 @Component
 class EntryApiService {
     fun updateMovement(entry: Entry, entryDataDTO: EntryDataDTO): Movement {
-        return fillEntryAttributes(entryDataDTO, ::Entry)
+        return fillEntryAttributes(entryDataDTO) { entry }
     }
 
     fun createMovement(entryDataDTO: EntryDataDTO): Movement {

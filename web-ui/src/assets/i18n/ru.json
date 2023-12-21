@@ -6,6 +6,9 @@
       "budget": "Бюджет",
       "calendar": "Календарь",
       "reports": "Отчеты"
+    },
+    "errors": {
+      "internal": "Внутренняя ошибка."
     }
   },
   "accounts": {
@@ -92,7 +95,7 @@
         "entryDate": {
           "title": "Дата записи",
           "errors": {
-            "invalid": "Ошибка формата!",
+            "matDatepickerParse": "Ошибка формата!",
             "required": "Обязательное поле!"
           }
         },

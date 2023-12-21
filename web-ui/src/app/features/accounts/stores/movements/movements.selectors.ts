@@ -5,9 +5,11 @@ import { createFeatureSelector, createSelector } from '@ngrx/store';
 
 export const selectMovementsState = createFeatureSelector<MovementsState>(MOVEMENTS_FEATURE_KEY);
 
-const { selectAll, selectIds } = movementsAdapter.getSelectors();
+const { selectAll, selectIds, selectEntities } = movementsAdapter.getSelectors();
 
 export const selectAllMovements = createSelector(selectMovementsState, selectAll);
+export const selectAllMovementEntities = createSelector(selectMovementsState, selectEntities);
 export const selectMovementsIds = createSelector(selectMovementsState, selectIds);
 export const selectMovementsRange = createSelector(selectMovementsState, (state) => state.movementsRange);
 export const selectDateRange = createSelector(selectMovementsState, (state) => state.dateRange);
+export const selectOperation = createSelector(selectMovementsState, (state) => state.operation);

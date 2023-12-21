@@ -55,7 +55,7 @@ interface MovementRepository : JpaRepository<Movement, Int>, CustomMovementRepos
                 "update Movement m\n" +
                 "   set m.total = m.total - :#{#movement.amount}\n" +
                 "     , m.position = m.position - 1\n" +
-                " where m.account = :#{#movement.amount}\n" +
+                " where m.account = :#{#movement.account}\n" +
                 "   and m.position > :#{#movement.position}\n"
     )
     fun rollbackMovementPositionsAndSumsByAccountAfterPosition(

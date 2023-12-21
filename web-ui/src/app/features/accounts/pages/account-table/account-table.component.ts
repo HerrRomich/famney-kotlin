@@ -4,10 +4,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   DestroyRef,
-  inject,
   OnDestroy,
-  signal,
   ViewChild,
+  inject,
+  signal,
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { EcoFabSpeedDialActionsComponent, EcoFabSpeedDialComponent } from '@ecodev/fab-speed-dial';
@@ -18,7 +18,7 @@ import { MovementsFacade } from '@famoney-features/accounts/stores/movements/mov
 
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { MovementsEntity } from '@famoney-features/accounts/stores/movements/movements.state';
-import { interval, of, Subject } from 'rxjs';
+import { Subject, interval, of } from 'rxjs';
 import { debounce, map } from 'rxjs/operators';
 import { AccountMovementsVirtualScrollStrategy } from './account-movements.virtual-scroller-strategy';
 import { MovementDataSource } from './movement-data-source';
@@ -46,8 +46,7 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
   protected layoutBreakpoint = inject(BreakpointObserver).observe([Breakpoints.HandsetPortrait]);
   protected movementDataSource = new MovementDataSource(this.movementsFacade);
   private virtualScrollerStrategy = inject(VIRTUAL_SCROLL_STRATEGY);
-  private layout$ = this.layoutBreakpoint.pipe(map((state) => (state.matches ? 'mobile' : 'web')));
-  protected layout = toSignal(this.layout$);
+  protected layout$ = this.layoutBreakpoint.pipe(map((state) => (state.matches ? 'mobile' : 'web')));
   private scrolledIndex = toSignal(this.virtualScrollerStrategy.scrolledIndexChange);
   private speedDialHovered$ = new Subject<boolean>();
   protected movementSelection = signal<number | undefined>(undefined);
@@ -122,27 +121,31 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
     this.speedDialHovered$.next(false);
   }
 
-  openMenu(movement: MovementDto) {
-    this.movementSelection.set(movement.id);
+  openMenu(pos: number) {
+    this.movementSelection.set(pos);
   }
 
   closeMenu() {
     this.movementSelection.set(undefined);
   }
 
-  addEntry() {
-    this.movementsFacade.addMovementEntry();
+  async addEntry() {
+    await this.movementsFacade.addMovementEntry('ENTRY');
   }
 
-  addTransfer() {
-    console.log('Add transfer.');
+  async addTransfer() {
+    await this.movementsFacade.addMovementEntry('TRANSFER');
   }
 
-  addRefund() {
-    console.log('Add refund.');
+  async addRefund() {
+    await this.movementsFacade.addMovementEntry('REFUND');
   }
 
-  edit(movement: MovementDto) {
-    this.movementsFacade.editMovementEntry(movement);
+  async edit(pos: number) {
+    await this.movementsFacade.editMovementEntry(pos);
+  }
+
+  async delete(pos: number) {
+    await this.movementsFacade.deleteMovementEntry(pos);
   }
 }

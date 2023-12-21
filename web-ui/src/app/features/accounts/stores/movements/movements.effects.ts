@@ -1,20 +1,25 @@
 import { inject, Injectable } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { AccountsApiService, EntryDataDto, MovementDto } from '@famoney-apis/accounts';
-import { MovementEntryDialogComponent } from '@famoney-features/accounts/components/movement-entry-dialog';
+import { AccountsApiService, MovementDto } from '@famoney-apis/accounts';
+import { MovementDialogService } from '@famoney-features/accounts/services/movement-dialog.service';
 import { MovementsService } from '@famoney-features/accounts/services/movements.service';
 import * as AccountsActions from '@famoney-features/accounts/stores/accounts/accounts.actions';
 import * as AccountsSelectors from '@famoney-features/accounts/stores/accounts/accounts.selectors';
 import * as MovementsActions from '@famoney-features/accounts/stores/movements/movements.actions';
 import * as MovementsSelectors from '@famoney-features/accounts/stores/movements/movements.selectors';
-import { MovementsEntityEntry } from '@famoney-features/accounts/stores/movements/movements.state';
+import {
+  MovementOperation,
+  MovementsEntity,
+  MovementsEntityEntry,
+} from '@famoney-features/accounts/stores/movements/movements.state';
+import { ConfirmationDialogService } from '@famoney-shared/services/confirmation-dialog.service';
 import { EntryCategoryService } from '@famoney-shared/services/entry-category.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { NotifierService } from 'angular-notifier';
 import { multirange } from 'multi-integer-range';
-import { EMPTY, of, OperatorFunction, pipe, switchMap, withLatestFrom } from 'rxjs';
+import { concatMap, firstValueFrom, of, OperatorFunction, pipe, switchMap, withLatestFrom } from 'rxjs';
+import { fromPromise } from 'rxjs/internal/observable/innerFrom';
 import { catchError, combineLatestWith, map } from 'rxjs/operators';
 
 @Injectable()
@@ -24,7 +29,8 @@ export class MovementsEffects {
   private readonly accountsApiService = inject(AccountsApiService);
   private readonly movementsService = inject(MovementsService);
   private readonly entryCategoriesService = inject(EntryCategoryService);
-  private readonly accountEntryDialogComponent = inject(MatDialog);
+  private readonly movementDialogService = inject(MovementDialogService);
+  private readonly confirmationDialogService = inject(ConfirmationDialogService);
   private notifierService = inject(NotifierService);
   private translateService = inject(TranslateService);
 
@@ -67,8 +73,8 @@ export class MovementsEffects {
         if (min === undefined || max === undefined) {
           return this.getLoadFailure(`Invalid request: ${request.toString()}`);
         }
-        return this.accountsApiService.getMovements(currentAccount.id, undefined, undefined, min, max - min + 1).pipe(
-          this.mapMovementsDtoTEntityData(),
+        return this.accountsApiService.readMovements(currentAccount.id, undefined, undefined, min, max - min + 1).pipe(
+          this.mapMovementsToEntries(),
           map((loadedMovements) => {
             return MovementsActions.loadMovementsRangeSuccess({
               requestedRange,
@@ -83,16 +89,10 @@ export class MovementsEffects {
   );
 
   private getLoadFailure(message: string) {
-    return of(
-      MovementsActions.loadMovementsRangeFailure({
-        error: {
-          message,
-        },
-      }),
-    );
+    return of(MovementsActions.loadMovementsRangeFailure({ error: { message } }));
   }
 
-  private mapMovementsDtoTEntityData(): OperatorFunction<MovementDto[], MovementsEntityEntry[]> {
+  private mapMovementsToEntries(): OperatorFunction<MovementDto[], MovementsEntityEntry[]> {
     return pipe(
       combineLatestWith(this.entryCategoriesService.entryCategoriesForVisualisation$),
       map(([movements, entryCategories]) =>
@@ -108,74 +108,52 @@ export class MovementsEffects {
     );
   }
 
-  readonly addMovement$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(MovementsActions.addMovementEntry, MovementsActions.editMovementEntry),
-      withLatestFrom(this.store.select(AccountsSelectors.currentAccountSelector)),
-      switchMap(([action, account]) => {
-        if (!account) {
-          this.showNoAccountErrorNotification();
-          return EMPTY;
-        }
-        let movementId: number | undefined;
-        let entryData: EntryDataDto | undefined;
-        if (action.type === '[ Movements] Edit Movement Entry') {
-          movementId = action.id;
-          entryData = action.entryData;
-        }
-        return this.openAccountEntryDialog(entryData).pipe(
-          switchMap((movementData) =>
-            movementData
-              ? of(MovementsActions.storeMovement({ accountId: account.id, movementId, movementData }))
-              : EMPTY,
-          ),
-        );
+  private mapMovementToEntity(): OperatorFunction<MovementDto, MovementsEntity> {
+    return pipe(
+      combineLatestWith(this.entryCategoriesService.entryCategoriesForVisualisation$),
+      map(([movement, entryCategories]) => {
+        const categoryId = this.movementsService.getEntryItemData(movement)?.categoryId;
+        const category = categoryId ? entryCategories.flatEntryCategories.get(categoryId) : undefined;
+        return {
+          pos: movement.position,
+          entry: {
+            movement,
+            category,
+          },
+        };
       }),
-    ),
-  );
-
-  private openAccountEntryDialog(data?: EntryDataDto) {
-    const accountEntryDialogRef = this.accountEntryDialogComponent.open<
-      MovementEntryDialogComponent,
-      EntryDataDto,
-      EntryDataDto
-    >(MovementEntryDialogComponent, {
-      width: 'min(100vw, max(60vw, 400px))',
-      maxWidth: '100vw',
-      maxHeight: '100vh',
-      panelClass: 'fm-account-entry-dialog',
-      disableClose: true,
-      hasBackdrop: true,
-      data,
-    });
-    return accountEntryDialogRef.afterClosed();
+    );
   }
 
-  private showNoAccountErrorNotification() {
-    this.translateService
-      .get(['notifications.title.error', 'accounts.table.errors.noAccount'])
-      .pipe()
-      .subscribe((errorMesages: { [key: string]: string }) =>
-        this.notifierService.notify('error', errorMesages['accounts.table.errors.noAccount']),
-      );
-  }
-
-  readonly storeMovement$ = createEffect(() =>
+  readonly createMovement$ = createEffect(() =>
     this.actions$.pipe(
-      ofType(MovementsActions.storeMovement),
-      switchMap(({ accountId, movementId, movementData }) => {
-        const storeOperator =
-          typeof movementId === 'undefined'
-            ? () => this.accountsApiService.addMovement(accountId, movementData)
-            : () => this.accountsApiService.changeMovement(accountId, movementId, movementData);
-        return storeOperator().pipe(
-          map(() => MovementsActions.storeMovementSuccess()),
+      ofType(MovementsActions.createMovement),
+      withLatestFrom(this.store.select(AccountsSelectors.currentAccountIdSelector)),
+      concatMap(([{ movementType, operation }, accountId]) => {
+        if (!accountId) {
+          return fromPromise(this.getInternalFailure(operation, 'No account is selected!'));
+        }
+        const createMovementData$ =
+          movementType === 'ENTRY' ? this.movementDialogService.createMovementEntry() : of(undefined);
+        return createMovementData$.pipe(
+          concatMap((movementData) =>
+            movementData
+              ? this.accountsApiService.createMovement(accountId, movementData).pipe(
+                  this.mapMovementToEntity(),
+                  map((entity) =>
+                    MovementsActions.storeMovementSuccess({
+                      entity,
+                      operation,
+                    }),
+                  ),
+                )
+              : of(MovementsActions.storeMovementCanceled({ operation })),
+          ),
           catchError((error) =>
             of(
               MovementsActions.storeMovementFailure({
-                error: {
-                  message: error.message ?? 'Failure storing movement!',
-                },
+                error: { message: error.message ?? 'Failure storing movement!' },
+                operation,
               }),
             ),
           ),
@@ -183,4 +161,98 @@ export class MovementsEffects {
       }),
     ),
   );
+
+  readonly updateMovement$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(MovementsActions.updateMovement),
+      withLatestFrom(
+        this.store.select(AccountsSelectors.currentAccountIdSelector),
+        this.store.select(MovementsSelectors.selectAllMovementEntities),
+      ),
+      concatMap(([{ pos, operation }, accountId, movementEntities]) => {
+        const movementsEntity = movementEntities[pos];
+        if (!accountId) {
+          return fromPromise(this.getInternalFailure(operation, 'No account is selected!'));
+        }
+        const movement = movementsEntity?.entry?.movement;
+        if (!movement?.data) {
+          return fromPromise(this.getInternalFailure(operation, 'No movement is selected!'));
+        }
+        const updatedMovementData$ =
+          movement.data.type === 'ENTRY' ? this.movementDialogService.editMovementEntry(movement?.data) : of(undefined);
+        return updatedMovementData$.pipe(
+          concatMap((updatedMovementData) =>
+            updatedMovementData
+              ? this.accountsApiService.updateMovement(accountId, movement.id, updatedMovementData).pipe(
+                  this.mapMovementToEntity(),
+                  map((entity) =>
+                    MovementsActions.storeMovementSuccess({
+                      pos,
+                      entity,
+                      operation,
+                    }),
+                  ),
+                )
+              : of(MovementsActions.storeMovementCanceled({ operation })),
+          ),
+          catchError((error) =>
+            of(
+              MovementsActions.storeMovementFailure({
+                error: { message: error.message ?? 'Failure storing movement!' },
+                operation,
+              }),
+            ),
+          ),
+        );
+      }),
+    ),
+  );
+
+  readonly deleteMovement$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(MovementsActions.deleteMovement),
+      withLatestFrom(
+        this.store.select(AccountsSelectors.currentAccountIdSelector),
+        this.store.select(MovementsSelectors.selectAllMovementEntities),
+      ),
+      concatMap(([{ pos, operation }, accountId, movementEntities]) => {
+        const movementsEntity = movementEntities[pos];
+        if (!accountId) {
+          return fromPromise(this.getInternalFailure(operation, 'No account is selected!'));
+        }
+        const movement = movementsEntity?.entry?.movement;
+        if (!movement) {
+          return fromPromise(this.getInternalFailure(operation, 'No movement is selected!'));
+        }
+        return this.confirmationDialogService.query('').pipe(
+          concatMap((confirmed) =>
+            confirmed
+              ? this.accountsApiService.deleteMovement(accountId, movement.id).pipe(
+                  map(() =>
+                    MovementsActions.storeMovementSuccess({
+                      pos,
+                      operation,
+                    }),
+                  ),
+                )
+              : of(MovementsActions.storeMovementCanceled({ operation })),
+          ),
+          catchError((error) =>
+            of(
+              MovementsActions.storeMovementFailure({
+                error: { message: error.message ?? 'Failure storing movement!' },
+                operation,
+              }),
+            ),
+          ),
+        );
+      }),
+    ),
+  );
+
+  private async getInternalFailure(operation: MovementOperation, message: string) {
+    const errorMessage: string = await firstValueFrom(this.translateService.get('main.errors.internal'));
+    this.notifierService.notify('error', errorMessage);
+    return MovementsActions.storeMovementFailure({ error: { message: message }, operation });
+  }
 }

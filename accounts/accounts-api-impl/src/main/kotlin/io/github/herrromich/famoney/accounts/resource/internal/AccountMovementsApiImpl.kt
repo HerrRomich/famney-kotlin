@@ -48,7 +48,7 @@ class AccountMovementsApiImpl(
     private lateinit var httpHeaders: HttpHeaders
 
     @Transactional
-    override fun getMovements(accountId: Int, dateFrom: LocalDate?, dateTo: LocalDate?, offset: Int?, limit: Int?): List<MovementDTO> {
+    override fun readMovements(accountId: Int, dateFrom: LocalDate?, dateTo: LocalDate?, offset: Int?, limit: Int?): List<MovementDTO> {
         logger.debug { "Getting all movemnts of account by id: $accountId" +
                 "${dateFrom?.let { " ,since: ${it}"} ?: ""}" +
                 "${dateTo?.let { " ,until: ${it}"} ?: ""}" +
@@ -95,7 +95,7 @@ class AccountMovementsApiImpl(
     }
 
     @Transactional
-    override fun getMovement(accountId: Int, movementId: Int): MovementDTO {
+    override fun readMovement(accountId: Int, movementId: Int): MovementDTO {
         logger.debug { "Geting movement info by id $movementId from account by id: $accountId." }
         val account = accountsApiService.getAccountByIdOrThrowNotFound(
             accountId,
@@ -125,7 +125,7 @@ class AccountMovementsApiImpl(
     }
 
     @Transactional
-    override fun changeMovement(
+    override fun updateMovement(
         accountId: Int, movementId: Int,
         movementDataDTO: MovementDataDTO
     ): MovementDTO {
@@ -177,7 +177,7 @@ class AccountMovementsApiImpl(
         }
     }
 
-    override fun addMovement(accountId: Int, movementDataDTO: MovementDataDTO): MovementDTO {
+    override fun createMovement(accountId: Int, movementDataDTO: MovementDataDTO): MovementDTO {
         logger.debug { "Adding movement." }
         logger.trace("Adding movement to account id: {} with data: {}", accountId, movementDataDTO)
         return try {

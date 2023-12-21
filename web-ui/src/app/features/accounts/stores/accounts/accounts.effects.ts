@@ -28,7 +28,7 @@ export class AccountsEffects {
     this.actions$.pipe(
       ofType(AccountsActions.loadAccounts),
       switchMap(() =>
-        this.accountsApiService.getAllAccounts().pipe(
+        this.accountsApiService.readAccounts().pipe(
           map((accounts) => {
             const currentSelectedTags = this.filterStorageService.restoreAccountsSelectedTags();
             const allTags = this.getAllTags(accounts);

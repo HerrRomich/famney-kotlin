@@ -15,12 +15,12 @@ import jakarta.ws.rs.*
 import jakarta.ws.rs.core.MediaType
 import java.time.LocalDate
 
-@Path("{accountId}/movements")
+@Path("accounts/{accountId}/movements")
 @Tag(name = "accounts")
 interface AccountMovementsApiResource: AccountsApiResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Gets a sorted list of account movements.")
+    @Operation(summary = "Reads a sorted list of account movements.")
     @ApiResponse(description = "A list of account movements of specified account.")
     @ApiResponse(
         responseCode = "404",
@@ -30,7 +30,7 @@ interface AccountMovementsApiResource: AccountsApiResource {
             schema = Schema(implementation = ApiErrorDTO::class)
         )]
     )
-    fun getMovements(
+    fun readMovements(
         @Parameter(
             name = "accountId",
             `in` = ParameterIn.PATH,
@@ -61,7 +61,7 @@ interface AccountMovementsApiResource: AccountsApiResource {
     @GET()
     @Path("/count")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Gets count of account movements.")
+    @Operation(summary = "Gets count of account movements.")
     @ApiResponse(description = "Count of account movements of specified account.")
     @ApiResponse(
         responseCode = "404",
@@ -92,7 +92,7 @@ interface AccountMovementsApiResource: AccountsApiResource {
     @GET
     @Path("{movementId}")
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Gets a movement of account, specified by id.")
+    @Operation(summary = "Reads a movement of account, specified by id.")
     @ApiResponse(description = "A movement of account specified by id is returned.")
     @ApiResponse(
         responseCode = "404",
@@ -110,7 +110,7 @@ interface AccountMovementsApiResource: AccountsApiResource {
             schema = Schema(implementation = ApiErrorDTO::class)
         )]
     )
-    fun getMovement(
+    fun readMovement(
         @Parameter(
             name = "accountId",
             `in` = ParameterIn.PATH,
@@ -127,7 +127,7 @@ interface AccountMovementsApiResource: AccountsApiResource {
     @Path("{movementId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Changes an account movement.")
+    @Operation(summary = "Updates an account movement.")
     @ApiResponse(
         responseCode = "201",
         description = "An existed account movement is changed.",
@@ -152,7 +152,7 @@ interface AccountMovementsApiResource: AccountsApiResource {
             schema = Schema(implementation = ApiErrorDTO::class)
         )]
     )
-    fun changeMovement(
+    fun updateMovement(
         @Parameter(
             name = "accountId",
             `in` = ParameterIn.PATH,
@@ -169,7 +169,7 @@ interface AccountMovementsApiResource: AccountsApiResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    @Operation(description = "Creates a new account movement.")
+    @Operation(summary = "Creates a new account movement.")
     @ApiResponse(description = "New account movement is created.")
     @ApiResponse(
         responseCode = "404",
@@ -179,7 +179,7 @@ interface AccountMovementsApiResource: AccountsApiResource {
             schema = Schema(implementation = ApiErrorDTO::class)
         )]
     )
-    fun addMovement(
+    fun createMovement(
         @Parameter(
             name = "accountId",
             `in` = ParameterIn.PATH,
@@ -189,7 +189,7 @@ interface AccountMovementsApiResource: AccountsApiResource {
 
     @DELETE
     @Path("{movementId}")
-    @Operation(description = "Deletes an existing account movement.")
+    @Operation(summary = "Deletes an existing account movement.")
     @ApiResponse(responseCode = "204", description = "An account movement is deleted.")
     @ApiResponse(
         responseCode = "404",
