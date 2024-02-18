@@ -24,7 +24,7 @@
             matInput
             [matDatepicker]="bookingDatePicker"
             autocomplete="off"
-            formControlName="bookingDate"
+            [formControl]="entryForm.controls.movementDate.controls.bookingDate"
             placeholder="{{ this.entryForm.controls.movementDate.value.date | date: 'shortDate' }}"
           />
           <mat-datepicker-toggle matSuffix [for]="bookingDatePicker"></mat-datepicker-toggle>
@@ -36,7 +36,7 @@
             matInput
             [fmMonthpicker]="budgetPeriodPicker"
             autocomplete="off"
-            formControlName="budgetPeriod"
+            [formControl]="entryForm.controls.movementDate.controls.budgetPeriod"
             placeholder="{{ this.entryForm.controls.movementDate.value.date | date: 'MMM YYYY' }}"
           />
           <mat-datepicker-toggle matSuffix [for]="budgetPeriodPicker"></mat-datepicker-toggle>
@@ -58,7 +58,6 @@
             class="mat-elevation-z2 entry-item-wrapper"
             *ngFor="let entryItem of entryForm.controls.entryItems.controls; let entryItemIndex = index"
             fmFocusHighlight="fm-entry-item-highlighted"
-            formArrayName="entryItems"
           >
             <div>{{ entryItemIndex + 1 }}.</div>
             <fm-entry-item [formGroup]="entryItem"></fm-entry-item>

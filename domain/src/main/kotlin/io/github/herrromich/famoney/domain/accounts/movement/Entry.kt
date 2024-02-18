@@ -6,7 +6,7 @@ import org.eclipse.persistence.annotations.JoinFetchType
 
 @Entity
 @DiscriminatorValue(Entry.TYPE)
-class Entry : Movement() {
+open class Entry : Movement() {
     @ElementCollection
     @CollectionTable(name = "entry_item", joinColumns = [JoinColumn(name = "entry_id")])
     @JoinFetch(JoinFetchType.INNER)

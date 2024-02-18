@@ -1,63 +1,44 @@
-import { movementsAdapter } from '@famoney-features/accounts/stores/accounts/accounts.state';
-import * as movementsActions from '@famoney-features/accounts/stores/movements/movements.actions';
-import { MovementsEntity, MovementsState } from '@famoney-features/accounts/stores/movements/movements.state';
-import { Update } from '@ngrx/entity';
+import { MovementDto } from '@famoney-apis/accounts';
+import { createEntityAdapter } from '@ngrx/entity';
 import { Action, createReducer, on } from '@ngrx/store';
-import { multirange } from 'multi-integer-range';
+import * as movementsActions from './movements.actions';
+import { MovementsState } from './movements.state';
 
 export const MOVEMENTS_FEATURE_KEY = 'movements';
+
+export const movementsAdapter = createEntityAdapter<MovementDto>({
+  selectId: (movement) => movement.id,
+});
 
 const initMovements = (): MovementsState =>
   movementsAdapter.getInitialState({
     dateRange: {},
-    movementsRange: multirange(),
+    count: 0,
   });
 
 const reducer = createReducer(
   initMovements(),
   on(movementsActions.selectAccount, (state, { count }) =>
-    movementsAdapter.setAll(
-      Array.from({ length: count }, (_, pos) => ({ pos })),
-      {
-        ...state,
-        movementsRange: multirange(),
-      },
-    ),
-  ),
-  on(movementsActions.loadMovementsRangeSuccess, (state, { requestedRange, loadedRange, loadedMovements }) => {
-    const min = requestedRange.min();
-    if (min === undefined) {
-      return {
-        ...state,
-        error: {
-          message: 'Request is invalid!',
-        },
-      };
-    }
-    const currRange = state.movementsRange.clone();
-    const positionsToUpdate = currRange.subtract(requestedRange).append(loadedRange);
-    const updates = positionsToUpdate.toArray().map<Update<MovementsEntity>>((pos) => ({
-      id: pos,
-      changes: {
-        pos,
-        entry: loadedRange.has(pos) ? loadedMovements[pos - min] : undefined,
-      },
-    }));
-    return movementsAdapter.updateMany(updates, {
+    movementsAdapter.removeAll({
       ...state,
-      loadedRange: requestedRange,
+      count,
+      movementsRange: undefined,
+    }),
+  ),
+  on(movementsActions.loadMovementsRangeSuccess, (state, { movementsRange, movements }) => {
+    return movementsAdapter.setAll(movements, {
+      ...state,
+      movementsRange,
     });
   }),
   on(movementsActions.loadMovementsRangeFailure, (state, { error }) => ({
     ...state,
     error,
   })),
-  on(movementsActions.storeMovementSuccess, (state, { pos, entity, operation }) => {
-    if (pos) {
-      state = movementsAdapter.removeOne(pos, state);
-    }
-    if (entity) {
-      state = movementsAdapter.addOne(entity, state);
+  on(movementsActions.storeMovementSuccess, (state, { movement, operation }) => {
+    if (movement !== undefined) {
+      state = movementsAdapter.removeOne(movement.id, state);
+      state = movementsAdapter.addOne(movement, state);
     }
     return {
       ...state,

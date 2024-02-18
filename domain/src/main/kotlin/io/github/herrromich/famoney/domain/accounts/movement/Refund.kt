@@ -6,7 +6,7 @@ import jakarta.persistence.Entity
 
 @Entity
 @DiscriminatorValue(Refund.TYPE)
-class Refund : Movement() {
+open class Refund : Movement() {
     @Column(name = "category_id")
     var categoryId: Int = 0
 

@@ -11,17 +11,14 @@ import {
 } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { EcoFabSpeedDialActionsComponent, EcoFabSpeedDialComponent } from '@ecodev/fab-speed-dial';
-import { MovementDto } from '@famoney-apis/accounts';
-import { MovementsService } from '@famoney-features/accounts/services/movements.service';
 import { AccountsFacade } from '@famoney-features/accounts/stores/accounts/accounts.facade';
 import { MovementsFacade } from '@famoney-features/accounts/stores/movements/movements.facade';
 
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { MovementsEntity } from '@famoney-features/accounts/stores/movements/movements.state';
 import { Subject, interval, of } from 'rxjs';
 import { debounce, map } from 'rxjs/operators';
 import { AccountMovementsVirtualScrollStrategy } from './account-movements.virtual-scroller-strategy';
-import { MovementDataSource } from './movement-data-source';
+import { MovementsDataSource, VisualMovement } from './movements-data-source.service';
 
 const fabSpeedDialDelayOnHover = 350;
 
@@ -34,17 +31,16 @@ const fabSpeedDialDelayOnHover = 350;
       provide: VIRTUAL_SCROLL_STRATEGY,
       useClass: AccountMovementsVirtualScrollStrategy,
     },
-    MovementsService,
+    MovementsDataSource,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AccountTableComponent implements AfterViewInit, OnDestroy {
-  accountTableService = inject(MovementsService);
   private accountsFacade = inject(AccountsFacade);
   private movementsFacade = inject(MovementsFacade);
   private destroyRef = inject(DestroyRef);
   protected layoutBreakpoint = inject(BreakpointObserver).observe([Breakpoints.HandsetPortrait]);
-  protected movementDataSource = new MovementDataSource(this.movementsFacade);
+  protected movementsDataSource = inject(MovementsDataSource);
   private virtualScrollerStrategy = inject(VIRTUAL_SCROLL_STRATEGY);
   protected layout$ = this.layoutBreakpoint.pipe(map((state) => (state.matches ? 'mobile' : 'web')));
   private scrolledIndex = toSignal(this.virtualScrollerStrategy.scrolledIndexChange);
@@ -57,9 +53,9 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
       this.layout$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((layout) => {
         const scrolledIndex = this.scrolledIndex() ?? 0;
         if (layout === 'web') {
-          virtualScrollerStrategy.updateItemAndBufferSize(49, 500, 1000);
+          virtualScrollerStrategy.updateItemAndBufferSize(49, 1000, 10000);
         } else {
-          virtualScrollerStrategy.updateItemAndBufferSize(54, 800, 1600);
+          virtualScrollerStrategy.updateItemAndBufferSize(54, 1600, 16000);
         }
         virtualScrollerStrategy.scrollToIndex(scrolledIndex, 'auto');
       });
@@ -105,8 +101,8 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
     return `-${this.viewPort['_renderedContentOffset']}px`;
   }
 
-  trackByFn(index: number, item: MovementsEntity) {
-    return item.pos;
+  trackByFn(index: number, item?: VisualMovement): number | undefined {
+    return item?.id;
   }
 
   getSumColorClass(sum: number | undefined) {
@@ -141,11 +137,11 @@ export class AccountTableComponent implements AfterViewInit, OnDestroy {
     await this.movementsFacade.addMovementEntry('REFUND');
   }
 
-  async edit(pos: number) {
-    await this.movementsFacade.editMovementEntry(pos);
+  async edit(id: number) {
+    await this.movementsFacade.editMovementEntry(id);
   }
 
-  async delete(pos: number) {
-    await this.movementsFacade.deleteMovementEntry(pos);
+  async delete(id: number) {
+    await this.movementsFacade.deleteMovementEntry(id);
   }
 }

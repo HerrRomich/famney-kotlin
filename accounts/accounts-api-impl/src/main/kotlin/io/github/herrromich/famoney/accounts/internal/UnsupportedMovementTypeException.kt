@@ -2,12 +2,14 @@ package io.github.herrromich.famoney.accounts.internal
 
 import io.github.herrromich.famoney.core.FamoneyException
 
-class IncompatibleMovementType : FamoneyException {
+class UnsupportedMovementTypeException : FamoneyException {
     constructor() : super() {}
-    constructor(
-        message: String?, cause: Throwable?, enableSuppression: Boolean,
-        writableStackTrace: Boolean
-    ) : super(message, cause, enableSuppression, writableStackTrace) {
+    constructor(message: String?, cause: Throwable?, enableSuppression: Boolean, writableStackTrace: Boolean) : super(
+        message,
+        cause,
+        enableSuppression,
+        writableStackTrace
+    ) {
     }
 
     constructor(message: String?, cause: Throwable?) : super(message, cause) {}

@@ -4,7 +4,6 @@ import { EntryItemComponent, EntryItemService } from '@famoney-features/accounts
 import { AccountTableComponent } from '@famoney-features/accounts/pages/account-table/account-table.component';
 import { AccountsFilterStorageService } from '@famoney-features/accounts/services/accounts-filter-storage.service';
 import { MovementDialogService } from '@famoney-features/accounts/services/movement-dialog.service';
-import { MovementsService } from '@famoney-features/accounts/services/movements.service';
 import { AccountsEffects } from '@famoney-features/accounts/stores/accounts/accounts.effects';
 import { AccountsFacade } from '@famoney-features/accounts/stores/accounts/accounts.facade';
 import { ACCOUNTS_FEATURE_KEY, accountsReducer } from '@famoney-features/accounts/stores/accounts/accounts.reducer';
@@ -46,14 +45,7 @@ import { AccountsComponent } from './pages/accounts/accounts.component';
     StoreModule.forFeature(MOVEMENTS_FEATURE_KEY, movementsReducer),
     EffectsModule.forFeature([MovementsEffects]),
   ],
-  providers: [
-    EntryItemService,
-    MovementsService,
-    AccountsFilterStorageService,
-    AccountsFacade,
-    MovementsFacade,
-    MovementDialogService,
-  ],
+  providers: [EntryItemService, AccountsFilterStorageService, AccountsFacade, MovementsFacade, MovementDialogService],
 })
 export class AccountsModule {
   constructor() {

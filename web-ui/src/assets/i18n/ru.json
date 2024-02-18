@@ -32,7 +32,13 @@
           "name": "Комментарий"
         },
         "category": {
-          "name": "Категория"
+          "name": "Категория",
+          "values": {
+            "multiple-entries": "<'Чек>",
+            "unknown": ">Неизвестная категория>",
+            "refund": "<Возврат>",
+            "transfer": "<Перевод {{direction}} \"{{accountName}}\">"
+          }
         },
         "amount": {
           "name": "Сумма"
@@ -67,6 +73,12 @@
       },
       "errors": {
         "noAccount": "Кошелек не выбран!"
+      }
+    },
+    "transfer": {
+      "directions": {
+        "to-account": "на счет",
+        "from-account": "со счета"
       }
     },
     "filterPopup": {

@@ -5,7 +5,7 @@ import jakarta.persistence.Embeddable
 import java.math.BigDecimal
 
 @Embeddable
-class EntryItem {
+open class EntryItem {
     @Column(name = "pos")
     var position: Int = 0
 

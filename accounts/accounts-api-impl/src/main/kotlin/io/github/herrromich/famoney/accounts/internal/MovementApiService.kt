@@ -15,6 +15,8 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
 
+private val logger = KotlinLogging.logger { }
+
 @Service
 class MovementApiService(
     private val accountRepository: AccountRepository,
@@ -23,118 +25,98 @@ class MovementApiService(
     private val entityManager: EntityManager,
     private val objectMapper: ObjectMapper,
 ) {
-    private val logger = KotlinLogging.logger { }
-
     @Transactional
-    fun addMovement(account: Account, movementDataDTO: MovementDataDTO): Movement {
+    fun createMovement(
+        account: Account,
+        movementDataDTO: MovementDataDTO,
+    ): Movement {
+        // region logging before
         logger.debug { "Creating movement in account by id: ${account.id}." }
         logger.trace {
             """Creating movement in account by id: ${account.id}..
-              |${objectMapper.writeValueAsString(movementDataDTO)}""".trimMargin()
+              |${objectMapper.writeValueAsString(movementDataDTO)}"""
+                .trimMargin()
         }
-        val movement: Movement = callAddMovement(account, movementDataDTO)
-        logger.debug { "Movement with id: ${movement.id} is created in account by id: ${account.id}." }
-        logger.trace {
-            """Movement is created in account by id: ${account.id}.
-              |${objectMapper.writeValueAsString(movement)}""".trimMargin()
-        }
-        return movement
-    }
+        // endregion
 
-    private fun callAddMovement(account: Account, movementDataDTO: MovementDataDTO): Movement {
         var movement = if (movementDataDTO is EntryDataDTO) {
             entryApiService.createMovement(movementDataDTO)
         } else {
-            val message: String = provideUnknownDtoMessage(movementDataDTO)
-            logger.warn { message }
-            throw UnknownMovementType(message)
+            throw UnsupportedMovementTypeException(movementDataDTO)
         }
         entityManager.lock(account, LockModeType.PESSIMISTIC_WRITE)
-        val newPosition = movementRepository.getLastPositionByAccountOnDate(movement, movementDataDTO.date)
-        movement = movement.let { setMovementAttributes(it, movementDataDTO) }.apply {
-            this.account = account
-            position = newPosition
+        movement.account = account
+        movement.position = Float.MAX_VALUE
+        val addedMovement = movementRepository.save(movement)
+        val startTotal = movementRepository.getTotalBeforeDate(
+            account.id!!,
+            movement.date
+        ) ?: BigDecimal.ZERO
+        movementRepository.updateTotalAndPos(account.id!!, movement.date, startTotal)
+        entityManager.refresh(addedMovement)
+
+        // region logging after
+        logger.debug { "Movement with id: ${addedMovement.id} is created in account by id: ${account.id}." }
+        logger.trace {
+            """Movement is created in account by id: ${account.id}.
+              |${objectMapper.writeValueAsString(addedMovement)}""".trimMargin()
         }
-        val addedMovement = adjustAccountMovements(movement)
+        // endregion
+
         return addedMovement
-    }
-
-    private fun setMovementAttributes(
-        movement: Movement,
-        movementDataDTO: MovementDataDTO
-    ) = movement.apply {
-        date = movementDataDTO.date
-        bookingDate = movementDataDTO.bookingDate
-        budgetPeriod = movementDataDTO.budgetPeriod
-    }
-
-    private fun adjustAccountMovements(movement: Movement): Movement {
-        val account = movement.account.apply {
-            movementTotal += movement.amount
-        }
-        accountRepository.save(account)
-        movementRepository.adjustMovementPositionsAndSumsByAccountAfterPosition(movement)
-        val totalBeforeMovement = movementRepository.findNextMovementByAccountIdBeforePosition(movement)
-            ?.let(Movement::total)
-            ?: BigDecimal.ZERO
-        return movement.apply {
-            this.account = account
-            total = totalBeforeMovement + amount
-        }.let(movementRepository::save)
-            .also { movementRepository.flush() }
     }
 
     @Transactional
     fun updateMovement(movement: Movement, movementDataDTO: MovementDataDTO): Movement {
+        // region logging before
         logger.debug { "Updating movement by id: ${movement.id}." }
         logger.trace {
             """Updating movement by id: ${movement.id}.
                        |${objectMapper.writeValueAsString(movementDataDTO)}""".trimMargin()
         }
+        // endregion
+
         entityManager.lock(movement.account, LockModeType.PESSIMISTIC_WRITE)
-        val positionBefore = movement.position
-        rollbackAccount(movement)
-        val positionAfter =
-            if (movement.date != movementDataDTO.date) {
-                movementRepository.getLastPositionByAccountOnDate(movement, movementDataDTO.date)
-            } else positionBefore
+        var fromDate = movement.date
         var updatedMovement = if (movementDataDTO is EntryDataDTO && movement is Entry) {
             entryApiService.updateMovement(movement, movementDataDTO)
         } else {
-            val message = provideIncompatibleEntityAndDtoMessage(movement, movementDataDTO)
-            logger.warn(message)
-            throw IncompatibleMovementType(message)
+            throw IncompatibleMovementTypeException(movement, movementDataDTO)
         }
-        updatedMovement = setMovementAttributes(updatedMovement, movementDataDTO).apply { position = positionAfter }
-            .let(::adjustAccountMovements)
+        updatedMovement.position -= 0.5f
+        updatedMovement = movementRepository.save(movement)
+        fromDate = if (fromDate.isBefore(updatedMovement.date)) fromDate else updatedMovement.date
+        val startTotal = movementRepository.getTotalBeforeDate(
+            movement.account.id!!,
+            fromDate
+        ) ?: BigDecimal.ZERO
+        movementRepository.updateTotalAndPos(movement.account.id!!, fromDate, startTotal)
+        entityManager.refresh(updatedMovement)
+
         logger.debug { "Movement is updated by id ${updatedMovement.id}." }
         logger.trace {
             """Movement is updated.
               |${objectMapper.writeValueAsString(movement)}""".trimMargin()
         }
-        return updatedMovement
-    }
-
-    private fun rollbackAccount(movement: Movement) {
-        val positionBefore = movement.position
-        movement.position = -1
-        val account = movement.account
-            .apply {
-                movementTotal -= movement.amount
-            }
-        movement.account = accountRepository.save(account)
-        movementRepository.rollbackMovementPositionsAndSumsByAccountAfterPosition(movement)
+        return updatedMovement;
     }
 
     companion object {
-        private fun <T : Movement, P : MovementDataDTO> provideIncompatibleEntityAndDtoMessage(
+        private fun <T : Movement, P : MovementDataDTO> IncompatibleMovementTypeException(
             movement: T,
             movementDTO: P
-        ) =
-            "Movement entity class [${movement::class.qualifiedName}] for account by id: ${movement.account.id} " +
-                    "and movement id: ${movement.id}] are incompatible with DTO class [${movementDTO::class.qualifiedName}]."
+        ): IncompatibleMovementTypeException {
+            val message =
+                "Movement entity class [${movement::class.qualifiedName}] for account by id: ${movement.account.id} " +
+                        "and movement id: ${movement.id}] are incompatible with DTO class [${movementDTO::class.qualifiedName}]."
+            logger.warn(message)
+            return IncompatibleMovementTypeException(message)
+        }
 
-        private fun <T : MovementDataDTO> provideUnknownDtoMessage(movementDTO: T) =
-            "Unknown DTO class [${movementDTO::class.qualifiedName}]."
+        private fun <T : MovementDataDTO> UnsupportedMovementTypeException(movementDTO: T): UnsupportedMovementTypeException {
+            val message = "Unknown DTO class [${movementDTO::class.qualifiedName}]."
+            logger.warn { message }
+            return UnsupportedMovementTypeException(message)
+        }
     }
 }

@@ -21,7 +21,7 @@ data class MigrationMovement(
     val bookingDate: LocalDate?,
     val budgetPeriod: LocalDate?,
     val items: List<MigrationMovementItem>?,
-    val oppositAccount: String?,
+    val oppositeAccount: String?,
     val tag: String?,
     val type: String
 )

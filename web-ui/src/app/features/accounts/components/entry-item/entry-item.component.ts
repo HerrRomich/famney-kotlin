@@ -6,7 +6,8 @@ import {
   EntryItemFormGroup,
   EntryItemService,
 } from '@famoney-features/accounts/components/entry-item/entry-item.service';
-import { EntryCategoryService, FlatEntryCategory } from '@famoney-shared/services/entry-category.service';
+import { EntryCategoriesFacade } from '@famoney-shared/stores/entry-categories/entry-categories.facade';
+import { FlatEntryCategory } from '@famoney-shared/stores/entry-categories/entry-categories.state';
 import { of, timer } from 'rxjs';
 import { combineLatestWith, debounce, map, startWith, switchMap } from 'rxjs/operators';
 
@@ -36,7 +37,7 @@ export class EntryItemComponent implements OnInit {
 
   constructor(
     private entryItemService: EntryItemService,
-    private entryCategoriesService: EntryCategoryService,
+    private entryCategoriesFacade: EntryCategoriesFacade,
     private controlContainer: ControlContainer,
   ) {}
 
@@ -49,15 +50,15 @@ export class EntryItemComponent implements OnInit {
         debounce((value) => (value ? timer(350) : of(0))), // On delete no deboumce
         startWith(this.formGroup.controls.categoryId.value),
         switchMap((filterValue) =>
-          this.entryCategoriesService.entryCategoriesForVisualisation$.pipe(
+          this.entryCategoriesFacade.entryCategories$.pipe(
             map((entryCategories) => {
               const filterText =
                 (typeof filterValue === 'number'
-                  ? entryCategories.flatEntryCategories.get(filterValue)?.name
+                  ? entryCategories?.flatEntryCategories.get(filterValue)?.name
                   : filterValue) ?? '';
               const filter = new RegExp(filterText, 'i');
               return {
-                flatEntryCategories: entryCategories.flatEntryCategories,
+                flatEntryCategories: entryCategories?.flatEntryCategories,
                 expenses: this.filterCategories(filter, entryCategories.flatEntryCategories, entryCategories.expenses),
                 incomes: this.filterCategories(filter, entryCategories.flatEntryCategories, entryCategories.incomes),
               };
@@ -72,7 +73,7 @@ export class EntryItemComponent implements OnInit {
     this.formGroup.controls.categoryId.valueChanges
       .pipe(
         startWith(this.formGroup.controls.categoryId.value),
-        combineLatestWith(this.entryCategoriesService.entryCategoriesForVisualisation$),
+        combineLatestWith(this.entryCategoriesFacade.entryCategories$),
         takeUntilDestroyed(this.destroyRef),
       )
       .subscribe(([categoryId, flatEntryCategories]) => {

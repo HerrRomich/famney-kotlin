@@ -14,6 +14,6 @@ data class MovementData (
     val entryItems: List<EntryItemData>?,
     val categoryId: Int?,
     val comment: String?,
-    val oppositAccountId: Int?
+    val oppositeAccountId: Int?
 )
 

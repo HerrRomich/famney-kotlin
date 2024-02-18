@@ -27,8 +27,12 @@ export class AccountsEffects {
   readonly loadAccounts$ = createEffect(() =>
     this.actions$.pipe(
       ofType(AccountsActions.loadAccounts),
-      switchMap(() =>
-        this.accountsApiService.readAccounts().pipe(
+      withLatestFrom(this.store.select(AccountsSeletors.accountsLoadedSelector)),
+      switchMap(([, loaded]) => {
+        if (loaded) {
+          return EMPTY;
+        }
+        return this.accountsApiService.readAccounts().pipe(
           map((accounts) => {
             const currentSelectedTags = this.filterStorageService.restoreAccountsSelectedTags();
             const allTags = this.getAllTags(accounts);
@@ -39,8 +43,8 @@ export class AccountsEffects {
             this.notifierService.notify('error', "Couldn't load list of accounts.");
             return EMPTY;
           }),
-        ),
-      ),
+        );
+      }),
     ),
   );
 

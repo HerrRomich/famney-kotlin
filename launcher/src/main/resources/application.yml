@@ -12,6 +12,7 @@ server:
 spring:
   flyway:
     enabled: false
+  jpa.show-sql: true
 
   datasource:
     url: jdbc:postgresql://localhost:5432/postgres

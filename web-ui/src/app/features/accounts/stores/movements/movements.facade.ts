@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { MovementDataDto } from '@famoney-apis/accounts';
-import { MovementOperation } from '@famoney-features/accounts/stores/movements/movements.state';
+import { MovementDataDto } from '@famoney-apis/accounts/model/movement-data.dto';
 import { select, Store } from '@ngrx/store';
 import { Range } from 'multi-integer-range';
 import { firstValueFrom } from 'rxjs';
@@ -8,18 +7,19 @@ import { filter, map } from 'rxjs/operators';
 import { v4 as uuidV4 } from 'uuid';
 import * as MovementsActions from './movements.actions';
 import * as MovementsSelectors from './movements.selectors';
+import { MovementOperation } from './movements.state';
 
 @Injectable()
 export class MovementsFacade {
   private store = inject(Store);
-  readonly movements$ = this.store.select(MovementsSelectors.selectAllMovements);
+  readonly movements$ = this.store.select(MovementsSelectors.selectMovements);
   private readonly operation$ = this.store.pipe(
     select(MovementsSelectors.selectOperation),
     filter((operation): operation is MovementOperation => !!operation),
   );
 
   loadMovementsRange(range: Range) {
-    this.store.dispatch(MovementsActions.loadMovementsRange({ range }));
+    this.store.dispatch(MovementsActions.loadMovementsRange({ movementsRange: range }));
   }
 
   async addMovementEntry(movementType: MovementDataDto['type']): Promise<void> {
@@ -37,12 +37,12 @@ export class MovementsFacade {
     return subscriptionPromise;
   }
 
-  async editMovementEntry(pos: number): Promise<void> {
+  async editMovementEntry(id: number): Promise<void> {
     const correlationId = uuidV4();
     const subscriptionPromise = this.subscribeToOperation(correlationId);
     this.store.dispatch(
       MovementsActions.updateMovement({
-        pos,
+        id,
         operation: {
           type: 'updateMovement',
           correlationId,
@@ -52,12 +52,12 @@ export class MovementsFacade {
     return subscriptionPromise;
   }
 
-  async deleteMovementEntry(pos: number): Promise<void> {
+  async deleteMovementEntry(id: number): Promise<void> {
     const correlationId = uuidV4();
     const subscriptionPromise = this.subscribeToOperation(correlationId);
     this.store.dispatch(
       MovementsActions.deleteMovement({
-        pos,
+        id,
         operation: {
           type: 'deleteMovement',
           correlationId,

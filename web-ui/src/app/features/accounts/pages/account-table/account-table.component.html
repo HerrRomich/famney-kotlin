@@ -86,37 +86,37 @@
       </div>
       <ng-container
         *cdkVirtualFor="
-          let element of movementDataSource;
+          let movement of movementsDataSource;
           let last = last;
           let pos = index;
           let even = even;
           trackBy: trackByFn
         "
       >
-        @if (element.entry; as entry) {
+        @if (movement; as movement) {
           <div
-            (click)="edit(pos)"
-            class="movements-row"
+            (click)="edit(movement.id)"
+            class="movements-row movements-entry"
             [ngClass]="[movementSelection() === pos ? 'selected' : '', layout, even ? 'even' : '']"
           >
             @switch (layout) {
               @case ("web") {
                 <div class="row-cells row-lane">
                   <div class="entry-date">
-                    <span>{{ entry.movement.data?.date | date: "dd.MM.yyyy" }}</span>
+                    <span>{{ movement.date | date: "dd.MM.yyyy" }}</span>
                   </div>
                   <div class="comments mat-body-2">
-                    <span>{{ accountTableService.getMovementComments(entry.movement.data) }}</span>
+                    <span>{{ movement.comments }}</span>
                   </div>
                   <div class="category">
-                    <span>{{ entry.category?.fullPath }}</span>
-                    <span class="tooltip">{{ entry.category?.fullPath }}</span>
+                    <span>{{ movement.category }}</span>
+                    <span class="tooltip">{{ movement.category }}</span>
                   </div>
-                  <div class="amount" [ngClass]="getSumColorClass(entry.movement.data?.amount)">
-                    <span>{{ entry.movement.data?.amount | number: "1.2-2" }}</span>
+                  <div class="amount" [ngClass]="movement.amountClass">
+                    <span>{{ movement.amount | number: "1.2-2" }}</span>
                   </div>
-                  <div class="balance" [ngClass]="getSumColorClass(entry.movement.total)">
-                    <span>{{ entry.movement.total | number: "1.2-2" }}</span>
+                  <div class="balance" [ngClass]="movement.totalClass">
+                    <span>{{ movement.total | number: "1.2-2" }}</span>
                   </div>
                 </div>
               }
@@ -124,19 +124,19 @@
                 <div class="row-cells">
                   <div class="row-lane">
                     <div class="entry-date">
-                      <span>{{ entry.movement.data?.date | date: "dd.MM.yyyy" }}</span>
+                      <span>{{ movement.date | date: "dd.MM.yyyy" }}</span>
                     </div>
-                    <div class="amount" [ngClass]="getSumColorClass(entry.movement.data?.amount)">
-                      <span>{{ entry.movement.data?.amount | number: "1.2-2" }}</span>
+                    <div class="amount" [ngClass]="movement.amountClass">
+                      <span>{{ movement.amount | number: "1.2-2" }}</span>
                     </div>
-                    <div class="balance" [ngClass]="getSumColorClass(entry.movement.total)">
-                      <span>{{ entry.movement.total | number: "1.2-2" }}</span>
+                    <div class="balance" [ngClass]="movement.totalClass">
+                      <span>{{ movement.total | number: "1.2-2" }}</span>
                     </div>
                   </div>
                   <div class="row-lane">
                     <div class="category">
-                      <span>{{ entry.category?.fullPath }}</span>
-                      <span class="tooltip">{{ entry.category?.fullPath }}</span>
+                      <span>{{ movement.category }}</span>
+                      <span class="tooltip">{{ movement.category }}</span>
                     </div>
                   </div>
                 </div>
@@ -147,8 +147,8 @@
                 mat-icon-button
                 [matMenuTriggerFor]="menuRef"
                 (menuClosed)="closeMenu()"
-                (menuOpened)="openMenu(pos)"
-                [matMenuTriggerData]="{ pos }"
+                (menuOpened)="openMenu(movement.id)"
+                [matMenuTriggerData]="{ id: movement.id }"
                 class="account-entry-action"
               >
                 <mat-icon>more_vert</mat-icon>

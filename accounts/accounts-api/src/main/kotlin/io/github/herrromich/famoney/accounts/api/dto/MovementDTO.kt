@@ -8,6 +8,7 @@ import java.math.BigDecimal
 @Schema(name = "Movement")
 data class MovementDTO(
     override val id: Int,
+    @get:Schema(required = true)
     val data: MovementDataDTO,
     @get:Schema(required = true)
     val position: Int,

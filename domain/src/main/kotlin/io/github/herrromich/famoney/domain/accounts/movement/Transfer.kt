@@ -6,9 +6,9 @@ import jakarta.persistence.Entity
 
 @Entity
 @DiscriminatorValue(Transfer.TYPE)
-class Transfer : Movement() {
-    @Column(name = "opposit_account_id")
-    var oppositAccountId: Int = 0
+open class Transfer : Movement() {
+    @Column(name = "opposite_account_id")
+    var oppositeAccountId: Int = 0
 
     @Column(name = "comments")
     var comments: String? = null

@@ -4,9 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import io.github.herrromich.famoney.accounts.api.dto.*
 import io.github.herrromich.famoney.accounts.api.resources.AccountMovementsApiResource
 import io.github.herrromich.famoney.accounts.events.MovementEventService
-import io.github.herrromich.famoney.accounts.internal.IncompatibleMovementType
+import io.github.herrromich.famoney.accounts.internal.IncompatibleMovementTypeException
 import io.github.herrromich.famoney.accounts.internal.MovementApiService
-import io.github.herrromich.famoney.accounts.internal.UnknownMovementType
+import io.github.herrromich.famoney.accounts.internal.UnsupportedMovementTypeException
 import io.github.herrromich.famoney.accounts.internalexceptions.AccountsApiError
 import io.github.herrromich.famoney.domain.accounts.movement.*
 import io.github.herrromich.famoney.jaxrs.ApiException
@@ -24,6 +24,8 @@ import org.springframework.transaction.annotation.Transactional
 import unwrap
 import java.time.LocalDate
 
+private val logger = KotlinLogging.logger { }
+
 @Service
 @Hidden
 class AccountMovementsApiImpl(
@@ -33,7 +35,6 @@ class AccountMovementsApiImpl(
     private val movementEventService: MovementEventService,
     private val objectMapper: ObjectMapper,
 ) : AccountMovementsApiResource {
-    private val logger = KotlinLogging.logger { }
 
     @Context
     private lateinit var httpServletResponse: HttpServletResponse
@@ -48,11 +49,21 @@ class AccountMovementsApiImpl(
     private lateinit var httpHeaders: HttpHeaders
 
     @Transactional
-    override fun readMovements(accountId: Int, dateFrom: LocalDate?, dateTo: LocalDate?, offset: Int?, limit: Int?): List<MovementDTO> {
-        logger.debug { "Getting all movemnts of account by id: $accountId" +
-                "${dateFrom?.let { " ,since: ${it}"} ?: ""}" +
-                "${dateTo?.let { " ,until: ${it}"} ?: ""}" +
-                ", offset: ${offset ?: "\"from beginning\""} and count: ${limit ?: "\"all\""}." }
+    override fun readMovements(
+        accountId: Int,
+        dateFrom: LocalDate?,
+        dateTo: LocalDate?,
+        offset: Int?,
+        limit: Int?
+    ): List<MovementDTO> {
+        // region logging before
+        logger.debug {
+            "Getting all movemnts of account by id: $accountId" +
+                    "${dateFrom?.let { " ,since: ${it}" } ?: ""}" +
+                    "${dateTo?.let { " ,until: ${it}" } ?: ""}" +
+                    ", offset: ${offset ?: "\"from beginning\""} and count: ${limit ?: "\"all\""}."
+        }
+        // endregion
         val account = accountsApiService.getAccountByIdOrThrowNotFound(
             accountId,
             AccountsApiError.NO_ACCOUNT_ON_GET_ALL_ACCOUNT_MOVEMENTS
@@ -64,39 +75,52 @@ class AccountMovementsApiImpl(
             MovementDTO(
                 id = movement.id!!,
                 data = toMovementDataDTO(movement),
-                position = movement.position,
+                position = movement.position.toInt(),
                 total = movement.total
             )
         }
-        logger.debug { "Got ${movementDTOs.size} movemnts of account by id: $accountId" +
-                "${dateFrom?.let { " ,since: ${it}"} ?: ""}" +
-                "${dateTo?.let { " ,until: ${it}"} ?: ""}" +
-                ", offset: ${offset ?: "\"from beginning\""} and count: ${limit ?: "\"all\""}." }
+        // region logging after
+        logger.debug {
+            "Got ${movementDTOs.size} movements of account by id: $accountId" +
+                    "${dateFrom?.let { " ,since: ${it}" } ?: ""}" +
+                    "${dateTo?.let { " ,until: ${it}" } ?: ""}" +
+                    ", offset: ${offset ?: "\"from beginning\""} and count: ${limit ?: "\"all\""}."
+        }
         logger.trace {
-            """Got movemnts of account by id: $accountId.
+            """Got movements of account by id: $accountId.
               |${objectMapper.writeValueAsString(movementDTOs)}""".trimMargin()
         }
+        // endregion
         return movementDTOs
     }
 
     @Transactional
     override fun getMovementsCount(accountId: Int, dateFrom: LocalDate?, dateTo: LocalDate?): Int {
-        logger.debug { "Getting movemnts count of account by id: $accountId" +
-                "${dateFrom?.let { " ,since: ${it}"} ?: ""}" +
-                "${dateTo?.let { " ,until: ${it}"} ?: ""}" }
+        // region logging before
+        logger.debug {
+            "Getting movements count of account by id: $accountId" +
+                    "${dateFrom?.let { " ,since: ${it}" } ?: ""}" +
+                    "${dateTo?.let { " ,until: ${it}" } ?: ""}"
+        }
+        // endregion
         val account = accountsApiService.getAccountByIdOrThrowNotFound(
             accountId,
             AccountsApiError.NO_ACCOUNT_ON_GET_ALL_ACCOUNT_MOVEMENTS
         )
         val count = movementRepository.getCountByAccountAndDateRange(
-            account, dateFrom, dateTo)
-        logger.debug { "Got ${count} movements of account by id: $accountId" }
+            account, dateFrom, dateTo
+        )
+        // region logging after
+        logger.debug { "Got $count movements of account by id: $accountId" }
+        // endregion
         return count
     }
 
     @Transactional
     override fun readMovement(accountId: Int, movementId: Int): MovementDTO {
-        logger.debug { "Geting movement info by id $movementId from account by id: $accountId." }
+        // region logging before
+        logger.debug { "Getting movement info by id $movementId from account by id: $accountId." }
+        // endregion
         val account = accountsApiService.getAccountByIdOrThrowNotFound(
             accountId,
             AccountsApiError.NO_ACCOUNT_ON_ADD_MOVEMENT
@@ -113,7 +137,7 @@ class AccountMovementsApiImpl(
         val movementDTO = MovementDTO(
             id = movement.id!!,
             data = toMovementDataDTO(movement),
-            position = movement.position,
+            position = movement.position.toInt(),
             total = movement.total
         )
         logger.debug { "Got movement info by id: $movementId from account by id: accountId." }
@@ -121,6 +145,7 @@ class AccountMovementsApiImpl(
             """Got movement info by id: $movementId from account by id: $accountId.
               |${objectMapper.writeValueAsString(movementDTO)}""".trimMargin()
         }
+        // endregion
         return movementDTO
     }
 
@@ -129,7 +154,9 @@ class AccountMovementsApiImpl(
         accountId: Int, movementId: Int,
         movementDataDTO: MovementDataDTO
     ): MovementDTO {
-        logger.debug { "Changing movement by id: $movementId in account id: accountId." }
+        // region logging before
+        logger.debug { "Updating movement by id: $movementId in account id: accountId." }
+        // endregion
         return try {
             val account = accountsApiService.getAccountByIdOrThrowNotFound(
                 accountId,
@@ -153,31 +180,29 @@ class AccountMovementsApiImpl(
             val data: MovementDataDTO = toMovementDataDTO(resultMovement)
             val eventData = MovementEventService.ChangeEventData(
                 accountId = accountId,
-                position = position,
-                positionAfter = positionAfter,
+                position = position.toInt(),
+                positionAfter = positionAfter.toInt(),
             )
             movementEventService.putEvent(eventData)
             val movementDTO = MovementDTO(
                 id = resultMovement.id!!,
                 data = data,
-                position = positionAfter,
+                position = positionAfter.toInt(),
                 total = data.amount
             )
-            logger.debug { "A movement was added to account." }
-            logger.trace { "A movement was added to account by id : $accountId. A new id: ${movementDTO.id} was generated." }
+            // region logging after
+            logger.debug { "A movement was updated." }
+            logger.trace { "A movement was updated in account by id : $accountId." }
+            // endregion
             movementDTO
         } catch (e: TransactionException) {
-            val message = "Problem during adding a movement to account."
-            logger.error(e) { message }
-            throw ApiException(message)
-        } catch (e: IncompatibleMovementType) {
-            val message = "Problem during adding a movement to account."
-            logger.error(e) { message }
-            throw ApiException(message)
+            throw ApiException(e, "Problem during update of movement.")
+        } catch (e: IncompatibleMovementTypeException) {
+            throw ApiException(e, "Problem during update of movement.")
         }
     }
 
-    override fun createMovement(accountId: Int, movementDataDTO: MovementDataDTO): MovementDTO {
+    override fun createMovement(accountId: Int, movementDataDTO: MovementDataDTO,): MovementDTO {
         logger.debug { "Adding movement." }
         logger.trace("Adding movement to account id: {} with data: {}", accountId, movementDataDTO)
         return try {
@@ -185,11 +210,11 @@ class AccountMovementsApiImpl(
                 accountId,
                 AccountsApiError.NO_ACCOUNT_ON_ADD_MOVEMENT
             )
-            val resultMovement = movementsApiService.addMovement(account, movementDataDTO)
+            val resultMovement = movementsApiService.createMovement(account, movementDataDTO)
             val position = resultMovement.position
             val eventData = MovementEventService.AddEventData(
                 accountId = accountId,
-                position = position
+                position = position.toInt()
             )
             val movementWithEventData = MovementWihEventData(
                 movement = resultMovement,
@@ -205,20 +230,17 @@ class AccountMovementsApiImpl(
             val movementDTO = MovementDTO(
                 id = resultMovement.id!!,
                 data = data,
-                position = resultMovement.position,
+                position = resultMovement.position.toInt(),
                 total = data.amount
             )
             logger.debug { "A movement was added to account." }
             logger.trace { "A movement was added to account id : $accountId. A new id: ${movementDTO.id} was generated." }
             movementDTO
         } catch (e: TransactionException) {
+            throw ApiException(e, "Problem during adding a movement to account.")
+        } catch (e: UnsupportedMovementTypeException) {
             val message = "Problem during adding a movement to account."
-            logger.error(e) { message }
-            throw ApiException(message)
-        } catch (e: UnknownMovementType) {
-            val message = "Problem during adding a movement to account."
-            logger.error(e) { message }
-            throw ApiException(message)
+            throw ApiException(e, "Problem during adding a movement to account.")
         }
     }
 
@@ -258,7 +280,7 @@ class AccountMovementsApiImpl(
                     bookingDate = movement.bookingDate,
                     budgetPeriod = movement.budgetPeriod,
                     amount = movement.amount,
-                    oppositAccountId = movement.oppositAccountId,
+                    oppositAccountId = movement.oppositeAccountId,
                     comments = movement.comments
                 )
             }
@@ -272,7 +294,7 @@ class AccountMovementsApiImpl(
                 )
             }
 
-            else -> throw UnknownMovementType("Cannot convert ${movement::class.qualifiedName} to DTO.")
+            else -> throw UnsupportedMovementTypeException("Cannot convert ${movement::class.qualifiedName} to DTO.")
         }
     }
 
@@ -307,5 +329,10 @@ class AccountMovementsApiImpl(
     companion object {
         private fun getNoAccountMovementIsFoundMessage(movementId: Int, accountId: Int) =
             "No movement info by id: $movementId is found in account by id: $accountId."
+
+        private fun ApiException(exception: Exception, message: String): ApiException {
+            logger.error(exception) { message }
+            return ApiException(message)
+        }
     }
 }

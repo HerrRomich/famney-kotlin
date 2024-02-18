@@ -15,6 +15,7 @@ import jakarta.ws.rs.core.Response
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import unwrap
+import java.math.BigDecimal
 
 @Service
 @Hidden
@@ -43,7 +44,7 @@ class AccountsApiResourceImpl(
             name = account.name,
             openingDate = account.openingDate,
             tags = account.tags,
-            total = account.movementTotal
+            total = BigDecimal.ZERO,
         )
     }
 

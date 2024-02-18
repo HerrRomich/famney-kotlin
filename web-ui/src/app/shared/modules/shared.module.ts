@@ -10,6 +10,14 @@ import {
 import { FocusHighlightDirective } from '@famoney-shared/directives/focus-highlight.directive';
 import { ConfirmationDialogService } from '@famoney-shared/services/confirmation-dialog.service';
 import { LocaleService } from '@famoney-shared/services/locale.service';
+import { EntryCategoriesEffects } from '@famoney-shared/stores/entry-categories/entry-categories.effects';
+import { EntryCategoriesFacade } from '@famoney-shared/stores/entry-categories/entry-categories.facade';
+import {
+  ENTRY_CATEGORIES_FEATURE_KEY,
+  entryCategoriesReducer,
+} from '@famoney-shared/stores/entry-categories/entry-categories.reducer';
+import { EffectsModule } from '@ngrx/effects';
+import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { NotifierModule } from 'angular-notifier';
 import { SpacerDirective } from '../directives/spacer.directive';
@@ -23,6 +31,8 @@ import { AngularModule } from './angular.module';
     EcoFabSpeedDialComponent,
     EcoFabSpeedDialActionsComponent,
     EcoFabSpeedDialTriggerComponent,
+    StoreModule.forFeature(ENTRY_CATEGORIES_FEATURE_KEY, entryCategoriesReducer),
+    EffectsModule.forFeature([EntryCategoriesEffects]),
   ],
   exports: [
     TranslateModule,
@@ -46,6 +56,7 @@ import { AngularModule } from './angular.module';
       deps: [LocaleService],
     },
     ConfirmationDialogService,
+    EntryCategoriesFacade,
   ],
 })
 export class SharedModule {

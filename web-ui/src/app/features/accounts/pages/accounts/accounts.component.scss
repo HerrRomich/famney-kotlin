@@ -1,7 +1,7 @@
 :host {
   flex-direction: column;
   display: flex;
-  flex: 1 1 auto;
+  flex: 1 1 0;
 }
 
 div.menu {
@@ -16,7 +16,7 @@ div.menu {
 .accounts-tab-group {
   display: flex;
   flex-direction: row;
-  flex: 0 1 auto;
+  flex: 1 1 0;
   min-width: 0px;
 }
 

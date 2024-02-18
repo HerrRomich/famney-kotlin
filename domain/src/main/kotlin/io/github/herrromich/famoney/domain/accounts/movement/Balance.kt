@@ -5,7 +5,7 @@ import jakarta.persistence.Entity
 
 @Entity
 @DiscriminatorValue(Balance.TYPE)
-class Balance : Movement() {
+open class Balance : Movement() {
     companion object {
         const val TYPE = "BALANCE"
     }

@@ -10,13 +10,13 @@ $tooltip-frame: mat.get-color-from-palette(v.$fm-app-accent, 100);
   position: relative;
   flex-direction: column;
   display: flex;
-  flex: 1 1 auto;
+  flex: 1 1 0;
 }
 
 cdk-virtual-scroll-viewport {
   display: flex;
   flex-direction: column;
-  flex: 1 1 auto;
+  flex: 1 1 0;
   overflow-y: scroll;
 }
 
@@ -51,7 +51,7 @@ cdk-virtual-scroll-viewport {
       display: none;
     }
 
-    &.web:hover,
+    &.movements-entry.web:hover,
     &.selected {
       border-radius: 10px;
       background-color: $background-color;

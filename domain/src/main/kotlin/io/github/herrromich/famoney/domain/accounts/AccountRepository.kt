@@ -7,7 +7,12 @@ import org.springframework.stereotype.Repository
 @Repository
 interface AccountRepository : JpaRepository<Account, Int> {
 
-    @Query("select distinct t from Account a join a.tags t")
+    @Query(
+        nativeQuery = true,
+        value = """
+select distinct t.tag
+ from tag t
+""")
     fun findDistinctTags(): List<String>
 
 }

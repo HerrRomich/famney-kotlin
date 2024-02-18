@@ -11,12 +11,10 @@ class AccountsJdbcStatements(override val connection: Connection) :
             """
 insert into account(budget_id
                   , opening_date
-                  , name
-                  , movement_total)
+                  , name)
 values(?
      , ?
-     , ?
-     , 0)
+     , ?)
 """
         )
     }

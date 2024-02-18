@@ -4,6 +4,6 @@ dependencies {
         exclude("org.springframework.boot", "spring-boot-starter-tomcat")
     }
     api("org.springframework.boot:spring-boot-starter-jetty")
-    api("org.eclipse.jetty.http2:http2-server")
+    api("org.eclipse.jetty.http2:jetty-http2-server")
     api("org.eclipse.jetty:jetty-alpn-java-server")
 }

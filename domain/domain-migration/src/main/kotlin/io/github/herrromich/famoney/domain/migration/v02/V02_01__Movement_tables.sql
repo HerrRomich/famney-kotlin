@@ -20,17 +20,17 @@ create table movement(
   account_id int not null,
   type varchar(50) not null,
   date date not null,
-  pos int not null,
+  pos real not null,
   booking_date date,
   budget_period date,
   category_id int,
   comments varchar(1000),
-  opposit_account_id int,
+  opposite_account_id int,
   amount decimal(13, 2) not null,
   total decimal(13, 2) not null,
   constraint movement_account_pos_uq unique (account_id, date, pos) deferrable initially deferred,
   constraint movement_account_fk foreign key (account_id) references account(id),
-  constraint movement_opposit_account_fk foreign key (opposit_account_id) references account(id),
+  constraint movement_opposite_account_fk foreign key (opposite_account_id) references account(id),
   constraint movement_type_ck check (type in ('ENTRY', 'REFUND', 'TRANSFER', 'BALANCE'))
 );
 comment on table movement is 'Table with all movements.';
@@ -43,7 +43,7 @@ comment on column movement.booking_date is 'Date of booking. Could be null, then
 comment on column movement.budget_period is 'Period in budget. Truncated to start of month. Could be null, then equals to month of movement date.';
 comment on column movement.category_id is 'Reference to entry category for entry or refund.';
 comment on column movement.comments is 'Comments to entry or refund.';
-comment on column movement.opposit_account_id is 'Opposit account for transfer';
+comment on column movement.opposite_account_id is 'Opposite account for transfer';
 comment on column movement.amount is 'Amount of movement.';
 comment on column movement.total is 'Total amount of movements including this.';
 

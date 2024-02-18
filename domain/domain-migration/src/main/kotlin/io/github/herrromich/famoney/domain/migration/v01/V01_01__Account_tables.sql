@@ -3,14 +3,12 @@ create table account(
   budget_id int not null,
   name varchar(250) not null,
   opening_date date not null,
-  movement_total decimal(13, 2) not null,
   constraint account_budget_name_uq unique (budget_id, name)
 );
 comment on table account is 'Personal accounts.';
 comment on column account.budget_id is 'Budget ID. Groups users.';
 comment on column account.name is 'Name of an account';
 comment on column account.opening_date is 'Date of account opening.';
-comment on column account.movement_total is 'Total amount of all movements in account.';
 
 create table account_tag(
   account_id int not null,

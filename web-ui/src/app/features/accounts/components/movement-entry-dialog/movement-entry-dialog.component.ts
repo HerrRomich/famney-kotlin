@@ -5,8 +5,9 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ApiErrorDto, EntryDataDto, EntryItemDataDto } from '@famoney-apis/accounts';
 import { EntryItemFormGroup, EntryItemService } from '@famoney-features/accounts/components/entry-item';
 import { AccountEntry, EntryItem } from '@famoney-features/accounts/models/account-entry.model';
-import { EntryCategoryService, FlatEntryCategoryObject } from '@famoney-shared/services/entry-category.service';
 import { ReactiveFormErrorHandlerService } from '@famoney-shared/services/reactive-form-error-handler.service';
+import { EntryCategoriesFacade } from '@famoney-shared/stores/entry-categories/entry-categories.facade';
+import { FlatEntryCategory } from '@famoney-shared/stores/entry-categories/entry-categories.state';
 import { NotifierService } from 'angular-notifier';
 import { mergeWith, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
@@ -46,7 +47,7 @@ export class MovementEntryDialogComponent {
 
   constructor(
     private dialogRef: MatDialogRef<MovementEntryDialogComponent, EntryDataDto>,
-    private entryCategoriesService: EntryCategoryService,
+    private entryCategoriesFacade: EntryCategoriesFacade,
     private notifierService: NotifierService,
     @Inject(MAT_DIALOG_DATA) private data: EntryDataDto,
     private entryItemService: EntryItemService,
@@ -63,7 +64,7 @@ export class MovementEntryDialogComponent {
     of(this.data)
       .pipe(
         switchMap((entryData) =>
-          this.entryCategoriesService.entryCategoriesForVisualisation$.pipe(
+          this.entryCategoriesFacade.entryCategories$.pipe(
             map((entryCategories) => {
               const accountEntry: AccountEntry = {
                 movementDate: {
@@ -73,7 +74,7 @@ export class MovementEntryDialogComponent {
                 },
                 entryItems: entryData
                   ? entryData.entryItems.map((entryItem) =>
-                      this.createEntryItem(entryItem, entryCategories.flatEntryCategories.get(entryItem.categoryId)),
+                      this.createEntryItem(entryItem, entryCategories?.flatEntryCategories.get(entryItem.categoryId)),
                     )
                   : [this.createEntryItem()],
               };
@@ -90,18 +91,15 @@ export class MovementEntryDialogComponent {
         this.extendedDate.set(bookingDate || budgetPeriod ? 'extended-date' : undefined);
         this.extendedEntry.set(entryItems.length > 1 ? 'extended-entry' : undefined);
         const entryItemControls = entryItems.map(() => this.entryItemService.createEntryItemFormGroup());
-        this.entryForm.setControl(
-          'entryItems',
-          this.formBuilder.array(entryItemControls),
-        );
+        this.entryForm.setControl('entryItems', this.formBuilder.array(entryItemControls));
         this.entryForm.patchValue(accountEntry);
         this.loaded.set(true);
       });
   }
 
-  private createEntryItem(entryItem?: EntryItemDataDto, flatEntryCategory?: FlatEntryCategoryObject): EntryItem {
+  private createEntryItem(entryItem?: EntryItemDataDto, flatEntryCategory?: FlatEntryCategory): EntryItem {
     const entryItemAmount = entryItem?.amount;
-    const sign = flatEntryCategory?.getCategorySign();
+    const sign = flatEntryCategory?.sign;
     const amount = entryItemAmount && sign ? entryItemAmount * sign : 0;
     return {
       categoryId: entryItem?.categoryId ?? 0,
@@ -126,7 +124,7 @@ export class MovementEntryDialogComponent {
     of(this.entryForm?.value)
       .pipe(
         switchMap((accountEntry) =>
-          this.entryCategoriesService.entryCategoriesForVisualisation$.pipe(
+          this.entryCategoriesFacade.entryCategories$.pipe(
             map((entryCategories) => [accountEntry, entryCategories] as const),
           ),
         ),
@@ -134,10 +132,10 @@ export class MovementEntryDialogComponent {
           const entryItems =
             accountEntry.entryItems?.map((entryItem) => {
               const categoryId = typeof entryItem?.categoryId === 'number' ? entryItem?.categoryId : 0;
-              const entryCategory = entryCategories.flatEntryCategories.get(categoryId);
+              const entryCategory = entryCategories?.flatEntryCategories.get(categoryId);
               return {
                 categoryId,
-                amount: (entryCategory?.getCategorySign() ?? 0) * (entryItem?.amount ?? 0),
+                amount: (entryCategory?.sign ?? 0) * (entryItem?.amount ?? 0),
                 comments: entryItem.comments ?? undefined,
               };
             }) ?? [];

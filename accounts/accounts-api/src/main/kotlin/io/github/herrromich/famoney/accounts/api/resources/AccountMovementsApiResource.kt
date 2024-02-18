@@ -42,7 +42,7 @@ interface AccountMovementsApiResource: AccountsApiResource {
             description = "Identifier of account, for which the movements will be searched."
         ) @QueryParam("dateFrom") dateFrom: LocalDate?,
         @Parameter(
-            name = "accountId",
+            name = "dateTo",
             `in` = ParameterIn.QUERY,
             description = "Identifier of account, for which the movements will be searched."
         ) @QueryParam("dateTo") dateTo: LocalDate?,
@@ -83,7 +83,7 @@ interface AccountMovementsApiResource: AccountsApiResource {
             description = "Start date, for which the movements will be searched."
         ) @QueryParam("dateFrom") dateFrom: LocalDate?,
         @Parameter(
-            name = "accountId",
+            name = "dateTo",
             `in` = ParameterIn.QUERY,
             description = "End date, for which the movements will be searched."
         ) @QueryParam("dateTo") dateTo: LocalDate?,

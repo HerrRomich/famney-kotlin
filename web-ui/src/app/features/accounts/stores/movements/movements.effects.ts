@@ -1,38 +1,29 @@
 import { inject, Injectable } from '@angular/core';
-import { AccountsApiService, MovementDto } from '@famoney-apis/accounts';
+import { AccountsApiService } from '@famoney-apis/accounts';
 import { MovementDialogService } from '@famoney-features/accounts/services/movement-dialog.service';
-import { MovementsService } from '@famoney-features/accounts/services/movements.service';
 import * as AccountsActions from '@famoney-features/accounts/stores/accounts/accounts.actions';
 import * as AccountsSelectors from '@famoney-features/accounts/stores/accounts/accounts.selectors';
 import * as MovementsActions from '@famoney-features/accounts/stores/movements/movements.actions';
 import * as MovementsSelectors from '@famoney-features/accounts/stores/movements/movements.selectors';
-import {
-  MovementOperation,
-  MovementsEntity,
-  MovementsEntityEntry,
-} from '@famoney-features/accounts/stores/movements/movements.state';
+import { MovementOperation } from '@famoney-features/accounts/stores/movements/movements.state';
 import { ConfirmationDialogService } from '@famoney-shared/services/confirmation-dialog.service';
-import { EntryCategoryService } from '@famoney-shared/services/entry-category.service';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { NotifierService } from 'angular-notifier';
-import { multirange } from 'multi-integer-range';
-import { concatMap, firstValueFrom, of, OperatorFunction, pipe, switchMap, withLatestFrom } from 'rxjs';
+import { concatMap, firstValueFrom, of, switchMap, withLatestFrom } from 'rxjs';
 import { fromPromise } from 'rxjs/internal/observable/innerFrom';
-import { catchError, combineLatestWith, map } from 'rxjs/operators';
+import { catchError, map } from 'rxjs/operators';
 
 @Injectable()
 export class MovementsEffects {
   private readonly store = inject(Store);
   private readonly actions$ = inject(Actions);
   private readonly accountsApiService = inject(AccountsApiService);
-  private readonly movementsService = inject(MovementsService);
-  private readonly entryCategoriesService = inject(EntryCategoryService);
   private readonly movementDialogService = inject(MovementDialogService);
   private readonly confirmationDialogService = inject(ConfirmationDialogService);
-  private notifierService = inject(NotifierService);
-  private translateService = inject(TranslateService);
+  private readonly notifierService = inject(NotifierService);
+  private readonly translateService = inject(TranslateService);
 
   readonly selectAccount$ = createEffect(() =>
     this.actions$.pipe(
@@ -55,33 +46,19 @@ export class MovementsEffects {
   readonly loadMovementsRange$ = createEffect(() =>
     this.actions$.pipe(
       ofType(MovementsActions.loadMovementsRange),
-      withLatestFrom(
-        this.store.select(AccountsSelectors.currentAccountSelector),
-        this.store.select(MovementsSelectors.selectMovementsIds),
-        this.store.select(MovementsSelectors.selectMovementsRange),
-      ),
-      switchMap(([{ range }, currentAccount, movementsIds, currentRange]) => {
+      withLatestFrom(this.store.select(AccountsSelectors.currentAccountSelector)),
+      switchMap(([{ movementsRange }, currentAccount]) => {
         if (currentAccount === undefined) {
           return of(MovementsActions.loadMovementsRangeFailure({ error: { message: 'Account is not selected!' } }));
         }
-        const dataRange =
-          movementsIds && movementsIds.length > 0 ? multirange([[0, movementsIds.length - 1]]) : multirange();
-        const requestedRange = multirange(range ? [range] : undefined);
-        const request = requestedRange.clone().intersect(dataRange).subtract(currentRange);
-        const min = request.min();
-        const max = request.max();
-        if (min === undefined || max === undefined) {
-          return this.getLoadFailure(`Invalid request: ${request.toString()}`);
-        }
+        const [min, max] = movementsRange;
         return this.accountsApiService.readMovements(currentAccount.id, undefined, undefined, min, max - min + 1).pipe(
-          this.mapMovementsToEntries(),
-          map((loadedMovements) => {
-            return MovementsActions.loadMovementsRangeSuccess({
-              requestedRange,
-              loadedRange: request,
-              loadedMovements,
-            });
-          }),
+          map((movements) =>
+            MovementsActions.loadMovementsRangeSuccess({
+              movementsRange,
+              movements,
+            }),
+          ),
           catchError((error) => this.getLoadFailure(error.message ?? 'Loading data failed!')),
         );
       }),
@@ -90,39 +67,6 @@ export class MovementsEffects {
 
   private getLoadFailure(message: string) {
     return of(MovementsActions.loadMovementsRangeFailure({ error: { message } }));
-  }
-
-  private mapMovementsToEntries(): OperatorFunction<MovementDto[], MovementsEntityEntry[]> {
-    return pipe(
-      combineLatestWith(this.entryCategoriesService.entryCategoriesForVisualisation$),
-      map(([movements, entryCategories]) =>
-        movements.map<MovementsEntityEntry>((movement) => {
-          const categoryId = this.movementsService.getEntryItemData(movement)?.categoryId;
-          const category = categoryId ? entryCategories.flatEntryCategories.get(categoryId) : undefined;
-          return {
-            movement,
-            category,
-          };
-        }),
-      ),
-    );
-  }
-
-  private mapMovementToEntity(): OperatorFunction<MovementDto, MovementsEntity> {
-    return pipe(
-      combineLatestWith(this.entryCategoriesService.entryCategoriesForVisualisation$),
-      map(([movement, entryCategories]) => {
-        const categoryId = this.movementsService.getEntryItemData(movement)?.categoryId;
-        const category = categoryId ? entryCategories.flatEntryCategories.get(categoryId) : undefined;
-        return {
-          pos: movement.position,
-          entry: {
-            movement,
-            category,
-          },
-        };
-      }),
-    );
   }
 
   readonly createMovement$ = createEffect(() =>
@@ -139,10 +83,9 @@ export class MovementsEffects {
           concatMap((movementData) =>
             movementData
               ? this.accountsApiService.createMovement(accountId, movementData).pipe(
-                  this.mapMovementToEntity(),
-                  map((entity) =>
+                  map((movement) =>
                     MovementsActions.storeMovementSuccess({
-                      entity,
+                      movement,
                       operation,
                     }),
                   ),
@@ -169,13 +112,12 @@ export class MovementsEffects {
         this.store.select(AccountsSelectors.currentAccountIdSelector),
         this.store.select(MovementsSelectors.selectAllMovementEntities),
       ),
-      concatMap(([{ pos, operation }, accountId, movementEntities]) => {
-        const movementsEntity = movementEntities[pos];
+      concatMap(([{ id, operation }, accountId, movements]) => {
+        const movement = movements[id];
         if (!accountId) {
           return fromPromise(this.getInternalFailure(operation, 'No account is selected!'));
         }
-        const movement = movementsEntity?.entry?.movement;
-        if (!movement?.data) {
+        if (!movement) {
           return fromPromise(this.getInternalFailure(operation, 'No movement is selected!'));
         }
         const updatedMovementData$ =
@@ -184,11 +126,9 @@ export class MovementsEffects {
           concatMap((updatedMovementData) =>
             updatedMovementData
               ? this.accountsApiService.updateMovement(accountId, movement.id, updatedMovementData).pipe(
-                  this.mapMovementToEntity(),
-                  map((entity) =>
+                  map((movement) =>
                     MovementsActions.storeMovementSuccess({
-                      pos,
-                      entity,
+                      movement,
                       operation,
                     }),
                   ),
@@ -215,12 +155,11 @@ export class MovementsEffects {
         this.store.select(AccountsSelectors.currentAccountIdSelector),
         this.store.select(MovementsSelectors.selectAllMovementEntities),
       ),
-      concatMap(([{ pos, operation }, accountId, movementEntities]) => {
-        const movementsEntity = movementEntities[pos];
+      concatMap(([{ id, operation }, accountId, movements]) => {
         if (!accountId) {
           return fromPromise(this.getInternalFailure(operation, 'No account is selected!'));
         }
-        const movement = movementsEntity?.entry?.movement;
+        const movement = movements[id];
         if (!movement) {
           return fromPromise(this.getInternalFailure(operation, 'No movement is selected!'));
         }
@@ -230,7 +169,7 @@ export class MovementsEffects {
               ? this.accountsApiService.deleteMovement(accountId, movement.id).pipe(
                   map(() =>
                     MovementsActions.storeMovementSuccess({
-                      pos,
+                      movement,
                       operation,
                     }),
                   ),

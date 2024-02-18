@@ -7,7 +7,7 @@ import java.time.LocalDate
 
 @Entity
 @Table(name = "account")
-class Account : DomainEntity() {
+open class Account : DomainEntity() {
     @Column(name = "name")
     lateinit var name: String
 
@@ -18,7 +18,4 @@ class Account : DomainEntity() {
     @Column(name = "tag")
     @CollectionTable(name = "account_tag", joinColumns = [JoinColumn(name = "account_id")])
     var tags: Set<String> = mutableSetOf()
-
-    @Column(name = "movement_total")
-    var movementTotal: BigDecimal = BigDecimal.ZERO
 }

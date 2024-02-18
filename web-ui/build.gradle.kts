@@ -3,7 +3,7 @@ import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 
 plugins {
   id("com.github.node-gradle.node").version("7.0.1")
-  id("org.openapi.generator").version("7.1.0")
+  id("org.openapi.generator").version("7.3.0")
 }
 
 data class Api(
@@ -69,6 +69,7 @@ tasks {
         inputSpec.set(layout.buildDirectory.file("api-defs/${it.jsonName}").get().toString())
         outputDir.set("${layout.projectDirectory}/src/app/shared/apis/${it.destPath}")
         generatorName.set("typescript-angular")
+
         typeMappings.set(mapOf("set" to "Array", "DateTime" to "Date", "date" to "Date", "date-time" to "Date"))
         configOptions.set(
           mapOf(

@@ -25,7 +25,7 @@ insert into movement(account_id
                    , budget_period
                    , category_id
                    , comments
-                   , opposit_account_id
+                   , opposite_account_id
                    , amount
                    , total)
 values(?
@@ -63,16 +63,6 @@ select max (pos)
  where account_id = ?
    and date = ?
 """)
-    }
-
-    val accountMovementsSumUpdate by lazy {
-        getStatement(
-            """
-update account a
-  set movement_total = ?
- where a.id = ?
- """
-        )
     }
 
     val entryItemInsert by lazy {

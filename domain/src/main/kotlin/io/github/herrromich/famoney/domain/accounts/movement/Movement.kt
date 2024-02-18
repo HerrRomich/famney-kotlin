@@ -19,7 +19,7 @@ abstract class Movement : DomainEntity() {
     lateinit var date: LocalDate
 
     @Column(name = "pos")
-    var position: Int = 0
+    var position: Float = 0f
 
     @Column(name = "booking_date")
     var bookingDate: LocalDate? = null

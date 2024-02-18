@@ -6,7 +6,7 @@ val resolveConfig by configurations.creating
 dependencies {
     api(project(":commons:commons-jaxrs"))
 
-    resolveConfig("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.8")
+    resolveConfig("io.swagger.core.v3:swagger-jaxrs2-jakarta:2.2.10")
 }
 
 val resolveApi = tasks.register<ResolveTask>("resolveApi") {

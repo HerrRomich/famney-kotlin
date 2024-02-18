@@ -12,10 +12,6 @@ const initAccounts = (): AccountsState =>
 
 const reducer = createReducer(
   initAccounts(),
-  on(AccountsActions.loadAccounts, (state) => ({
-    ...state,
-    loaded: false,
-  })),
   on(AccountsActions.loadAccountsSuccess, (state, { selectedTags, accounts }) =>
     accountsAdapter.setAll(accounts, {
       ...state,

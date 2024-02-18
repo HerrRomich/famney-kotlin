@@ -18,6 +18,7 @@ build/
 .idea/compiler.xml
 .idea/prettier.xml
 .idea/libraries/
+.idea/sonarlint/
 *.iws
 *.iml
 *.ipr
@@ -54,3 +55,8 @@ out/
 /.idea/kotlinc.xml
 /.idea/misc.xml
 /.idea/intellij-javadocs-4.0.1.xml
+/.idea/dataSources
+/.idea/dataSources.local.xml
+/.idea/dataSources.xml
+/.idea/ktlint-plugin.xml
+/.idea/sqldialects.xml

@@ -33,7 +33,6 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
                 context.connection
             ).use { migrationData ->
                 insertAccountsMovements(migrationData)
-                updateAccountsMovemntsCountAndSum(migrationData)
                 logger.info(
                     "Migration: \"{} {}\" is successfully completed.",
                     version,
@@ -110,7 +109,7 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
                                 entryItems = entryItems,
                                 categoryId = categoryId,
                                 comment = movement.comment,
-                                oppositAccountId = movement.oppositAccount?.let { accountsNameToId.getValue(it) }
+                                oppositeAccountId = movement.oppositeAccount?.let { accountsNameToId.getValue(it) }
                             )
                         }
                     )
@@ -296,7 +295,7 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
             ?: insertMovementStatement.setNull(7, Types.INTEGER)
         movement.comment?.run { insertMovementStatement.setString(8, this) }
             ?: insertMovementStatement.setNull(8, Types.VARCHAR)
-        movement.oppositAccountId?.run { insertMovementStatement.setInt(9, this) }
+        movement.oppositeAccountId?.run { insertMovementStatement.setInt(9, this) }
             ?: insertMovementStatement.setNull(9, Types.INTEGER)
         insertMovementStatement.setBigDecimal(10, movement.amount)
         insertMovementStatement.setBigDecimal(11, total)
@@ -319,31 +318,6 @@ class V2M2InitialMovements(private val objectMapper: ObjectMapper) : DomainMigra
         logger.debug { "${entryItems.size} entry items are inserted." }
     }
 
-
-    private fun updateAccountsMovemntsCountAndSum(migrationData: MigrationData) {
-        val accountsMovementsSumCountSelectStmt = migrationData.jdbcStatements.accountsMovementsSumCountSelect
-        val accountMovementsSumCountUpdateStmt = migrationData.jdbcStatements.accountMovementsSumUpdate
-        try {
-            accountsMovementsSumCountSelectStmt.executeQuery().use { countsAndSums ->
-                while (countsAndSums.next()) {
-                    accountMovementsSumCountUpdateStmt.setBigDecimal(
-                        1,
-                        countsAndSums.getBigDecimal(1)
-                    )
-                    accountMovementsSumCountUpdateStmt.setInt(
-                        2,
-                        countsAndSums.getInt(2)
-                    )
-                    accountMovementsSumCountUpdateStmt.executeUpdate()
-                }
-            }
-        } catch (e: SQLException) {
-            throw MigrationException(
-                "Cannot update account movements sums.",
-                e
-            )
-        }
-    }
 
     companion object {
         private fun mapImportMovementTypeToEnum(movementType: String) =
